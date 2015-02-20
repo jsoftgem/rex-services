@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1"
+             xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+
+    <persistence-unit name="warpu" transaction-type="RESOURCE_LOCAL">
+        <!-- admin -->
+        <class>com.jsofttechnologies.jpa.admin.FlowSession</class>
+        <class>com.jsofttechnologies.jpa.admin.FlowSummary</class>
+        <class>com.jsofttechnologies.jpa.admin.FlowUser</class>
+        <class>com.jsofttechnologies.jpa.admin.FlowUserDetail</class>
+        <class>com.jsofttechnologies.jpa.admin.FlowUserProfile</class>
+        <class>com.jsofttechnologies.jpa.admin.FlowUserGroup</class>
+        <class>com.jsofttechnologies.jpa.admin.FlowUserGroupModule</class>
+        <class>com.jsofttechnologies.jpa.admin.FlowUserGroupTask</class>
+        <class>com.jsofttechnologies.jpa.admin.FlowProfilePermission</class>
+        <class>com.jsofttechnologies.jpa.admin.FlowUploadedFile</class>
+        <class>com.jsofttechnologies.jpa.admin.FlowUserAppSetting</class>
+
+        <!-- dev -->
+        <class>com.jsofttechnologies.jpa.dev.FlowStyle</class>
+        <class>com.jsofttechnologies.jpa.dev.FlowPage</class>
+        <class>com.jsofttechnologies.jpa.dev.FlowGroup</class>
+        <class>com.jsofttechnologies.jpa.dev.FlowTask</class>
+        <class>com.jsofttechnologies.jpa.dev.FlowModule</class>
+        <class>com.jsofttechnologies.jpa.dev.FlowUserTask</class>
+        <class>com.jsofttechnologies.jpa.dev.FlowStyleAsc</class>
+
+        <!-- flow -->
+        <class>com.jsofttechnologies.jpa.flow.FlowNotification</class>
+
+
+        <!-- Activity -->
+
+        <class>com.jsofttechnologies.rexwar.model.activty.WarActivity</class>
+        <class>com.jsofttechnologies.rexwar.model.activty.WarCustomerMarket</class>
+        <class>com.jsofttechnologies.rexwar.model.activty.WarMarketSegment</class>
+        <class>com.jsofttechnologies.rexwar.model.activty.WarMarketSegmentControl</class>
+        <class>com.jsofttechnologies.rexwar.model.activty.WarSchoolYear</class>
+        <class>com.jsofttechnologies.rexwar.model.activty.WarPlanner</class>
+        <!-- Management -->
+        <class>com.jsofttechnologies.rexwar.model.management.WarCustomer</class>
+        <class>com.jsofttechnologies.rexwar.model.management.WarCustomerLight</class>
+        <class>com.jsofttechnologies.rexwar.model.management.WarAgent</class>
+
+        <!-- Table -->
+        <class>com.jsofttechnologies.rexwar.model.tables.BuyingCycle</class>
+        <class>com.jsofttechnologies.rexwar.model.tables.Contacts</class>
+        <class>com.jsofttechnologies.rexwar.model.tables.CustomerLevel</class>
+        <class>com.jsofttechnologies.rexwar.model.tables.Level</class>
+        <class>com.jsofttechnologies.rexwar.model.tables.Position</class>
+        <class>com.jsofttechnologies.rexwar.model.tables.Item</class>
+        <class>com.jsofttechnologies.rexwar.model.tables.Publisher</class>
+        <class>com.jsofttechnologies.rexwar.model.tables.Region</class>
+        <class>com.jsofttechnologies.rexwar.model.tables.School</class>
+        <class>com.jsofttechnologies.rexwar.model.tables.SupportGiven</class>
+
+        <!-- Report -->
+        <class>com.jsofttechnologies.rexwar.model.reports.WarReportWeeklyAgentViewCustomer</class>
+        <class>com.jsofttechnologies.rexwar.model.reports.WarReportWeeklyAgentView</class>
+
+        <!-- Sale -->
+        <class>com.jsofttechnologies.rexwar.model.sales.HistoricalSale</class>
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+        <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/rexcoredb"/>
+            <property name="javax.persistence.jdbc.user" value="flowAdmin"/>
+            <property name="javax.persistence.jdbc.password" value="flowAdmin"/>
+        </properties>
+    </persistence-unit>
+</persistence>

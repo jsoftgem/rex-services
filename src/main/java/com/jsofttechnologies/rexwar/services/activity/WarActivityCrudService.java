@@ -1,0 +1,129 @@
+package com.jsofttechnologies.rexwar.services.activity;
+
+import com.jsofttechnologies.interceptor.Notify;
+import com.jsofttechnologies.jpa.util.FlowAlertType;
+import com.jsofttechnologies.rexwar.model.activty.WarActivity;
+import com.jsofttechnologies.rexwar.model.activty.WarPlanner;
+import com.jsofttechnologies.services.util.CrudService;
+import com.jsofttechnologies.services.util.FlowSessionHelper;
+import com.jsofttechnologies.util.CalendarUtil;
+import com.jsofttechnologies.util.ProjectHelper;
+
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.text.MessageFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+/**
+ * Created by Jerico on 1/30/2015.
+ */
+@Path("services/war/activity_crud")
+@Stateless
+@Notify(task = "planner_task", alertType = FlowAlertType.BROADCAST, page = "planner")
+public class WarActivityCrudService extends CrudService<WarActivity, Long> {
+
+    @EJB
+    private FlowSessionHelper sessionHelper;
+
+    @EJB
+    private WarPlannerQueryService warPlannerQueryService;
+
+    public WarActivityCrudService() {
+        super(WarActivity.class);
+    }
+
+    @Override
+    protected WarActivity preCreateValidation(WarActivity warActivity) throws Exception {
+        return warActivity;
+    }
+
+    @Override
+    protected WarActivity preUpdateValidation(WarActivity warActivity) throws Exception {
+        return warActivity;
+    }
+
+
+    @Path("save_activities/{id:[0-9][0-9]*}")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response saveActivities(WarActivity[] activities, @PathParam("id") Long plannerId) {
+        Response response = null;
+
+        Date currentDate = new Date();
+
+        Calendar current = Calendar.getInstance();
+
+        current.setTime(currentDate);
+
+        int currentWeek = current.get(Calendar.WEEK_OF_YEAR);
+        int currentYear = current.get(Calendar.YEAR);
+        try {
+            WarPlanner warPlanner = warPlannerQueryService.getById(plannerId);
+
+            for (WarActivity activity : activities) {
+                if (activity.getId() != null) {
+                    response = update(activity, activity.getId());
+                } else if (activity.getId() == null) {
+
+                    activity.setWarPlanner(warPlanner);
+                    Calendar activityCalendar = Calendar.getInstance();
+
+                    activityCalendar.setTime(activity.getStartDt());
+
+                    int week = activityCalendar.get(Calendar.WEEK_OF_YEAR);
+                    int year = activityCalendar.get(Calendar.YEAR);
+
+                    if (currentYear > year) {
+                        activity.setPlanned(Boolean.FALSE);
+                    } else {
+                        if (currentWeek > week) {
+                            activity.setPlanned(Boolean.FALSE);
+                        } else if (currentWeek == week) {
+                            activity.setPlanned(Boolean.FALSE);
+                        } else {
+                            activity.setPlanned(Boolean.TRUE);
+                        }
+                    }
+
+                    activity.setWeek(CalendarUtil.getWeek(activity.getStartDt()));
+                    response = create(activity);
+                }
+                if (response.getStatus() > 400) break;
+            }
+
+            response = Response.ok(new ProjectHelper().createJson().addField("plannedId", warPlanner.getId()).buildJsonString(), MediaType.APPLICATION_JSON_TYPE).build();
+
+        } catch (Exception e) {
+            exceptionSummary.handleException(e, getClass());
+        }
+
+        return response;
+    }
+
+
+    @Override
+    public String updateSuccessMessage(WarActivity activity) {
+
+        String[] params = new String[2];
+
+        String authorization = request.getHeader("Authorization");
+        FlowSessionHelper.Promise promise = sessionHelper.isAuthorized(authorization);
+
+        if (promise.getOk()) {
+            params[0] = promise.getFlowUser().getFlowUserDetail().getFullName();
+            params[1] = activity.getStartDt().toString();
+
+        }
+
+
+        return MessageFormat.format(getMessage("WAR_ACTIVITY_USER_UPDATED"), params);
+    }
+
+}
