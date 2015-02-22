@@ -32,12 +32,13 @@
 
         <!-- Activity -->
 
-        <class>com.jsofttechnologies.rexwar.model.activty.WarActivity</class>
-        <class>com.jsofttechnologies.rexwar.model.activty.WarCustomerMarket</class>
-        <class>com.jsofttechnologies.rexwar.model.activty.WarMarketSegment</class>
-        <class>com.jsofttechnologies.rexwar.model.activty.WarMarketSegmentControl</class>
-        <class>com.jsofttechnologies.rexwar.model.activty.WarSchoolYear</class>
-        <class>com.jsofttechnologies.rexwar.model.activty.WarPlanner</class>
+        <class>com.jsofttechnologies.rexwar.model.activity.WarActivity</class>
+        <class>com.jsofttechnologies.rexwar.model.activity.WarCustomerMarket</class>
+        <class>com.jsofttechnologies.rexwar.model.activity.WarMarketSegment</class>
+        <class>com.jsofttechnologies.rexwar.model.activity.WarMarketSegmentControl</class>
+        <class>com.jsofttechnologies.rexwar.model.activity.WarSchoolYear</class>
+        <class>com.jsofttechnologies.rexwar.model.activity.WarPlanner</class>
+        <class>com.jsofttechnologies.rexwar.model.activity.view.WarCustomerMarketView</class>
         <!-- Management -->
         <class>com.jsofttechnologies.rexwar.model.management.WarCustomer</class>
         <class>com.jsofttechnologies.rexwar.model.management.WarCustomerLight</class>

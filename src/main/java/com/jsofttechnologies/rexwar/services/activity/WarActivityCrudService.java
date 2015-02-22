@@ -2,8 +2,8 @@ package com.jsofttechnologies.rexwar.services.activity;
 
 import com.jsofttechnologies.interceptor.Notify;
 import com.jsofttechnologies.jpa.util.FlowAlertType;
-import com.jsofttechnologies.rexwar.model.activty.WarActivity;
-import com.jsofttechnologies.rexwar.model.activty.WarPlanner;
+import com.jsofttechnologies.rexwar.model.activity.WarActivity;
+import com.jsofttechnologies.rexwar.model.activity.WarPlanner;
 import com.jsofttechnologies.services.util.CrudService;
 import com.jsofttechnologies.services.util.FlowSessionHelper;
 import com.jsofttechnologies.util.CalendarUtil;
@@ -41,6 +41,7 @@ public class WarActivityCrudService extends CrudService<WarActivity, Long> {
 
     @Override
     protected WarActivity preCreateValidation(WarActivity warActivity) throws Exception {
+
         return warActivity;
     }
 

@@ -1,4 +1,4 @@
-package com.jsofttechnologies.rexwar.model.activty;
+package com.jsofttechnologies.rexwar.model.activity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jsofttechnologies.jpa.util.FlowJpe;
@@ -15,13 +15,15 @@ import java.util.Date;
 @NamedQueries({
         @NamedQuery(name = WarCustomerMarket.FIND_ALL, query = "select e from WarCustomerMarket e"),
         @NamedQuery(name = WarCustomerMarket.FIND_BY_SCHOOL_YEAR, query = "select wm from WarCustomerMarket wm where wm.schoolYear.id =:schoolYear"),
-        @NamedQuery(name = WarCustomerMarket.FIND_BY_SCHOOL_YEAR_AGENT, query = "select wm from WarCustomerMarket wm where wm.schoolYear.id =:schoolYear and wm.ownerAgentId =:agent")
+        @NamedQuery(name = WarCustomerMarket.FIND_BY_SCHOOL_YEAR_AGENT, query = "select wm from WarCustomerMarket wm where wm.schoolYear.id =:schoolYear and wm.ownerAgentId =:agent"),
+        @NamedQuery(name = WarCustomerMarket.FIND_BY_SCHOOL_YEAR_AGENT_CUSTOMER, query = "select wm from WarCustomerMarket wm where wm.schoolYear.id =:schoolYear and wm.ownerAgentId =:agent and wm.customerId =:customer")
 })
 public class WarCustomerMarket implements FlowJpe {
 
     public static final String FIND_ALL = "WarCustomerMarket.FIND_ALL";
     public static final String FIND_BY_SCHOOL_YEAR = "WarCustomerMarket.FIND_BY_SCHOOL_YEAR";
     public static final String FIND_BY_SCHOOL_YEAR_AGENT = "WarCustomerMarket.FIND_BY_SCHOOL_YEAR_AGENT";
+    public static final String FIND_BY_SCHOOL_YEAR_AGENT_CUSTOMER = "WarCustomerMarket.FIND_BY_SCHOOL_YEAR_AGENT_CUSTOMER";
     @Id
     @Column(name = "war_report_customer_market_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)

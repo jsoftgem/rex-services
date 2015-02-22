@@ -1,7 +1,7 @@
 package com.jsofttechnologies.rexwar.services.management;
 
 import com.jsofttechnologies.interceptor.SkipCheck;
-import com.jsofttechnologies.rexwar.model.activty.WarCustomerMarket;
+import com.jsofttechnologies.rexwar.model.activity.WarCustomerMarket;
 import com.jsofttechnologies.services.util.QueryService;
 
 import javax.ejb.Stateless;
@@ -19,8 +19,8 @@ import java.util.List;
 @Stateless
 public class WarCustomerMarketQueryService extends QueryService<WarCustomerMarket> {
 
-    public WarCustomerMarketQueryService(){
-        super(WarCustomerMarket.class,WarCustomerMarket.FIND_ALL);
+    public WarCustomerMarketQueryService() {
+        super(WarCustomerMarket.class, WarCustomerMarket.FIND_ALL);
     }
 
 
@@ -28,10 +28,10 @@ public class WarCustomerMarketQueryService extends QueryService<WarCustomerMarke
     @GET
     @SkipCheck("action")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<WarCustomerMarket> findBySchoolYear(@QueryParam("schoolYear") Long schoolYear){
+    public List<WarCustomerMarket> findBySchoolYear(@QueryParam("schoolYear") Long schoolYear) {
 
         setNamedQuery(WarCustomerMarket.FIND_BY_SCHOOL_YEAR);
-        putParam("schoolYear",schoolYear);
+        putParam("schoolYear", schoolYear);
 
         return doGetResultList();
     }
@@ -41,11 +41,25 @@ public class WarCustomerMarketQueryService extends QueryService<WarCustomerMarke
     @GET
     @SkipCheck("action")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<WarCustomerMarket> findByAgent(@QueryParam("schoolYear") Long schoolYear, @QueryParam("agent") Long agent){
+    public List<WarCustomerMarket> findByAgent(@QueryParam("schoolYear") Long schoolYear, @QueryParam("agent") Long agent) {
         setNamedQuery(WarCustomerMarket.FIND_BY_SCHOOL_YEAR_AGENT);
-        putParam("schoolYear",schoolYear);
-        putParam("agent",agent);
+        putParam("schoolYear", schoolYear);
+        putParam("agent", agent);
         return doGetResultList();
     }
+
+
+    @Path("find_by_agent_customer")
+    @GET
+    @SkipCheck("action")
+    @Produces(MediaType.APPLICATION_JSON)
+    public WarCustomerMarket findByAgentCustomer(@QueryParam("schoolYear") Long schoolYear, @QueryParam("agent") Long agent, @QueryParam("customer") Long customerId) {
+        setNamedQuery(WarCustomerMarket.FIND_BY_SCHOOL_YEAR_AGENT_CUSTOMER);
+        putParam("schoolYear", schoolYear);
+        putParam("agent", agent);
+        putParam("customer", customerId);
+        return getSingleResult();
+    }
+
 
 }

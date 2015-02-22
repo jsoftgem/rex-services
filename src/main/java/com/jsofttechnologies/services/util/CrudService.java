@@ -9,6 +9,7 @@ import javax.ejb.EJB;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -243,6 +244,10 @@ public abstract class CrudService<T extends FlowJpe, ID extends Number> extends 
 
     public Exception throwException(String messageKey) {
         return new Exception(messageService.getMessage(messageKey));
+    }
+
+    public Exception throwException(String messageKey, String... messages) {
+        return new Exception(MessageFormat.format(messageService.getMessage(messageKey), messages));
     }
 
 

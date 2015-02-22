@@ -1,7 +1,7 @@
 package com.jsofttechnologies.rexwar.services.activity;
 
 import com.jsofttechnologies.interceptor.SkipCheck;
-import com.jsofttechnologies.rexwar.model.activty.WarActivity;
+import com.jsofttechnologies.rexwar.model.activity.WarActivity;
 import com.jsofttechnologies.services.util.QueryService;
 
 import javax.ejb.Stateless;

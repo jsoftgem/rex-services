@@ -1,7 +1,7 @@
 package com.jsofttechnologies.rexwar.services.activity;
 
-import com.jsofttechnologies.rexwar.model.activty.WarPlanner;
-import com.jsofttechnologies.rexwar.model.activty.WarSchoolYear;
+import com.jsofttechnologies.rexwar.model.activity.WarPlanner;
+import com.jsofttechnologies.rexwar.model.activity.WarSchoolYear;
 import com.jsofttechnologies.services.util.CrudService;
 
 import javax.ejb.EJB;

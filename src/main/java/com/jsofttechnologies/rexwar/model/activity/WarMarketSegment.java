@@ -1,4 +1,4 @@
-package com.jsofttechnologies.rexwar.model.activty;
+package com.jsofttechnologies.rexwar.model.activity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jsofttechnologies.jpa.util.FlowJpe;

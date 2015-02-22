@@ -1,11 +1,15 @@
 package com.jsofttechnologies.rexwar.services.session.planner;
 
 import com.jsofttechnologies.interceptor.SkipCheck;
-import com.jsofttechnologies.rexwar.model.activty.WarActivity;
-import com.jsofttechnologies.rexwar.model.activty.WarPlanner;
+import com.jsofttechnologies.rexwar.model.activity.WarActivity;
+import com.jsofttechnologies.rexwar.model.activity.WarPlanner;
+import com.jsofttechnologies.rexwar.model.activity.view.WarCustomerMarketView;
 import com.jsofttechnologies.rexwar.services.activity.WarActivityCrudService;
 import com.jsofttechnologies.rexwar.services.activity.WarPlannerCrudService;
+import com.jsofttechnologies.rexwar.util.contants.Month;
 import com.jsofttechnologies.services.util.FlowService;
+import com.jsofttechnologies.util.ProjectHelper;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.ejb.EJB;
@@ -13,6 +17,7 @@ import javax.ejb.Stateless;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 /**
  * Created by Jerico on 2/16/2015.
@@ -20,6 +25,8 @@ import javax.ws.rs.core.Response;
 @Path("session/war/planner_service")
 @Stateless
 public class WarPlannerService extends FlowService {
+
+
     @EJB
     private WarPlannerCrudService warPlannerCrudService;
     @EJB
@@ -71,8 +78,66 @@ public class WarPlannerService extends FlowService {
         return response;
     }
 
+    @GET
+    @SkipCheck("action")
+    @Path("customers")
+    public Response getCustomer(@QueryParam("tag") @DefaultValue("20") String tag, @QueryParam("size") @DefaultValue("25") Integer size,
+                                @QueryParam("month") Month month, @QueryParam("isMonth") @DefaultValue("true") Boolean isMonth, @QueryParam("start") @DefaultValue("0") Integer start,
+                                @QueryParam("schoolYear") Long schoolYear, @QueryParam("agentId") Long agentId, @QueryParam("week") @DefaultValue("0") Integer week) {
+
+        Response response = null;
+
+        try {
+            if (tag.equalsIgnoreCase("all")) {
+
+            } else if (tag.equalsIgnoreCase("20")) {
+                size = 20;
+            } else if (tag.equalsIgnoreCase("50")) {
+                size = 50;
+            }
+
+            List<WarCustomerMarketView> warCustomerMarketViewList = storedProcedures.callSchoolYearCustomer(schoolYear, agentId, isMonth, month, week, start, size);
+
+            int length = warCustomerMarketViewList.size();
+
+            List<WarCustomerMarketView> nextBatch = storedProcedures.callSchoolYearCustomer(schoolYear, agentId, isMonth, month, week, length, size);
+
+            int nextBatchSize = 0;
+
+            if (nextBatch != null && !nextBatch.isEmpty()) {
+                nextBatchSize = nextBatch.size();
+            }
+
+            boolean hasNext = nextBatchSize > 0;
+
+            boolean hasPrevious = length > size;
+
+            ProjectHelper projectHelper = new ProjectHelper();
+
+            projectHelper.createJson()
+                    .addField("customers", new JSONArray(warCustomerMarketViewList.toArray()))
+                    .addField("size", size)
+                    .addField("start", length)
+                    .addField("hasNext", hasNext)
+                    .addField("hasPrevious", hasPrevious)
+                    .addField("tag", tag)
+                    .addField("month", month)
+                    .addField("isMonth", isMonth)
+                    .addField("week", week)
+                    .addField("schoolYear", schoolYear)
+                    .addField("agentId", agentId)
+                    .addField("previous", start)
+                    .addField("next", start + size);
+
+            response = Response.ok(projectHelper.buildJsonString(), MediaType.APPLICATION_JSON_TYPE).build();
+
+        } catch (Exception e) {
+            exceptionSummary.handleException(e, getClass());
+        }
 
 
+        return response;
+    }
 
 
 }

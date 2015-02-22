@@ -1,6 +1,6 @@
 package com.jsofttechnologies.rexwar.services.activity;
 
-import com.jsofttechnologies.rexwar.model.activty.WarSchoolYear;
+import com.jsofttechnologies.rexwar.model.activity.WarSchoolYear;
 import com.jsofttechnologies.services.util.QueryService;
 
 import javax.ejb.Stateless;

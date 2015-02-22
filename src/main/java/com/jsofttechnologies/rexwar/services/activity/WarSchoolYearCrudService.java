@@ -1,9 +1,9 @@
 package com.jsofttechnologies.rexwar.services.activity;
 
 import com.jsofttechnologies.jpa.admin.FlowUser;
-import com.jsofttechnologies.rexwar.model.activty.WarCustomerMarket;
-import com.jsofttechnologies.rexwar.model.activty.WarMarketSegment;
-import com.jsofttechnologies.rexwar.model.activty.WarSchoolYear;
+import com.jsofttechnologies.rexwar.model.activity.WarCustomerMarket;
+import com.jsofttechnologies.rexwar.model.activity.WarMarketSegment;
+import com.jsofttechnologies.rexwar.model.activity.WarSchoolYear;
 import com.jsofttechnologies.services.util.CrudService;
 import com.jsofttechnologies.services.util.FlowSessionHelper;
 

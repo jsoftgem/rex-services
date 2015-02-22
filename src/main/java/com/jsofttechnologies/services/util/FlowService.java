@@ -1,7 +1,7 @@
 package com.jsofttechnologies.services.util;
 
+import com.jsofttechnologies.ds.StoredProcedures;
 import com.jsofttechnologies.ejb.MergeExceptionSummary;
-import com.jsofttechnologies.interceptor.SkipCheck;
 import com.jsofttechnologies.util.ProjectConstants;
 
 import javax.annotation.security.PermitAll;
@@ -18,6 +18,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Jerico on 6/13/2014.
@@ -42,6 +44,12 @@ public abstract class FlowService implements Serializable {
 
     @EJB
     protected MergeExceptionSummary exceptionSummary;
+
+    @EJB
+    protected StoredProcedures storedProcedures;
+
+
+    private final Map<String, Object> serviceCache = new HashMap<>();
 
     @GET
     @PermitAll
@@ -90,5 +98,23 @@ public abstract class FlowService implements Serializable {
     public HttpSession getHttpSession() {
         return httpSession;
     }
+
+
+    public <T> T serviceMap(Object key, Object o, Class<T> type, boolean isNew) {
+        if (key == null) return null;
+        String theKey = key.toString().trim().toLowerCase() + type.getName().toLowerCase();
+        if (!serviceCache.containsKey(theKey) || isNew) {
+            serviceCache.put(theKey, o);
+        }
+        return (T) serviceCache.get(key);
+    }
+
+
+    public <T> boolean isCached(Object key, Class<T> type) {
+        if (key == null) return false;
+        String theKey = key.toString().trim().toLowerCase() + type.getName().toLowerCase();
+        return serviceCache.containsKey(theKey);
+    }
+
 
 }

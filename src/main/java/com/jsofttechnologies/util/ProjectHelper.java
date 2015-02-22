@@ -2,6 +2,7 @@ package com.jsofttechnologies.util;
 
 import com.jsofttechnologies.model.DataTables;
 import com.jsofttechnologies.model.DataTablesColumn;
+import org.json.JSONObject;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -47,21 +48,12 @@ public class ProjectHelper {
     }
 
     public static String json(Map<String, Object> jsonMap) {
-        String json = null;
-        StringBuilder builder = new StringBuilder("{");
-        int l = jsonMap.keySet().size();
-        int c = 0;
+        JSONObject jsonObject = new JSONObject();
         for (String key : jsonMap.keySet()) {
-            c++;
-            builder.append("\"" + key + "\":\"" + jsonMap.get(key) + "\"");
-            if (c < l) {
-                builder.append(",");
-            }
-        }
-        builder.append("}");
-        json = builder.toString();
+            jsonObject.put(key, jsonMap.get(key));
 
-        return json;
+        }
+        return jsonObject.toString();
     }
 
     public static String message(String msg) {

@@ -1,7 +1,7 @@
 package com.jsofttechnologies.rexwar.services.activity;
 
 import com.jsofttechnologies.interceptor.SkipCheck;
-import com.jsofttechnologies.rexwar.model.activty.WarPlanner;
+import com.jsofttechnologies.rexwar.model.activity.WarPlanner;
 import com.jsofttechnologies.rexwar.util.contants.Month;
 import com.jsofttechnologies.services.util.QueryService;
 

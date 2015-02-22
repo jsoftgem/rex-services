@@ -1,7 +1,7 @@
 package com.jsofttechnologies.rexwar.services.session.planner;
 
-import com.jsofttechnologies.rexwar.model.activty.WarActivity;
-import com.jsofttechnologies.rexwar.model.activty.WarPlanner;
+import com.jsofttechnologies.rexwar.model.activity.WarActivity;
+import com.jsofttechnologies.rexwar.model.activity.WarPlanner;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
