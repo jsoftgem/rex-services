@@ -3,39 +3,37 @@ package com.jsofttechnologies.rexwar.model.reports;
 import com.jsofttechnologies.rexwar.util.contants.Month;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-import java.util.Date;
 
 /**
- * Created by Jerico on 2/6/2015.
+ * Created by Jerico on 2/23/2015.
  */
 @Entity
-@IdClass(WarReportWeeklyAgentViewCustomerID.class)
-public class WarReportWeeklyAgentViewCustomer implements Serializable {
-
-    @Column(name = "report_week")
-    private Integer week;
-    @Column(name = "report_day")
-    private Integer day;
+@XmlRootElement
+public class WarReportMonthlyCustomerView implements Serializable {
+    @Column(name = "report_customer_id", nullable = false)
+    private Long customerId;
+    @Column(name = "report_customer", nullable = false)
+    private String customerName;
     @Column(name = "report_month")
     @Enumerated(EnumType.STRING)
     private Month month;
+    @Id
+    @Column(name = "report_customer_market_id", nullable = false)
+    private Long customerMakertId;
+    @Column(name = "report_agent")
+    private Long agent;
+    @Column(name = "report_school_year")
+    private Long schoolYear;
     @Column(name = "report_year")
     private Integer year;
     @Column(name = "report_region")
     private String region;
+    @Column(name = "report_frequency")
+    private Integer customerFrequency;
     @Column(name = "report_planned")
-    private Boolean planned;
-    @Id
-    @Column(name = "report_customer")
-    private String customer;
-    @Column(name = "report_market_potential_segment")
-    private String marketSegment;
-    @Id
-    @Column(name = "report_agent")
-    private Long agent;
-    @Column(name = "report_actual")
-    private Integer actual;
+    private Integer planned;
     @Column(name = "report_exam_copies_distribution")
     private Integer ecd;
     @Column(name = "report_invitation_to_events")
@@ -52,39 +50,27 @@ public class WarReportWeeklyAgentViewCustomer implements Serializable {
     private Integer po;
     @Column(name = "report_delivery_of_additional_order_trm_compliance")
     private Integer daotrc;
-    @Column(name = "report_booklist")
+    @Column(name = "report_book_list")
     private Integer bookList;
     @Column(name = "report_updated_customer_info_sheet")
     private Integer ucis;
     @Column(name = "report_implemented_ex_sem")
     private Integer ies;
-    @Id
-    @Column(name = "report_date")
-    @Temporal(TemporalType.DATE)
-    private Date date;
 
-    public Integer getWeek() {
-        return week;
+    public Long getCustomerId() {
+        return customerId;
     }
 
-    public void setWeek(Integer week) {
-        this.week = week;
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
     }
 
-    public Integer getIes() {
-        return ies;
+    public String getCustomerName() {
+        return customerName;
     }
 
-    public void setIes(Integer ies) {
-        this.ies = ies;
-    }
-
-    public Integer getDay() {
-        return day;
-    }
-
-    public void setDay(Integer day) {
-        this.day = day;
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 
     public Month getMonth() {
@@ -93,6 +79,30 @@ public class WarReportWeeklyAgentViewCustomer implements Serializable {
 
     public void setMonth(Month month) {
         this.month = month;
+    }
+
+    public Long getCustomerMakertId() {
+        return customerMakertId;
+    }
+
+    public void setCustomerMakertId(Long customerMakertId) {
+        this.customerMakertId = customerMakertId;
+    }
+
+    public Long getAgent() {
+        return agent;
+    }
+
+    public void setAgent(Long agent) {
+        this.agent = agent;
+    }
+
+    public Long getSchoolYear() {
+        return schoolYear;
+    }
+
+    public void setSchoolYear(Long schoolYear) {
+        this.schoolYear = schoolYear;
     }
 
     public Integer getYear() {
@@ -111,44 +121,20 @@ public class WarReportWeeklyAgentViewCustomer implements Serializable {
         this.region = region;
     }
 
-    public Boolean getPlanned() {
+    public Integer getCustomerFrequency() {
+        return customerFrequency;
+    }
+
+    public void setCustomerFrequency(Integer customerFrequency) {
+        this.customerFrequency = customerFrequency;
+    }
+
+    public Integer getPlanned() {
         return planned;
     }
 
-    public void setPlanned(Boolean planned) {
+    public void setPlanned(Integer planned) {
         this.planned = planned;
-    }
-
-    public String getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(String customer) {
-        this.customer = customer;
-    }
-
-    public String getMarketSegment() {
-        return marketSegment;
-    }
-
-    public void setMarketSegment(String marketSegment) {
-        this.marketSegment = marketSegment;
-    }
-
-    public Long getAgent() {
-        return agent;
-    }
-
-    public void setAgent(Long agent) {
-        this.agent = agent;
-    }
-
-    public Integer getActual() {
-        return actual;
-    }
-
-    public void setActual(Integer actual) {
-        this.actual = actual;
     }
 
     public Integer getEcd() {
@@ -231,11 +217,11 @@ public class WarReportWeeklyAgentViewCustomer implements Serializable {
         this.ucis = ucis;
     }
 
-    public Date getDate() {
-        return date;
+    public Integer getIes() {
+        return ies;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setIes(Integer ies) {
+        this.ies = ies;
     }
 }

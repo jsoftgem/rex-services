@@ -15,4 +15,5 @@ public class WarConstants {
     public static final String MSG_AGENT_NOT_ACTIVE = "WAR_AGENT_NOT_ACTIVE";
     public static final String VIEW_WAR_REPORT_WEEKLY_AGENT = "weekly_agent_report_activity";
     public static final String VIEW_WAR_REPORT_WEEKLY_AGENT_CUSTOMER_VIEW = "weekly_agent_report_activity_customer_day";
+    public static final String VIEW_WAR_REPORT_MONTHLY_CUSTOMER = "monthly_customer_report_activtiy";
 }

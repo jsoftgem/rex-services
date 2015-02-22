@@ -8,7 +8,9 @@ import com.jsofttechnologies.rexwar.services.activity.WarActivityCrudService;
 import com.jsofttechnologies.rexwar.services.activity.WarPlannerCrudService;
 import com.jsofttechnologies.rexwar.util.contants.Month;
 import com.jsofttechnologies.services.util.FlowService;
+import com.jsofttechnologies.util.CalendarUtil;
 import com.jsofttechnologies.util.ProjectHelper;
+import com.jsofttechnologies.util.TableUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -17,6 +19,7 @@ import javax.ejb.Stateless;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -83,7 +86,7 @@ public class WarPlannerService extends FlowService {
     @Path("customers")
     public Response getCustomer(@QueryParam("tag") @DefaultValue("20") String tag, @QueryParam("size") @DefaultValue("25") Integer size,
                                 @QueryParam("month") Month month, @QueryParam("isMonth") @DefaultValue("true") Boolean isMonth, @QueryParam("start") @DefaultValue("0") Integer start,
-                                @QueryParam("schoolYear") Long schoolYear, @QueryParam("agentId") Long agentId, @QueryParam("week") @DefaultValue("0") Integer week) {
+                                @QueryParam("schoolYear") Long schoolYear, @QueryParam("agentId") Long agentId, @QueryParam("weekStart") Long weekStart, @QueryParam("page") Integer page) {
 
         Response response = null;
 
@@ -94,6 +97,12 @@ public class WarPlannerService extends FlowService {
                 size = 20;
             } else if (tag.equalsIgnoreCase("50")) {
                 size = 50;
+            }
+            int week = 0;
+
+            if (!isMonth) {
+                Date startDate = new Date(weekStart);
+                week = CalendarUtil.getWeek(startDate);
             }
 
             List<WarCustomerMarketView> warCustomerMarketViewList = storedProcedures.callSchoolYearCustomer(schoolYear, agentId, isMonth, month, week, start, size);
@@ -112,22 +121,17 @@ public class WarPlannerService extends FlowService {
 
             boolean hasPrevious = length > size;
 
-            ProjectHelper projectHelper = new ProjectHelper();
 
-            projectHelper.createJson()
-                    .addField("customers", new JSONArray(warCustomerMarketViewList.toArray()))
-                    .addField("size", size)
-                    .addField("start", length)
-                    .addField("hasNext", hasNext)
-                    .addField("hasPrevious", hasPrevious)
-                    .addField("tag", tag)
-                    .addField("month", month)
-                    .addField("isMonth", isMonth)
-                    .addField("week", week)
-                    .addField("schoolYear", schoolYear)
-                    .addField("agentId", agentId)
-                    .addField("previous", start)
-                    .addField("next", start + size);
+            ProjectHelper projectHelper =
+                    TableUtil.createPaginationJson(size, length, hasNext, hasPrevious, start, (start + size), 0)
+                            .addField("customers", new JSONArray(warCustomerMarketViewList.toArray()))
+                            .addField("tag", tag)
+                            .addField("month", month)
+                            .addField("isMonth", isMonth)
+                            .addField("week", week)
+                            .addField("schoolYear", schoolYear)
+                            .addField("agentId", agentId)
+                            .addField("page", page);
 
             response = Response.ok(projectHelper.buildJsonString(), MediaType.APPLICATION_JSON_TYPE).build();
 

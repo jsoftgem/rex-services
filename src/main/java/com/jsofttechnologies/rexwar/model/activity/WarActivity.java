@@ -60,6 +60,8 @@ public class WarActivity implements FlowJpe {
     private Boolean ite;
     @Column(name = "war_activity_confirmation_of_events", length = ColumnLengths.FLAG)
     private Boolean coe;
+    @Column(name = "war_activity_follow_up_payment", length = ColumnLengths.FLAG)
+    private Boolean fp;
     @Column(name = "war_activity_giveaways_distribution", length = ColumnLengths.FLAG)
     private Boolean gd;
     @Column(name = "war_activity_delivery_of_incentive_donation", length = ColumnLengths.FLAG)
@@ -207,6 +209,14 @@ public class WarActivity implements FlowJpe {
 
     public void setCoe(Boolean coe) {
         this.coe = coe;
+    }
+
+    public Boolean getFp() {
+        return fp;
+    }
+
+    public void setFp(Boolean fp) {
+        this.fp = fp;
     }
 
     public Boolean getGd() {

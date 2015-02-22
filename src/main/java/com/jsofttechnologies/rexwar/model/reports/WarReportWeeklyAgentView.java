@@ -31,6 +31,8 @@ public class WarReportWeeklyAgentView implements Serializable {
     private Month reportMonth;
     @Column(name = "report_year", nullable = false)
     private Integer year;
+    @Column(name = "report_region", nullable = false)
+    private String region;
     @Id
     @Column(name = "report_week", nullable = false)
     private Integer week;
@@ -58,6 +60,8 @@ public class WarReportWeeklyAgentView implements Serializable {
     private Integer ite;
     @Column(name = "report_confirmation_of_events")
     private Integer coe;
+    @Column(name = "report_follow_up_payment")
+    private Integer fp;
     @Column(name = "report_giveaways_distribution")
     private Integer gd;
     @Column(name = "report_delivery_of_incentive_donation")
@@ -119,6 +123,14 @@ public class WarReportWeeklyAgentView implements Serializable {
 
     public void setYear(Integer year) {
         this.year = year;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
     }
 
     public Integer getWeek() {
@@ -223,6 +235,14 @@ public class WarReportWeeklyAgentView implements Serializable {
 
     public void setCoe(Integer coe) {
         this.coe = coe;
+    }
+
+    public Integer getFp() {
+        return fp;
+    }
+
+    public void setFp(Integer fp) {
+        this.fp = fp;
     }
 
     public Integer getGd() {

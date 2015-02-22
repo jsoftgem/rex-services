@@ -7,6 +7,9 @@ import com.jsofttechnologies.rexwar.util.WarConstants;
 import com.jsofttechnologies.rexwar.util.contants.Month;
 import com.jsofttechnologies.services.util.FlowService;
 import com.jsofttechnologies.util.ProjectConstants;
+import com.jsofttechnologies.util.ProjectHelper;
+import com.jsofttechnologies.util.TableUtil;
+import org.json.JSONArray;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -37,46 +40,111 @@ public class WarReportWeeklyService extends FlowService {
             @QueryParam("isYear") @DefaultValue("false") Boolean isYear,
             @QueryParam("isMonth") @DefaultValue("false") Boolean isMonth,
             @QueryParam("isAgent") @DefaultValue("false") Boolean isAgent,
+            @QueryParam("isRegion") @DefaultValue("false") Boolean isRegion,
             @QueryParam("year") Integer year, @QueryParam("month") Month month, @QueryParam("agent") Long agent,
-            @QueryParam("size") Integer max, @QueryParam("resultCount") Integer resultCount, @QueryParam("firstResult") Integer firstResult
+            @QueryParam("region") String region, @QueryParam("size") @DefaultValue("25") Integer size,
+            @QueryParam("start") @DefaultValue("0") Integer start, @QueryParam("tag") @DefaultValue("20") String tag
     ) {
         Response response = null;
 
         List<WarReportWeeklyAgentView> warReportWeeklyAgentViewList = new ArrayList<>();
 
-        boolean complete = isYear && isMonth && isAgent;
+        boolean complete = isYear && isMonth && isAgent && isRegion;
 
         String query = "select * from " + WarConstants.VIEW_WAR_REPORT_WEEKLY_AGENT + " w";
 
         try {
             if (!complete) {
-                if (isYear && isMonth) {
-                    query += " where w.report_year =" + year + " and w.report_month = '" + month.toString() + "'";
-                } else if (isYear && isAgent) {
-                    query += " where w.report_year = " + year + " and w.report_agent_id = " + agent;
-                } else if (isMonth && isAgent) {
-                    query += " where w.report_month = '" + month.toString() + "' and w.report_agent_id = " + agent;
-                } else if (isYear) {
+                int count = 0;
+
+                if (isYear) {
                     query += " where w.report_year =" + year;
-                } else if (isMonth) {
-                    query += " where w.report_month = '" + month.toString() + "'";
-                } else if (isAgent) {
-                    query += " where w.report_agent_id = " + agent;
+                    count++;
+                }
+
+                if (isMonth) {
+                    if (count > 0) {
+                        query += " and ";
+                    } else {
+                        query += " where ";
+                        count++;
+                    }
+                    query += "w.report_month = '" + month.toString() + "'";
+                }
+
+                if (isAgent) {
+                    if (count > 0) {
+                        query += " and ";
+                    } else {
+                        query += " where ";
+                        count++;
+                    }
+                    query += "w.report_agent_id = " + agent;
+                }
+
+                if (isRegion) {
+                    if (count > 0) {
+                        query += " and ";
+                    } else {
+                        query += " where ";
+                        count++;
+                    }
+                    query += "lower(w.report_region) like '" + region.toLowerCase() + "'";
                 }
             } else {
-                query += " where w.report_year =" + year + " and w.report_month = '" + month.toString() + "' and w.report_agent_id = " + agent;
+                query += " where w.report_year =" + year + " and w.report_month = '" + month.toString() + "' and w.report_agent_id = " + agent + " and lower(w.report_region) ='" + region.toLowerCase() + "'";
             }
 
 
-            query += " order by w.report_date asc";
+            switch (tag) {
+                case "All":
+                case "all":
+                    query += " order by w.report_date asc";
+                    break;
+                case "20":
+                    query += " order by w.report_total_actual desc";
+                    break;
+                case "50":
+                    query += " order by w.report_total_actual desc";
+                    break;
+            }
 
-            warReportWeeklyAgentViewList = entityManager.createNativeQuery(query, WarReportWeeklyAgentView.class).getResultList();
+            warReportWeeklyAgentViewList = entityManager.createNativeQuery(query, WarReportWeeklyAgentView.class)
+                    /*.setFirstResult(start)
+                    .setMaxResults(size)*/
+                    .getResultList();
+
+
+            int length = start + warReportWeeklyAgentViewList.size();
+
+
+           /* List<WarReportWeeklyAgentView> nextBatch = entityManager.createNativeQuery(query, WarReportWeeklyAgentView.class)
+                  *//*  .setFirstResult(length)
+                    .setMaxResults(size)*//*
+                    .getResultList();*/
+
+            boolean hasNext = false;
+
+            boolean hasPrevious = start > size;
+
+            ProjectHelper projectHelper = TableUtil.createPaginationJson(size, start, hasNext, hasPrevious, start, length, 0)
+                    .addField("tag", tag)
+                    .addField("weeklyReports", new JSONArray(warReportWeeklyAgentViewList.toArray()))
+                    .addField("isAgent", isAgent)
+                    .addField("isYear", isYear)
+                    .addField("isMonth", isMonth)
+                    .addField("isRegion", isRegion)
+                    .addField("year", year)
+                    .addField("month", month)
+                    .addField("region", region);
+
+
+            response = Response.ok(projectHelper.buildJsonString(), MediaType.APPLICATION_JSON_TYPE).build();
 
         } catch (Exception e) {
             exceptionSummary.handleException(e, getClass());
         }
 
-        response = Response.ok(warReportWeeklyAgentViewList, MediaType.APPLICATION_JSON_TYPE).build();
 
         return response;
     }
@@ -85,7 +153,7 @@ public class WarReportWeeklyService extends FlowService {
     @Path("agent_customer")
     @GET
     @SkipCheck("action")
-    public Response findWarReportWeeklyAgentsCustomer(@QueryParam("month") Month month, @QueryParam("agent") Long agent, @QueryParam("year") Integer year, @QueryParam("week") Integer week) {
+    public Response findWarReportWeeklyAgentsCustomer(@QueryParam("month") Month month, @QueryParam("agent") Long agent, @QueryParam("year") Integer year, @QueryParam("week") Integer week, @QueryParam("region") String region) {
 
         Response response = null;
         List<WarReportWeeklyAgentViewCustomer> viewCustomers = new ArrayList<>();
@@ -127,6 +195,17 @@ public class WarReportWeeklyService extends FlowService {
                     count++;
                 }
                 query += " w.report_week = " + week;
+            }
+
+
+            if (region != null) {
+                if (count > 0) {
+                    query += " and ";
+                } else {
+                    query += " where ";
+                    count++;
+                }
+                query += " lower(w.report_region) like '" + region.toLowerCase() + "'";
             }
 
             query += " order by w.report_date asc";
