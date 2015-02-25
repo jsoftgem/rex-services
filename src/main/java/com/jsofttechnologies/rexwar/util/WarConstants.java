@@ -10,6 +10,8 @@ public class WarConstants {
     public static final String APP_VER = "1.0";
     public static final String AGENT_GROUP = "agent";
     public static final String AGENT_PROFILE = "agent";
+    public static final String AGENT_REGIONAL_MANAGER_GROUP = "agent_regional_manager";
+    public static final String AGENT_REGIONAL_MANAGER = "agent_regional_manager";
     public static final String MSG_AGENT_CREATED = "WAR_AGENT_CREATED";
     public static final String MSG_AGENT_UPDATED = "WAR_AGENT_UPDATED";
     public static final String MSG_AGENT_NOT_ACTIVE = "WAR_AGENT_NOT_ACTIVE";

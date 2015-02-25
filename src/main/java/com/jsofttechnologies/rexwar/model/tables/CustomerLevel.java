@@ -162,7 +162,7 @@ public class CustomerLevel implements FlowJpe {
         createdDt = new Date();
     }
 
-    @Override
+    @PreUpdate
     public void preUpdate() {
         updatedDt = new Date();
     }

@@ -177,7 +177,6 @@ public class FlowUserCrudService extends CrudService<FlowUser, Long> {
     }
 
 
-
     @Path("/update/{id:[0-9][0-9]*}")
     @PUT
     @Consumes("application/json")
@@ -236,7 +235,6 @@ public class FlowUserCrudService extends CrudService<FlowUser, Long> {
     }
 
 
-
     @DELETE
     @Path("/delete/{id:[0-9][0-9]*}")
     public Response delete(@PathParam("id") Long id) {
@@ -267,5 +265,6 @@ public class FlowUserCrudService extends CrudService<FlowUser, Long> {
 
         return response;
     }
+
 
 }

@@ -3,6 +3,7 @@ package com.jsofttechnologies.rexwar.services.management;
 import com.jsofttechnologies.jpa.admin.FlowUser;
 import com.jsofttechnologies.jpa.admin.FlowUserGroup;
 import com.jsofttechnologies.rexwar.model.management.WarCustomer;
+import com.jsofttechnologies.rexwar.model.management.WarCustomerMarketSchoolYear;
 import com.jsofttechnologies.rexwar.model.tables.School;
 import com.jsofttechnologies.rexwar.util.WarConstants;
 import com.jsofttechnologies.services.util.CrudService;
@@ -49,9 +50,9 @@ public class WarCustomerCrudService extends CrudService<WarCustomer, Long> {
                 throw throwException("WAR_SCHOOL_NULL_ADDRESS");
             }
 
-            if (school.getRegion() == null) {
+          /*  if (school.getRegion() == null) {
                 throw throwException("WAR_SCHOOL_NULL_REGION");
-            }
+            }*/
 
             if (school.getEmail() == null || school.getEmail().isEmpty()) {
                 throw throwException("WAR_SCHOOL_NULL_EMAIL");
@@ -96,9 +97,9 @@ public class WarCustomerCrudService extends CrudService<WarCustomer, Long> {
                 throw throwException("WAR_SCHOOL_NULL_ADDRESS");
             }
 
-            if (school.getRegion() == null) {
+            /*if (school.getRegion() == null) {
                 throw throwException("WAR_SCHOOL_NULL_REGION");
-            }
+            }*/
 
             if (school.getEmail() == null || school.getEmail().isEmpty()) {
                 throw throwException("WAR_SCHOOL_NULL_EMAIL");

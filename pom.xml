@@ -19,6 +19,7 @@
 
 
     <properties>
+        <version.hibernate>4.3.6.Final</version.hibernate>
         <jndi.name>java:jboss/rexCoreDS</jndi.name>
         <jdbc.url>jdbc:mysql://localhost:3306/rexCoreDB</jdbc.url>
         <version.flow>1-RELEASE</version.flow>
@@ -28,6 +29,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <version.mysql>5.1.34</version.mysql>
+        <version.wildfly>8.1.0.Final</version.wildfly>
     </properties>
 
     <dependencies>
@@ -35,13 +37,6 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.11</version>
-        </dependency>
-
-        <!-- flow-models -->
-        <dependency>
-            <groupId>com.jsofttechnologies</groupId>
-            <artifactId>flow-models</artifactId>
-            <version>${version.flow}</version>
         </dependency>
 
         <dependency>
@@ -103,11 +98,23 @@
             <version>5.4</version>
         </dependency>
 
-
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.2.2</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-2.1-api</artifactId>
+            <version>1.0.0.Final</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>${version.hibernate}</version>
         </dependency>
 
     </dependencies>

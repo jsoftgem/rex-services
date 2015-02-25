@@ -45,6 +45,10 @@ public class WarAgent implements FlowJpe {
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "user", referencedColumnName = "flow_user_id")
     private FlowUser user;
+    @Column(name = "region", nullable = false)
+    private String region;
+    @Column(name = "manager", nullable = false, length = ColumnLengths.FLAG)
+    private Boolean isManager;
 
     @Column(name = "war_agent_active", nullable = false, length = ColumnLengths.FLAG)
     private Boolean active;
@@ -147,6 +151,22 @@ public class WarAgent implements FlowJpe {
         this.initials = initials;
     }
 
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
+    public Boolean getIsManager() {
+        return isManager;
+    }
+
+    public void setIsManager(Boolean isManager) {
+        this.isManager = isManager;
+    }
+
     @PrePersist
     public void prePersist() {
         createdDt = new Date();
@@ -155,7 +175,7 @@ public class WarAgent implements FlowJpe {
         }
     }
 
-    @Override
+    @PreUpdate
     public void preUpdate() {
         updatedDt = new Date();
     }

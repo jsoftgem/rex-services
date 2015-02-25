@@ -51,6 +51,7 @@ public class WarCustomerLight implements FlowJpe {
             "on d.flow_user_detail_id = u.flow_user_detail_id " +
             "where agent.war_agent_id = customer_owner_agent_id)")
     private String ownerName;
+
     @Override
     public void setId(Object id) {
         this.id = id != null ? Long.valueOf(id.toString()) : null;
@@ -148,7 +149,7 @@ public class WarCustomerLight implements FlowJpe {
         createdDt = new Date();
     }
 
-    @Override
+    @PreUpdate
     public void preUpdate() {
         updatedDt = new Date();
     }

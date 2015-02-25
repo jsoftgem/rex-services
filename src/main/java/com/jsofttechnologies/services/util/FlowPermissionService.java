@@ -15,9 +15,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.StringTokenizer;
 
 /**
@@ -59,6 +57,10 @@ public class FlowPermissionService {
             permission:
             for (FlowProfilePermission flowProfilePermission : flowProfilePermissionList) {
                 if (flowProfilePermission.getFlowPageName().equals(pageName)) {
+                    if (method == null) {
+                        hasPermission = true;
+                        break permission;
+                    }
                     if (method.equalsIgnoreCase("get")) {
                         hasPermission = flowProfilePermission.getGet();
                     } else if (method.equalsIgnoreCase("delete")) {

@@ -1,9 +1,8 @@
-package com.jsofttechnologies.rexwar.model.tables;/**
+package com.jsofttechnologies.rexwar.model.management;/**
  * Created by Jerico on 1/8/2015.
  */
 
 
-import com.jsofttechnologies.jpa.util.ColumnLengths;
 import com.jsofttechnologies.jpa.util.FlowJpe;
 
 import javax.persistence.*;
@@ -15,9 +14,9 @@ import java.util.Date;
 @Entity
 @Table(name = "war_customer_region")
 @NamedQueries({
-        @NamedQuery(name = Region.FIND_ALL, query = "select rg from Region rg")
+        @NamedQuery(name = WarCustomerRegion.FIND_ALL, query = "select rg from WarCustomerRegion rg")
 })
-public class Region implements FlowJpe {
+public class WarCustomerRegion implements FlowJpe {
 
     public static final String FIND_ALL = "Region.FIND_ALL";
 
@@ -39,7 +38,7 @@ public class Region implements FlowJpe {
     private Date endDt;
     @Column(name = "description")
     private String description;
-    @Column(name = "region_code", nullable = false,length = 50)
+    @Column(name = "region_code", nullable = false, length = 50)
     private String regionCode;
     @Column(name = "region_name", nullable = false)
     private String regionName;

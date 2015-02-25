@@ -197,7 +197,7 @@ public class Contacts implements FlowJpe {
         createdDt = new Date();
     }
 
-    @Override
+    @PreUpdate
     public void preUpdate() {
         updatedDt = new Date();
     }

@@ -51,10 +51,6 @@ public class School implements FlowJpe {
     private String email;
     @Column(name = "school_logo")
     private Long logoId;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(referencedColumnName = "region_code", name = "region")
-    private Region region;
-
 
     @Override
     public void setId(Object id) {
@@ -164,20 +160,12 @@ public class School implements FlowJpe {
         this.logoId = logoId;
     }
 
-    public Region getRegion() {
-        return region;
-    }
-
-    public void setRegion(Region region) {
-        this.region = region;
-    }
-
     @PrePersist
     public void prePersist() {
         createdDt = new Date();
     }
 
-    @Override
+    @PreUpdate
     public void preUpdate() {
         updatedDt = new Date();
     }

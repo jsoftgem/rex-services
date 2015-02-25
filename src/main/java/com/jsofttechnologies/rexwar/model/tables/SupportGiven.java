@@ -40,7 +40,7 @@ public class SupportGiven implements FlowJpe {
     @Column(name = "description")
     private String description;
 
-    @Column(name="support_given_amount")
+    @Column(name = "support_given_amount")
     private Double amount;
 
     @Override
@@ -117,7 +117,7 @@ public class SupportGiven implements FlowJpe {
         createdDt = new Date();
     }
 
-    @Override
+    @PreUpdate
     public void preUpdate() {
         updatedDt = new Date();
     }

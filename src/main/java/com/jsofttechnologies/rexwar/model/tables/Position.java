@@ -36,7 +36,7 @@ public class Position implements FlowJpe {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "end_dt")
     private Date endDt;
-    @Column(name = "description",nullable = false)
+    @Column(name = "description", nullable = false)
     private String description;
 
     @Override
@@ -104,7 +104,7 @@ public class Position implements FlowJpe {
         createdDt = new Date();
     }
 
-    @Override
+    @PreUpdate
     public void preUpdate() {
         updatedDt = new Date();
     }

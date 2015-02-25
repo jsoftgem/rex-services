@@ -62,10 +62,17 @@ public class WarAgentCrudService extends CrudService<WarAgent, Long> {
     @Override
     protected WarAgent preCreateValidation(WarAgent warAgent) throws Exception {
 
-        FlowUserGroup agentGroup = flowUserGroupQueryService.findGroupByName(WarConstants.AGENT_GROUP);
-        FlowUserProfile agentProfile = flowUserProfileQueryService.findByProfileName(WarConstants.AGENT_PROFILE);
-        warAgent.getUser().setFlowUserGroup(agentGroup);
-        warAgent.getUser().getFlowUserProfileSet().add(agentProfile);
+        FlowUserGroup group = null;
+        FlowUserProfile profile = null;
+        if (!warAgent.getIsManager()) {
+            group = flowUserGroupQueryService.findGroupByName(WarConstants.AGENT_GROUP);
+            profile = flowUserProfileQueryService.findByProfileName(WarConstants.AGENT_PROFILE);
+        } else {
+            group = flowUserGroupQueryService.findGroupByName(WarConstants.AGENT_REGIONAL_MANAGER_GROUP);
+            profile = flowUserProfileQueryService.findByProfileName(WarConstants.AGENT_REGIONAL_MANAGER);
+        }
+        warAgent.getUser().setFlowUserGroup(group);
+        warAgent.getUser().getFlowUserProfileSet().add(profile);
 
         FlowUser flowUser = flowUserQueryService.getFlowUserByUsername(warAgent.getUser().getUsername());
 

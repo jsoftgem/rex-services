@@ -1,6 +1,6 @@
 package com.jsofttechnologies.rexwar.services.data;
 
-import com.jsofttechnologies.rexwar.model.tables.Region;
+import com.jsofttechnologies.rexwar.model.management.WarCustomerRegion;
 import com.jsofttechnologies.services.util.CrudService;
 
 import javax.ejb.Stateless;
@@ -11,19 +11,19 @@ import javax.ws.rs.Path;
  */
 @Path("services/war/region_crud")
 @Stateless
-public class WarRegionCrudService extends CrudService<Region,Long> {
+public class WarRegionCrudService extends CrudService<WarCustomerRegion,Long> {
 
     public WarRegionCrudService(){
-        super(Region.class);
+        super(WarCustomerRegion.class);
     }
 
     @Override
-    protected Region preCreateValidation(Region region) throws Exception {
-        return region;
+    protected WarCustomerRegion preCreateValidation(WarCustomerRegion warCustomerRegion) throws Exception {
+        return warCustomerRegion;
     }
 
     @Override
-    protected Region preUpdateValidation(Region region) throws Exception {
-        return region;
+    protected WarCustomerRegion preUpdateValidation(WarCustomerRegion warCustomerRegion) throws Exception {
+        return warCustomerRegion;
     }
 }

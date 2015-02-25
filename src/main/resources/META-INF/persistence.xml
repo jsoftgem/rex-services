@@ -41,10 +41,13 @@
         <class>com.jsofttechnologies.rexwar.model.activity.WarSchoolYear</class>
         <class>com.jsofttechnologies.rexwar.model.activity.WarPlanner</class>
         <class>com.jsofttechnologies.rexwar.model.activity.view.WarCustomerMarketView</class>
+
         <!-- Management -->
+        <class>com.jsofttechnologies.rexwar.model.management.WarAgent</class>
         <class>com.jsofttechnologies.rexwar.model.management.WarCustomer</class>
         <class>com.jsofttechnologies.rexwar.model.management.WarCustomerLight</class>
-        <class>com.jsofttechnologies.rexwar.model.management.WarAgent</class>
+        <class>com.jsofttechnologies.rexwar.model.management.WarCustomerMarketSchoolYear</class>
+        <class>com.jsofttechnologies.rexwar.model.management.WarCustomerRegion</class>
 
         <!-- Table -->
         <class>com.jsofttechnologies.rexwar.model.tables.BuyingCycle</class>
@@ -54,7 +57,6 @@
         <class>com.jsofttechnologies.rexwar.model.tables.Position</class>
         <class>com.jsofttechnologies.rexwar.model.tables.Item</class>
         <class>com.jsofttechnologies.rexwar.model.tables.Publisher</class>
-        <class>com.jsofttechnologies.rexwar.model.tables.Region</class>
         <class>com.jsofttechnologies.rexwar.model.tables.School</class>
         <class>com.jsofttechnologies.rexwar.model.tables.SupportGiven</class>
 

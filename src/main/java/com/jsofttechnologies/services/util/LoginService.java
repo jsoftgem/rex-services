@@ -10,9 +10,7 @@ import com.jsofttechnologies.rexwar.services.management.WarAgentQueryService;
 import com.jsofttechnologies.rexwar.util.WarConstants;
 import com.jsofttechnologies.util.PasswordHash;
 import com.jsofttechnologies.util.ProjectConstants;
-import com.jsofttechnologies.util.ProjectHelper;
 
-import javax.annotation.security.PermitAll;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -60,10 +58,10 @@ public class LoginService extends FlowService {
     @Path("/auth")
     @SkipCheck("authorization")
     public Response basicAuth(@FormParam("username") String username,
-            @FormParam("password") String password, @Context HttpServletRequest request) {
+                              @FormParam("password") String password, @Context HttpServletRequest request) {
 
         if (!isAuthenticated(username, password)) {
-            return Response.serverError().entity("{\"msg\":'" + messageService.getMessage(ProjectConstants.MSG_AUTH_FAILED)+ "'}").status(ProjectConstants.STATUS_NOT_AUTHENTICATED).build();
+            return Response.serverError().entity("{\"msg\":'" + messageService.getMessage(ProjectConstants.MSG_AUTH_FAILED) + "'}").status(ProjectConstants.STATUS_NOT_AUTHENTICATED).build();
         }
         String bs64auth = null;
         try {
@@ -77,7 +75,7 @@ public class LoginService extends FlowService {
         /*TODO: handle existing session*/
         FlowSessionHelper.Promise promise = flowSessionHelper.isSessionExisting(username);
         if (promise.getOk()) {
-           // return Response.ok(new ProjectHelper().createJson().addField("username", username).addField("host", promise.getFlowSession().getUserHost()).buildJsonString()).type(MediaType.TEXT_PLAIN_TYPE).status(Response.Status.CONFLICT).build();
+            // return Response.ok(new ProjectHelper().createJson().addField("username", username).addField("host", promise.getFlowSession().getUserHost()).buildJsonString()).type(MediaType.TEXT_PLAIN_TYPE).status(Response.Status.CONFLICT).build();
         } else {
             if (flowUserManager.getGroup(username).getGroupName().equals(WarConstants.AGENT_GROUP)) {
                 WarAgent warAgent = warAgentQueryService.findAgentByUsername(flowUserManager.getUser(flowUserManager.getUserId(username)).getUsername());
@@ -90,29 +88,32 @@ public class LoginService extends FlowService {
 
             }
 
-         flowSessionHelper.createSession(username, request.getRemoteAddr());
+            flowSessionHelper.createSession(username, request.getRemoteAddr());
         }
 
         return Response.ok("{\"bs64auth\":\"" + bs64auth + "\"}").type(MediaType.APPLICATION_JSON_TYPE).build();
     }
 
     private boolean isAuthenticated(String username, String password) {
+        boolean valid = false;
         try {
 
             FlowUser flowUser = entityManager.createNamedQuery(FlowUser.FIND_BY_USERNAME, FlowUser.class).setParameter("username", username).getSingleResult();
 
+            String userPassword =  flowUser.getPassword();
+
             if (flowUser != null) {
-                return PasswordHash.validatePassword(password, flowUser.getPassword());
+                valid = PasswordHash.validatePassword(password.trim(),userPassword);
             }
 
         } catch (NoSuchAlgorithmException e) {
             exceptionSummary.handleException(e, getClass());
         } catch (InvalidKeySpecException e) {
             exceptionSummary.handleException(e, getClass());
-        }catch (Exception e){
-            exceptionSummary.handleException(e,getClass());
+        } catch (Exception e) {
+            exceptionSummary.handleException(e, getClass());
         }
 
-        return false;
+        return valid;
     }
 }
