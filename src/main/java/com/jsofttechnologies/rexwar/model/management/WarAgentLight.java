@@ -2,6 +2,7 @@ package com.jsofttechnologies.rexwar.model.management;
 
 import com.jsofttechnologies.jpa.util.ColumnLengths;
 import com.jsofttechnologies.jpa.util.FlowJpe;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -60,6 +61,13 @@ public class WarAgentLight implements FlowJpe {
 
     @Column(name = "war_agent_initials", nullable = false)
     private String initials;
+
+    @Formula("(select fud.avatar from war_agent wa join flow_user fu on fu.flow_user_id = wa.user join flow_user_detail fud on fud.flow_user_detail_id = fu.flow_user_detail_id where wa.war_agent_id = war_agent_id )")
+    private Long avatar;
+
+    @Formula("(select fud.full_name from war_agent wa join flow_user fu on fu.flow_user_id = wa.user join flow_user_detail fud on fud.flow_user_detail_id = fu.flow_user_detail_id where wa.war_agent_id = war_agent_id )")
+    private String fullName;
+
 
     @Override
     public void setId(Object id) {
@@ -152,6 +160,22 @@ public class WarAgentLight implements FlowJpe {
         this.initials = initials;
     }
 
+
+    public Long getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(Long avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
 
     @Override
     public void prePersist() {

@@ -8,9 +8,11 @@ import com.jsofttechnologies.rexwar.services.data.WarRegionQueryService;
 import com.jsofttechnologies.services.util.QueryService;
 import com.jsofttechnologies.util.ProjectHelper;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
@@ -32,9 +34,8 @@ public class WarAgentLightQueryService extends QueryService<WarAgentLight> {
     }
 
 
-    @POST
+    @GET
     @Path("find_managed_agents")
-    @SkipCheck("action")
     public Response findManagedAgents(@QueryParam("manager") Long manager) {
         Response response = null;
         try {
@@ -43,7 +44,7 @@ public class WarAgentLightQueryService extends QueryService<WarAgentLight> {
             WarAgentLight warManager = getById(manager);
             WarCustomerRegion region = regionQueryService.findByCode(warManager.getRegion());
 
-            setNamedQuery(WarAgent.FIND_AGENT_BY_MANAGER);
+            setNamedQuery(WarAgentLight.FIND_AGENT_BY_MANAGER);
 
             putParam("region", warManager.getRegion());
 
@@ -53,11 +54,12 @@ public class WarAgentLightQueryService extends QueryService<WarAgentLight> {
             ProjectHelper returnVal = new ProjectHelper();
 
             returnVal.createJson()
-                    .addField("manager", warManager)
-                    .addField("region", region)
+                    .addField("manager", new JSONObject(warManager))
+                    .addField("region", new JSONObject(region))
                     .addField("agents", new JSONArray(agents.toArray()));
 
-            response = Response.ok(agents, MediaType.APPLICATION_JSON_TYPE).build();
+            response = Response.ok(returnVal.buildJsonString()
+                    , MediaType.APPLICATION_JSON_TYPE).build();
         } catch (Exception e) {
             exceptionSummary.handleException(e, getClass(), "findManagedAgents", manager);
             response = ProjectHelper.error("Error getting managed agents");

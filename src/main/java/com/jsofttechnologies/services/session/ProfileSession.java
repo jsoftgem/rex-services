@@ -4,15 +4,22 @@ import com.jsofttechnologies.ejb.FlowUserManager;
 import com.jsofttechnologies.ejb.MergeExceptionSummary;
 import com.jsofttechnologies.interceptor.SkipCheck;
 import com.jsofttechnologies.jpa.admin.*;
+import com.jsofttechnologies.rexwar.model.management.WarAgent;
+import com.jsofttechnologies.rexwar.model.management.WarAgentLight;
+import com.jsofttechnologies.rexwar.services.management.WarAgentLightQueryService;
+import com.jsofttechnologies.rexwar.services.management.WarAgentQueryService;
+import com.jsofttechnologies.rexwar.util.WarConstants;
 import com.jsofttechnologies.services.admin.FlowUploadedFileQueryService;
 import com.jsofttechnologies.services.admin.FlowUserDetailQueryService;
 import com.jsofttechnologies.services.util.DownloadService;
 import com.jsofttechnologies.services.util.FlowService;
+import com.jsofttechnologies.services.util.FlowSessionHelper;
 import com.jsofttechnologies.services.util.MessageService;
 import com.jsofttechnologies.util.ProjectConstants;
 import com.jsofttechnologies.util.ProjectHelper;
 import org.jboss.resteasy.core.ServerResponse;
 import org.jboss.resteasy.util.Base64;
+import org.json.JSONObject;
 
 import javax.annotation.security.PermitAll;
 import javax.ejb.EJB;
@@ -37,6 +44,11 @@ public class ProfileSession extends FlowService {
 
 
     @EJB
+    private WarAgentQueryService warAgentQueryService;
+    @EJB
+    private WarAgentLightQueryService warAgentLightQueryService;
+
+    @EJB
     private DownloadService downloadService;
     @EJB
     private MessageService messageService;
@@ -48,6 +60,7 @@ public class ProfileSession extends FlowService {
     private FlowUploadedFileQueryService uploadedFileQueryService;
     @EJB
     private FlowUserDetailQueryService flowUserDetailQueryService;
+
 
     private static final ServerResponse ACCESS_DENIED = new ServerResponse();
     private static final ServerResponse SERVER_ERROR = new ServerResponse();
@@ -143,62 +156,61 @@ public class ProfileSession extends FlowService {
         StringBuilder userDetail = new StringBuilder("{");
         try {
             Map<String, Object> jsonMap = new HashMap<>();
-            if (authorization == null || authorization.isEmpty()) {
-                jsonMap.put("msg", messageService.getMessage(ProjectConstants.MSG_LOGIN_REQUIRED));
-                ACCESS_DENIED.setEntity(ProjectHelper.json(jsonMap));
-                return ACCESS_DENIED;
-            }
-            //Get encoded username and password
-            final String encodedUserPassword = authorization.replaceFirst(ProjectConstants.AUTHENTICATION_SCHEME + " ", "");
-            //Decode username and password
-            String usernameAndPassword;
-            try {
-                usernameAndPassword = new String(Base64.decode(encodedUserPassword));
-            } catch (IOException e) {
-                exceptionSummary.handleException(e, getClass());
-                return SERVER_ERROR;
-            }
-            final StringTokenizer tokenizer = new StringTokenizer(usernameAndPassword, ":");
-            final String username = tokenizer.nextToken();
-            Long userId = flowUserManager.getUserId(username);
-            FlowUser flowUser = flowUserManager.getUser(userId);
 
-            FlowUserDetail flowUserDetail = flowUserDetailQueryService.getById(flowUser.getFlowUserDetail().getId());
+            FlowSessionHelper.Promise promise = session.isAuthorized(authorization);
 
-            FlowUserGroup flowUserGroup = flowUserManager.getGroup(username);
+            if (promise.getOk()) {
 
-            Long emblemId = flowUserGroup.getEmblemId();
+                FlowUser flowUser = promise.getFlowUser();
 
-            FlowUploadedFile flowUploadedFile = uploadedFileQueryService.getById(emblemId);
+                FlowUserDetail flowUserDetail = flowUserDetailQueryService.getById(flowUser.getFlowUserDetail().getId());
 
-            String path = null;
+                FlowUserGroup flowUserGroup = promise.getFlowUserGroup();
 
-            if (flowUploadedFile == null) {
-                path = ProjectConstants.FLOW_DOWNLOAD_DEFAULT_EMBLEM;
-            } else {
-                path = flowUploadedFile.getPath();
-            }
+                Long emblemId = flowUserGroup.getEmblemId();
 
-            userDetail.append("\"fullName\"").append(":").append("\"").append(flowUserDetail.getFullName()).append("\"").append(",");
-            userDetail.append("\"username\"").append(":").append("\"").append(flowUser.getUsername()).append("\"").append(",");
-            userDetail.append("\"email\"").append(":").append("\"").append(flowUser.getEmail()).append("\"").append(",");
-            userDetail.append("\"avatar\"").append(":").append(flowUserDetail.getAvatar()).append(",");
-            userDetail.append("\"detailId\"").append(":").append(flowUserDetail.getId()).append(",");
-            userDetail.append("\"group\"").append(":").append("\"").append(flowUserGroup.getGroupTitle()).append("\"").append(",");
-            userDetail.append("\"groupEmblem\"").append(":").append("\"").append(path).append("\"").append(",");
-            userDetail.append("\"groupOwner\"").append(":").append(flowUser.getId().equals(flowUserGroup.getOwnerUserId())).append(",");
-            userDetail.append("\"editProfileTask\"").append(":").append("\"services/flow_task_service/getTask?name=edit_profile&active=true&size=50&showToolBar=false&page=edit_profile&page-path=").append(flowUserDetail.getId()).append("\"").append(",");
-            userDetail.append("\"profiles\"").append(":").append("[");
+                FlowUploadedFile flowUploadedFile = uploadedFileQueryService.getById(emblemId);
 
-            Iterator<FlowUserProfile> profileIterator = flowUser.getFlowUserProfileSet().iterator();
-            while (profileIterator.hasNext()) {
-                FlowUserProfile flowUserProfile = profileIterator.next();
-                userDetail.append("\"").append(flowUserProfile.getProfileName()).append("\"");
-                if (profileIterator.hasNext()) {
-                    userDetail.append(",");
+                String path = null;
+
+                if (flowUploadedFile == null) {
+                    path = ProjectConstants.FLOW_DOWNLOAD_DEFAULT_EMBLEM;
+                } else {
+                    path = flowUploadedFile.getPath();
                 }
+
+                userDetail.append("\"fullName\"").append(":").append("\"").append(flowUserDetail.getFullName()).append("\"").append(",");
+                userDetail.append("\"username\"").append(":").append("\"").append(flowUser.getUsername()).append("\"").append(",");
+                userDetail.append("\"email\"").append(":").append("\"").append(flowUser.getEmail()).append("\"").append(",");
+                userDetail.append("\"avatar\"").append(":").append(flowUserDetail.getAvatar()).append(",");
+                userDetail.append("\"detailId\"").append(":").append(flowUserDetail.getId()).append(",");
+                userDetail.append("\"group\"").append(":").append("\"").append(flowUserGroup.getGroupTitle()).append("\"").append(",");
+                userDetail.append("\"groupEmblem\"").append(":").append("\"").append(path).append("\"").append(",");
+                userDetail.append("\"groupOwner\"").append(":").append(flowUser.getId().equals(flowUserGroup.getOwnerUserId())).append(",");
+                userDetail.append("\"editProfileTask\"").append(":").append("\"services/flow_task_service/getTask?name=edit_profile&active=true&size=50&showToolBar=false&page=edit_profile&page-path=").append(flowUserDetail.getId()).append("\"").append(",");
+                userDetail.append("\"profiles\"").append(":").append("[");
+
+                Iterator<FlowUserProfile> profileIterator = flowUser.getFlowUserProfileSet().iterator();
+                while (profileIterator.hasNext()) {
+                    FlowUserProfile flowUserProfile = profileIterator.next();
+                    userDetail.append("\"").append(flowUserProfile.getProfileName()).append("\"");
+                    if (profileIterator.hasNext()) {
+                        userDetail.append(",");
+                    }
+                }
+                userDetail.append("]");
+
+                if (flowUserGroup.getGroupName().equals(WarConstants.AGENT_GROUP) || flowUserGroup.getGroupName().equals(WarConstants.AGENT_REGIONAL_MANAGER_GROUP)) {
+                    userDetail.append(",");
+                    WarAgent warAgent = warAgentQueryService.findAgentByUsername(flowUser.getUsername());
+                    WarAgentLight warAgentLight = warAgentLightQueryService.getById(warAgent.getId());
+                    userDetail.append("\"agent\":").append(new JSONObject(warAgentLight).toString());
+                }
+
+                userDetail.append("}");
+
             }
-            userDetail.append("]").append("}");
+
 
         } catch (Exception e) {
             exceptionSummary.handleException(e, getClass());
