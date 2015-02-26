@@ -44,10 +44,12 @@
 
         <!-- Management -->
         <class>com.jsofttechnologies.rexwar.model.management.WarAgent</class>
+        <class>com.jsofttechnologies.rexwar.model.management.WarAgentLight</class>
         <class>com.jsofttechnologies.rexwar.model.management.WarCustomer</class>
         <class>com.jsofttechnologies.rexwar.model.management.WarCustomerLight</class>
         <class>com.jsofttechnologies.rexwar.model.management.WarCustomerMarketSchoolYear</class>
         <class>com.jsofttechnologies.rexwar.model.management.WarCustomerRegion</class>
+        <class>com.jsofttechnologies.rexwar.model.management.WarCustomerTag</class>
 
         <!-- Table -->
         <class>com.jsofttechnologies.rexwar.model.tables.BuyingCycle</class>

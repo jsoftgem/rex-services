@@ -1,7 +1,4 @@
-package com.jsofttechnologies.rexwar.model.management;/**
- * Created by Jerico on 1/8/2015.
- */
-
+package com.jsofttechnologies.rexwar.model.management;
 
 import com.jsofttechnologies.jpa.util.FlowJpe;
 
@@ -9,20 +6,19 @@ import javax.persistence.*;
 import java.util.Date;
 
 /**
- * Created by Jerico on 12/22/2014.
+ * Created by Jerico on 2/26/15 1902.
  */
 @Entity
-@Table(name = "war_customer_region")
+@Table(name = "war_customer_tag")
 @NamedQueries({
-        @NamedQuery(name = WarCustomerRegion.FIND_ALL, query = "select rg from WarCustomerRegion rg"),
-        @NamedQuery(name = WarCustomerRegion.FIND_BY_CODE, query = "select rg from WarCustomerRegion rg where rg.regionCode=:regionCode")
+        @NamedQuery(name = WarCustomerTag.FIND_ALL, query = "select e from WarCustomerTag e")
 })
-public class WarCustomerRegion implements FlowJpe {
+public class WarCustomerTag implements FlowJpe {
 
-    public static final String FIND_ALL = "Region.FIND_ALL";
-    public static final String FIND_BY_CODE = "Region.FIND_BY_CODE";
+    public static final String FIND_ALL = "WarCustomerTag.FIND_ALL";
+
     @Id
-    @Column(name = "flow_id", nullable = false)
+    @Column(name = "war_customer_tag_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Temporal(TemporalType.TIMESTAMP)
@@ -39,10 +35,18 @@ public class WarCustomerRegion implements FlowJpe {
     private Date endDt;
     @Column(name = "description")
     private String description;
-    @Column(name = "region_code", nullable = false, length = 50)
+    @Column(name = "war_customer_tag_agent", nullable = false)
+    private Long agentId;
+    @Column(name = "war_customer_tag_customer", nullable = false)
+    private Long customerId;
+    @Column(name = "war_customer_tag_market_school_year", nullable = false)
+    private Long customerMarketSchoolYearId;
+    @Column(name = "war_customer_tag_market_region", nullable = false)
+    private Long regionId;
+    @Column(name = "war_customer_tag_region_code", nullable = false)
     private String regionCode;
-    @Column(name = "region_name", nullable = false)
-    private String regionName;
+    @Column(name = "war_customer_tag_index", nullable = false)
+    private Integer index;
 
     @Override
     public void setId(Object id) {
@@ -104,21 +108,52 @@ public class WarCustomerRegion implements FlowJpe {
         return description;
     }
 
+    public Long getAgentId() {
+        return agentId;
+    }
 
-    public void setRegionCode(String regionCode) {
-        this.regionCode = regionCode;
+    public void setAgentId(Long agentId) {
+        this.agentId = agentId;
+    }
+
+    public Long getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
+    }
+
+    public Long getCustomerMarketSchoolYearId() {
+        return customerMarketSchoolYearId;
+    }
+
+    public void setCustomerMarketSchoolYearId(Long customerMarketSchoolYearId) {
+        this.customerMarketSchoolYearId = customerMarketSchoolYearId;
+    }
+
+    public Long getRegionId() {
+        return regionId;
+    }
+
+    public void setRegionId(Long regionId) {
+        this.regionId = regionId;
     }
 
     public String getRegionCode() {
         return regionCode;
     }
 
-    public void setRegionName(String regionName) {
-        this.regionName = regionName;
+    public void setRegionCode(String regionCode) {
+        this.regionCode = regionCode;
     }
 
-    public String getRegionName() {
-        return regionName;
+    public Integer getIndex() {
+        return index;
+    }
+
+    public void setIndex(Integer index) {
+        this.index = index;
     }
 
     @PrePersist
@@ -130,6 +165,4 @@ public class WarCustomerRegion implements FlowJpe {
     public void preUpdate() {
         updatedDt = new Date();
     }
-
-
 }

@@ -2,6 +2,7 @@ package com.jsofttechnologies.rexwar.services.management;
 
 import com.jsofttechnologies.ejb.MergeExceptionSummary;
 import com.jsofttechnologies.rexwar.model.management.WarAgent;
+import com.jsofttechnologies.rexwar.services.data.WarRegionQueryService;
 import com.jsofttechnologies.services.util.QueryService;
 
 import javax.ejb.EJB;
@@ -15,8 +16,6 @@ import java.util.List;
 @Path("services/war/agent_query")
 @Stateless
 public class WarAgentQueryService extends QueryService<WarAgent> {
-    @EJB
-    private MergeExceptionSummary exceptionSummary;
 
     public WarAgentQueryService() {
         super(WarAgent.class, WarAgent.FIND_ALL);

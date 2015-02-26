@@ -19,4 +19,11 @@ public class WarRegionQueryService extends QueryService<WarCustomerRegion> {
     public WarRegionQueryService() {
         super(WarCustomerRegion.class, WarCustomerRegion.FIND_ALL);
     }
+
+    public WarCustomerRegion findByCode(String regionCode) {
+        setNamedQuery(WarCustomerRegion.FIND_BY_CODE);
+        putParam("regionCode", regionCode);
+        return getSingleResult();
+    }
+
 }

@@ -22,4 +22,10 @@ public class MergeExceptionSummary {
         logger = Logger.getLogger(origin.getName());
         logger.log(Level.WARNING, e.getMessage(), e);
     }
+
+
+    public void handleException(Exception e, Class<?> origin, String method, Object...param) {
+        logger = Logger.getLogger(origin.getName());
+        logger.log(Level.WARNING, e.getMessage(), e);
+    }
 }

@@ -2,6 +2,7 @@ package com.jsofttechnologies.services.util;
 
 import com.jsofttechnologies.ejb.FlowUserManager;
 import com.jsofttechnologies.ejb.MergeExceptionSummary;
+import com.jsofttechnologies.interceptor.SkipCheck;
 import com.jsofttechnologies.jpa.admin.FlowUserGroupModule;
 import com.jsofttechnologies.jpa.admin.FlowUserGroupTask;
 import com.jsofttechnologies.jpa.dev.FlowGroup;
@@ -54,7 +55,7 @@ public class FlowModuleService extends FlowService {
     private EntityManager entityManager;
 
 
-    @PermitAll
+    @SkipCheck("action")
     @GET
     @Path("session_modules")
     @Produces("application/json")
@@ -120,7 +121,7 @@ public class FlowModuleService extends FlowService {
     }
 
 
-    @PermitAll
+    @SkipCheck("action")
     @GET
     @Path("session_tasks")
     @Produces("application/json")

@@ -111,7 +111,8 @@ public class FlowUserTaskCrudService extends CrudService<FlowUserTask, Long> {
                         case "CLOSED":
                             persistedFlowUserTask.setActive(Boolean.FALSE);
                             persistedFlowUserTask.setClosed(true);
-                            entityManager.merge(persistedFlowUserTask);
+                            entityManager.remove(persistedFlowUserTask);
+                            entityManager.flush();
                             break;
                     }
                 }

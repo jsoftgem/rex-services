@@ -1,9 +1,5 @@
-package com.jsofttechnologies.rexwar.model.management;/**
- * Created by Jerico on 1/11/2015.
- */
+package com.jsofttechnologies.rexwar.model.management;
 
-
-import com.jsofttechnologies.jpa.admin.FlowUser;
 import com.jsofttechnologies.jpa.util.ColumnLengths;
 import com.jsofttechnologies.jpa.util.FlowJpe;
 
@@ -11,43 +7,48 @@ import javax.persistence.*;
 import java.util.Date;
 
 /**
- * Created by Jerico on 12/22/2014.
+ * Created by Jerico on 2/26/2015.
  */
+
 @Entity
 @Table(name = "war_agent")
 @NamedQueries({
-        @NamedQuery(name = WarAgent.FIND_ALL, query = "select a from WarAgent a"),
-        @NamedQuery(name = WarAgent.FIND_AGENT_BY_USERNAME, query = "select a from WarAgent a where a.user.username=:username"),
-        @NamedQuery(name = WarAgent.FIND_AGENT_BY_MANAGER, query = "select a from WarAgent a where a.isManager = false and a.region =:region")
+        @NamedQuery(name = WarAgentLight.FIND_ALL, query = "select a from WarAgentLight a"),
+        @NamedQuery(name = WarAgentLight.FIND_AGENT_BY_MANAGER, query = "select a from WarAgentLight a where a.isManager = false and a.region =:region")
 })
-public class WarAgent implements FlowJpe {
+public class WarAgentLight implements FlowJpe {
 
-    public static final String FIND_ALL = "WarAgent.FIND_ALL";
-    public static final String FIND_AGENT_BY_USERNAME = "WarAgent.FIND_AGENT_BY_USERNAME";
-    public static final String FIND_AGENT_BY_MANAGER = "WarAgent.FIND_AGENT_BY_MANAGER";
+
+    public static final String FIND_ALL = "WarAgentLight.FIND_ALL";
+    public static final String FIND_AGENT_BY_MANAGER = "WarAgentLight.FIND_AGENT_BY_MANAGER";
+
     @Id
     @Column(name = "war_agent_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_dt", nullable = false)
     private Date createdDt;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_dt")
     private Date updatedDt;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "start_dt")
     private Date startDt;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "end_dt")
     private Date endDt;
+
     @Column(name = "description")
     private String description;
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user", referencedColumnName = "flow_user_id")
-    private FlowUser user;
+
     @Column(name = "region", nullable = false)
     private String region;
+
     @Column(name = "manager", nullable = false, length = ColumnLengths.FLAG)
     private Boolean isManager;
 
@@ -65,67 +66,66 @@ public class WarAgent implements FlowJpe {
         this.id = id != null ? Long.valueOf(id.toString()) : null;
     }
 
-    @Override
     public Long getId() {
         return id;
     }
 
-    @Override
-    public void setCreatedDt(Date createdDt) {
-        this.createdDt = createdDt;
-    }
 
-    @Override
     public Date getCreatedDt() {
         return createdDt;
     }
 
-    @Override
-    public void setUpdatedDt(Date updatedDt) {
-        this.updatedDt = updatedDt;
+    public void setCreatedDt(Date createdDt) {
+        this.createdDt = createdDt;
     }
 
-    @Override
     public Date getUpdatedDt() {
         return updatedDt;
     }
 
-    @Override
-    public void setStartDt(Date startDt) {
-        this.startDt = startDt;
+    public void setUpdatedDt(Date updatedDt) {
+        this.updatedDt = updatedDt;
     }
 
-    @Override
     public Date getStartDt() {
         return startDt;
     }
 
-    @Override
-    public void setEndDt(Date endDt) {
-        this.endDt = endDt;
+    public void setStartDt(Date startDt) {
+        this.startDt = startDt;
     }
 
-    @Override
     public Date getEndDt() {
         return endDt;
     }
 
-    public FlowUser getUser() {
-        return user;
+    public void setEndDt(Date endDt) {
+        this.endDt = endDt;
     }
 
-    public void setUser(FlowUser user) {
-        this.user = user;
+    public String getDescription() {
+        return description;
     }
 
-    @Override
+
     public void setDescription(String description) {
         this.description = description;
     }
 
-    @Override
-    public String getDescription() {
-        return description;
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
+    public Boolean getIsManager() {
+        return isManager;
+    }
+
+    public void setIsManager(Boolean isManager) {
+        this.isManager = isManager;
     }
 
     public Boolean getActive() {
@@ -152,32 +152,14 @@ public class WarAgent implements FlowJpe {
         this.initials = initials;
     }
 
-    public String getRegion() {
-        return region;
-    }
 
-    public void setRegion(String region) {
-        this.region = region;
-    }
-
-    public Boolean getIsManager() {
-        return isManager;
-    }
-
-    public void setIsManager(Boolean isManager) {
-        this.isManager = isManager;
-    }
-
-    @PrePersist
+    @Override
     public void prePersist() {
-        createdDt = new Date();
-        if (active == null) {
-            this.active = false;
-        }
+
     }
 
-    @PreUpdate
+    @Override
     public void preUpdate() {
-        updatedDt = new Date();
+
     }
 }
