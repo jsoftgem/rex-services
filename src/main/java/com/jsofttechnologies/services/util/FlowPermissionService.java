@@ -1,6 +1,7 @@
 package com.jsofttechnologies.services.util;
 
 import com.jsofttechnologies.ejb.MergeExceptionSummary;
+import com.jsofttechnologies.interceptor.SkipCheck;
 import com.jsofttechnologies.jpa.admin.FlowProfilePermission;
 import com.jsofttechnologies.jpa.admin.FlowUser;
 import com.jsofttechnologies.jpa.admin.FlowUserProfile;
@@ -10,10 +11,9 @@ import org.jboss.resteasy.util.Base64;
 import javax.annotation.security.PermitAll;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -23,13 +23,46 @@ import java.util.StringTokenizer;
  */
 @Path("services/flow_permission")
 @Stateless
-public class FlowPermissionService {
+public class FlowPermissionService extends FlowService {
 
     @EJB
     private FlowUserQueryService flowUserQueryService;
 
     @EJB
     private MergeExceptionSummary exceptionSummary;
+
+
+    @POST
+    @Path("has_profile")
+    @SkipCheck("action")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response hasProfile(String... profiles) {
+        Response response = null;
+        String authorization = request.getHeader("Authorization");
+
+        FlowSessionHelper.Promise promise = session.isAuthorized(authorization);
+
+        boolean valid = false;
+
+        if (promise.getOk()) {
+            parentLoop:
+            for (String prof : profiles) {
+                for (FlowUserProfile profile : promise.getFlowUser().getFlowUserProfileSet()) {
+                    if (prof.equals(profile.getProfileName())) {
+                        valid = true;
+                        break parentLoop;
+                    }
+
+                }
+
+            }
+
+        }
+
+        response = Response.ok(valid,MediaType.APPLICATION_JSON_TYPE).build();
+
+        return response;
+    }
 
     @GET
     @Path("has_permission")

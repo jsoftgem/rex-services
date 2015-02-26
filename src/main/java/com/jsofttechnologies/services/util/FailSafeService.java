@@ -11,7 +11,7 @@ import javax.ejb.Stateless;
  *
  * @author Jerico
  */
-@Stateless
+//TODO:@Stateless
 public class FailSafeService {
 
 }

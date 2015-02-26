@@ -30,6 +30,8 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <version.mysql>5.1.34</version.mysql>
         <version.wildfly>8.1.0.Final</version.wildfly>
+        <apache.shiro.version>1.2.2</apache.shiro.version>
+
     </properties>
 
     <dependencies>
@@ -116,6 +118,19 @@
             <artifactId>hibernate-entitymanager</artifactId>
             <version>${version.hibernate}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-core</artifactId>
+            <version>${apache.shiro.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-web</artifactId>
+            <version>${apache.shiro.version}</version>
+        </dependency>
+
 
     </dependencies>
 
@@ -229,7 +244,7 @@
                         <version>1.0.2.Final</version>
                         <configuration>
                             <jboss-home>${env.JBOSS_HOME}</jboss-home>
-                            <port>10990</port>
+                          <port>9990</port>
                             <username>jerico</username>
                             <password>JERKallstar98</password>
                         </configuration>

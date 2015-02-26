@@ -48,6 +48,9 @@ public abstract class FlowService implements Serializable {
     @EJB
     protected StoredProcedures storedProcedures;
 
+    @EJB
+    protected FlowSessionHelper session;
+
 
     private final Map<String, Object> serviceCache = new HashMap<>();
 

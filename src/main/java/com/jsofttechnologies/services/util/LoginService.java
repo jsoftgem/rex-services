@@ -10,6 +10,7 @@ import com.jsofttechnologies.rexwar.services.management.WarAgentQueryService;
 import com.jsofttechnologies.rexwar.util.WarConstants;
 import com.jsofttechnologies.util.PasswordHash;
 import com.jsofttechnologies.util.ProjectConstants;
+import com.jsofttechnologies.util.ProjectHelper;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -75,7 +76,7 @@ public class LoginService extends FlowService {
         /*TODO: handle existing session*/
         FlowSessionHelper.Promise promise = flowSessionHelper.isSessionExisting(username);
         if (promise.getOk()) {
-            // return Response.ok(new ProjectHelper().createJson().addField("username", username).addField("host", promise.getFlowSession().getUserHost()).buildJsonString()).type(MediaType.TEXT_PLAIN_TYPE).status(Response.Status.CONFLICT).build();
+            //return Response.ok(new ProjectHelper().createJson().addField("username", username).addField("host", promise.getFlowSession().getUserHost()).buildJsonString()).type(MediaType.TEXT_PLAIN_TYPE).status(Response.Status.CONFLICT).build();
         } else {
             if (flowUserManager.getGroup(username).getGroupName().equals(WarConstants.AGENT_GROUP)) {
                 WarAgent warAgent = warAgentQueryService.findAgentByUsername(flowUserManager.getUser(flowUserManager.getUserId(username)).getUsername());
@@ -103,13 +104,13 @@ public class LoginService extends FlowService {
             String userPassword =  flowUser.getPassword();
 
             if (flowUser != null) {
-                valid = PasswordHash.validatePassword(password.trim(),userPassword);
+                valid = /*TODO: PasswordHash.validatePassword(password.trim(),userPassword);*/ true;
             }
 
-        } catch (NoSuchAlgorithmException e) {
+      /*  } catch (NoSuchAlgorithmException e) {
             exceptionSummary.handleException(e, getClass());
         } catch (InvalidKeySpecException e) {
-            exceptionSummary.handleException(e, getClass());
+            exceptionSummary.handleException(e, getClass());*/
         } catch (Exception e) {
             exceptionSummary.handleException(e, getClass());
         }

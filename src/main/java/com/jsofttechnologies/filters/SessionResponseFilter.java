@@ -29,7 +29,7 @@ public class SessionResponseFilter implements ContainerResponseFilter {
 		logger.info("sessions-response-filter");
 
 		MultivaluedMap headerMap = requestContext.getHeaders();
-
+        headerMap.putSingle("Access-Control-Allow-Headers","*");
 		for (Object key : headerMap.keySet()) {
 			logger.log(Level.INFO, "header: {0}={1}", new Object[] { key,
 					headerMap.get(key) });

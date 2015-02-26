@@ -71,6 +71,8 @@
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="hibernate.hbm2ddl.import_files" value="rex-core.sql"/>
+
         </properties>
     </persistence-unit>
 </persistence>
