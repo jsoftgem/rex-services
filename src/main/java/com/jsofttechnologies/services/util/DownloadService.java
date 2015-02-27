@@ -124,7 +124,7 @@ public class DownloadService extends FlowService {
 
 		if (file.exists()) {
 			response = Response
-					.ok(file, MediaType.APPLICATION_OCTET_STREAM_TYPE)
+					.ok(file, MediaType.MEDIA_TYPE_WILDCARD)
 					.header("file-name", file.getName()).build();
 		} else {
 			response = Response.ok().entity(ProjectConstants.FLOW_DOWNLOAD_DEFAULT_IMG)

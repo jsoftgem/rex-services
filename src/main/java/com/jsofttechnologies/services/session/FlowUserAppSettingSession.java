@@ -86,7 +86,7 @@ public class FlowUserAppSettingSession extends FlowService {
                 flowUserAppSetting.setStyle(style);
             }
             if(hideMenu != null){
-                //flowUserAppSetting.setHideMenu(hideMenu);
+                flowUserAppSetting.setHideMenu(hideMenu);
             }
             response = flowUserAppSettingCrudService.update(flowUserAppSetting, flowUserAppSetting.getId());
 

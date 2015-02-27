@@ -115,7 +115,7 @@ public class UploadService extends FlowService {
     }
 
     @POST
-    @Path("upload_imfage/{base_folder}")
+    @Path("upload_image/{base_folder}")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response uploadTo(@PathParam("base_folder") String baseFolder, @QueryParam("name") String name,
             MultipartFormDataInput input) {

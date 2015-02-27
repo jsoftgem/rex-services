@@ -8,7 +8,6 @@ import com.jsofttechnologies.services.util.FlowService;
 import com.jsofttechnologies.util.ProjectConstants;
 import com.jsofttechnologies.util.ProjectHelper;
 import com.jsofttechnologies.util.TableUtil;
-import org.json.JSONArray;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -139,18 +138,18 @@ public class WarReportMonthlyService extends FlowService {
 
             ProjectHelper projectHelper = TableUtil.createPaginationJson(size, start, hasNext, hasPrevious, start, length, 0)
                     .addField("tag", tag)
-                    .addField("monthlyReports", new JSONArray(warReportMonthlyCustomerViewList.toArray()))
+                    .addField("monthlyReports", warReportMonthlyCustomerViewList.toArray())
                     .addField("isAgent", isAgent)
                     .addField("isYear", isYear)
                     .addField("isMonth", isMonth)
                     .addField("isRegion", isRegion)
                     .addField("isCustomer", isCustomer)
                     .addField("schoolYear", schoolYear)
-                    .addField("month", month)
+                    .addField("month", month != null ? month.toString() : null)
                     .addField("region", region)
                     .addField("agentId", agentId)
                     .addField("customerId", customerId)
-                    .addField("length",length);
+                    .addField("length", length);
 
 
             response = Response.ok(projectHelper.buildJsonString(), MediaType.APPLICATION_JSON_TYPE).build();

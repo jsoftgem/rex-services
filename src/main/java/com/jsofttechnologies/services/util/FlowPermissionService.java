@@ -36,7 +36,9 @@ public class FlowPermissionService extends FlowService {
     @Path("has_profile")
     @SkipCheck("action")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response hasProfile(String... profiles) {
+    public Response hasProfile(String profiles) {
+
+        String[] split = profiles.split(",");
         Response response = null;
         String authorization = request.getHeader("Authorization");
 
@@ -46,7 +48,7 @@ public class FlowPermissionService extends FlowService {
 
         if (promise.getOk()) {
             parentLoop:
-            for (String prof : profiles) {
+            for (String prof : split) {
                 for (FlowUserProfile profile : promise.getFlowUser().getFlowUserProfileSet()) {
                     if (prof.equals(profile.getProfileName())) {
                         valid = true;
@@ -59,7 +61,7 @@ public class FlowPermissionService extends FlowService {
 
         }
 
-        response = Response.ok(valid,MediaType.APPLICATION_JSON_TYPE).build();
+        response = Response.ok(valid, MediaType.APPLICATION_JSON_TYPE).build();
 
         return response;
     }
