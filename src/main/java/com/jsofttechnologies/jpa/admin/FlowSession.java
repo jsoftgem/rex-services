@@ -10,7 +10,9 @@ import java.util.Date;
 @NamedQueries({
         @NamedQuery(name = FlowSession.FIND_ALL, query = "select ms from FlowSession ms"),
         @NamedQuery(name = FlowSession.FIND_BY_USER_HOST, query = "select ms from FlowSession ms where ms.userId = :userId and ms.userHost= :userHost"),
-        @NamedQuery(name = FlowSession.FIND_BY_ACTIVE_BY_USER, query = "select fs from FlowSession fs where fs.userId=:userId and fs.active=true order by fs.createdDt desc")
+        @NamedQuery(name = FlowSession.FIND_BY_ACTIVE_BY_USER, query = "select fs from FlowSession fs where fs.userId=:userId and fs.active=true order by fs.createdDt desc"),
+        @NamedQuery(name = FlowSession.FIND_BY_SESSION_KEY, query = "select fs from FlowSession fs where fs.userSessionKey =:sessionKey and fs.active=true order by fs.createdDt desc")
+
 })
 
 public class FlowSession implements FlowJpe {
@@ -24,6 +26,7 @@ public class FlowSession implements FlowJpe {
     public static final String FIND_BY_SESSIONID = "FlowSession.FIND_BY_SESSIONID";
     public static final String FIND_BY_USER_HOST = "FlowSession.FIND_BY_USER_HOST";
     public static final String FIND_BY_ACTIVE_BY_USER = "FlowSession.FIND_BY_ACTIVE_BY_USER";
+    public static final String FIND_BY_SESSION_KEY = "FlowSession.FIND_BY_SESSION_KEY";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "flow_session_id", nullable = false)
@@ -53,6 +56,8 @@ public class FlowSession implements FlowJpe {
     private Date endDt;
     @Column(name = "description")
     private String description;
+    @Column(name = "user_session_key", nullable = false)
+    private String userSessionKey;
 
 
     @Override
@@ -107,31 +112,31 @@ public class FlowSession implements FlowJpe {
 
     @Override
     public void setCreatedDt(Date createdDt) {
-        
+
         this.createdDt = createdDt;
     }
 
     @Override
     public Date getCreatedDt() {
-        
+
         return createdDt;
     }
 
     @Override
     public void setUpdatedDt(Date updatedDt) {
-        
+
         this.updatedDt = updatedDt;
     }
 
     @Override
     public Date getUpdatedDt() {
-        
+
         return updatedDt;
     }
 
     @Override
     public void setStartDt(Date startDt) {
-        
+
         this.startDt = startDt;
     }
 
@@ -152,27 +157,36 @@ public class FlowSession implements FlowJpe {
 
     @Override
     public void setDescription(String description) {
-        
+
         this.description = description;
     }
 
     @Override
     public String getDescription() {
-        
+
         return description;
+    }
+
+    public String getUserSessionKey() {
+        return userSessionKey;
+    }
+
+
+    public void setUserSessionKey(String userSessionKey) {
+        this.userSessionKey = userSessionKey;
     }
 
     @PrePersist
     @Override
     public void prePersist() {
-        
+
         createdDt = new Date();
     }
 
     @PreUpdate
     @Override
     public void preUpdate() {
-        
+
         updatedDt = new Date();
     }
 

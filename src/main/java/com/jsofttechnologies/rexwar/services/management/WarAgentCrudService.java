@@ -8,10 +8,7 @@ import com.jsofttechnologies.jpa.admin.FlowUserProfile;
 import com.jsofttechnologies.jpa.util.FlowAlertType;
 import com.jsofttechnologies.rexwar.model.management.WarAgent;
 import com.jsofttechnologies.rexwar.util.WarConstants;
-import com.jsofttechnologies.services.admin.FlowUserGroupCrudService;
-import com.jsofttechnologies.services.admin.FlowUserGroupQueryService;
-import com.jsofttechnologies.services.admin.FlowUserProfileQueryService;
-import com.jsofttechnologies.services.admin.FlowUserQueryService;
+import com.jsofttechnologies.services.admin.*;
 import com.jsofttechnologies.services.util.CrudService;
 import com.jsofttechnologies.services.util.MessageService;
 import com.jsofttechnologies.util.PasswordHash;
@@ -19,6 +16,7 @@ import com.jsofttechnologies.util.ProjectHelper;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.faces.flow.Flow;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -48,6 +46,9 @@ public class WarAgentCrudService extends CrudService<WarAgent, Long> {
 
     @EJB
     private FlowUserGroupCrudService flowUserGroupCrudService;
+
+    @EJB
+    private FlowUserCrudService flowUserCrudService;
 
     @EJB
     private MessageService messageService;
@@ -171,11 +172,7 @@ public class WarAgentCrudService extends CrudService<WarAgent, Long> {
             setId(id);
             WarAgent warAgent = getInstance();
 
-            FlowUserGroup agentGroup = flowUserGroupQueryService.findGroupByName(WarConstants.AGENT_GROUP);
-
-            agentGroup.getFlowUsers().remove(warAgent.getUser());
-
-            flowUserGroupCrudService.update(agentGroup, agentGroup.getId());
+            flowUserCrudService.delete(warAgent.getUser().getId());
 
             if (delete().equalsIgnoreCase("deleted")) {
                 response = Response.ok(ProjectHelper.message("Delete successful."),

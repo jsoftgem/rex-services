@@ -14,13 +14,14 @@ import com.jsofttechnologies.services.admin.FlowSessionQueryService;
 import com.jsofttechnologies.util.ProjectConstants;
 import com.jsofttechnologies.util.ProjectHelper;
 import org.jboss.resteasy.core.ServerResponse;
-import org.jboss.resteasy.util.Base64;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Jerico on 12/22/2014.
@@ -45,6 +46,7 @@ public class FlowSessionHelper {
     @EJB
     private WarAgentCrudService warAgentCrudService;
 
+
     private static final ServerResponse ACCESS_DENIED = new ServerResponse();
     private static final ServerResponse SERVER_ERROR = new ServerResponse();
 
@@ -62,9 +64,10 @@ public class FlowSessionHelper {
         return promise;
     }
 
-    public void createSession(String username, String remoteAddress) {
+    public void createSession(String username, String base64, String remoteAddress) {
         Long userId = flowUserManager.getUserId(username);
         FlowSession flowSession = new FlowSession();
+        flowSession.setUserSessionKey(base64);
         flowSession.setActive(Boolean.TRUE);
         flowSession.setUserHost(remoteAddress);
         flowSession.setUserId(userId);
@@ -74,7 +77,7 @@ public class FlowSessionHelper {
     }
 
     public Response logoutSession(String authorization) {
-        Promise promise = isAuthorized(authorization);
+        Promise promise = isAuthorized(authorization.replace(ProjectConstants.AUTHENTICATION_SCHEME + " ", ""));
 
         if (promise.getOk()) {
             FlowSession flowSession = promise.getFlowSession();
@@ -99,35 +102,21 @@ public class FlowSessionHelper {
         promise.ok = true;
         Map<String, Object> jsonMap = new HashMap<>();
 
-        if (authorization == null || authorization.isEmpty()) {
+        FlowSession flowSession = flowSessionQueryService.findBySessionKey(authorization);
+        //Get encoded username and password
+        FlowUser flowUser = flowUserManager.getUser(flowSession.getUserId());
+
+        if (flowSession == null || flowUser == null) {
             jsonMap.put("msg", messageService.getMessage(ProjectConstants.MSG_LOGIN_REQUIRED));
             ACCESS_DENIED.setEntity(ProjectHelper.json(jsonMap));
             promise.response = ACCESS_DENIED;
             promise.ok = false;
         }
-        //Get encoded username and password
-        final String encodedUserPassword = authorization.replaceFirst(ProjectConstants.AUTHENTICATION_SCHEME + " ", "");
 
-        //Decode username and password
-        String usernameAndPassword = null;
-        try {
-            usernameAndPassword = new String(Base64.decode(encodedUserPassword));
-        } catch (IOException e) {
-            exceptionSummary.handleException(e, getClass());
-            promise.response = SERVER_ERROR;
-            promise.ok = false;
-
-        }
         if (promise.getOk()) {
-            final StringTokenizer tokenizer = new StringTokenizer(usernameAndPassword, ":");
-            final String username = tokenizer.nextToken();
-            promise.flowUser = flowUserManager.getUser(flowUserManager.getUserId(username));
-            promise.flowUserGroup = flowUserManager.getGroup(username);
-
-            Promise sessionPromise = isSessionExisting(username);
-            if (sessionPromise.getOk()) {
-                promise.flowSession = sessionPromise.getFlowSession();
-            }
+            promise.flowUser = flowUser;
+            promise.flowUserGroup = flowUserManager.getGroup(flowUser.getUsername());
+            promise.flowSession = flowSession;
         }
 
         return promise;

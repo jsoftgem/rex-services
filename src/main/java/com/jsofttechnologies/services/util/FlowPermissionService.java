@@ -3,10 +3,8 @@ package com.jsofttechnologies.services.util;
 import com.jsofttechnologies.ejb.MergeExceptionSummary;
 import com.jsofttechnologies.interceptor.SkipCheck;
 import com.jsofttechnologies.jpa.admin.FlowProfilePermission;
-import com.jsofttechnologies.jpa.admin.FlowUser;
 import com.jsofttechnologies.jpa.admin.FlowUserProfile;
 import com.jsofttechnologies.services.admin.FlowUserQueryService;
-import org.jboss.resteasy.util.Base64;
 
 import javax.annotation.security.PermitAll;
 import javax.ejb.EJB;
@@ -14,9 +12,7 @@ import javax.ejb.Stateless;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 import java.util.List;
-import java.util.StringTokenizer;
 
 /**
  * Created by Jerico on 12/1/2014.
@@ -70,45 +66,37 @@ public class FlowPermissionService extends FlowService {
     @Path("has_permission")
     @Produces("application/json")
     @PermitAll
-    public Boolean hasPermission(@QueryParam("authorization") String authorization, @QueryParam("pageName") String pageName, @QueryParam("method") String method) {
-        final String encodedUserPassword = authorization.replaceFirst("Basic ", "");
+    public Boolean hasPermission(@HeaderParam("authorization") String authorization, @QueryParam("pageName") String pageName, @QueryParam("method") String method) {
+        FlowSessionHelper.Promise promise = session.isAuthorized(authorization);
 
-        //Decode username and password
-        String usernameAndPassword = null;
-        try {
-            usernameAndPassword = new String(Base64.decode(encodedUserPassword));
-        } catch (IOException e) {
-            exceptionSummary.handleException(e, getClass());
-        }
-
-        final StringTokenizer tokenizer = new StringTokenizer(usernameAndPassword, ":");
-        final String username = tokenizer.nextToken();
-        FlowUser flowUser = flowUserQueryService.getFlowUserByUsername(username);
         boolean hasPermission = false;
-        profile:
-        for (FlowUserProfile flowUserProfile : flowUser.getFlowUserProfileSet()) {
-            if (hasPermission) break profile;
-            List<FlowProfilePermission> flowProfilePermissionList = flowUserProfile.getFlowProfilePermissions();
-            permission:
-            for (FlowProfilePermission flowProfilePermission : flowProfilePermissionList) {
-                if (flowProfilePermission.getFlowPageName().equals(pageName)) {
-                    if (method == null) {
-                        hasPermission = true;
+
+        if (promise.getOk()) {
+            profile:
+            for (FlowUserProfile flowUserProfile : promise.getFlowUser().getFlowUserProfileSet()) {
+                if (hasPermission) break profile;
+                List<FlowProfilePermission> flowProfilePermissionList = flowUserProfile.getFlowProfilePermissions();
+                permission:
+                for (FlowProfilePermission flowProfilePermission : flowProfilePermissionList) {
+                    if (flowProfilePermission.getFlowPageName().equals(pageName)) {
+                        if (method == null) {
+                            hasPermission = true;
+                            break permission;
+                        }
+                        if (method.equalsIgnoreCase("get")) {
+                            hasPermission = flowProfilePermission.getGet();
+                        } else if (method.equalsIgnoreCase("delete")) {
+                            hasPermission = flowProfilePermission.getDel();
+                        } else if (method.equalsIgnoreCase("post")) {
+                            hasPermission = flowProfilePermission.getPost();
+                        } else if (method.equalsIgnoreCase("put")) {
+                            hasPermission = flowProfilePermission.getPut();
+                        }
                         break permission;
                     }
-                    if (method.equalsIgnoreCase("get")) {
-                        hasPermission = flowProfilePermission.getGet();
-                    } else if (method.equalsIgnoreCase("delete")) {
-                        hasPermission = flowProfilePermission.getDel();
-                    } else if (method.equalsIgnoreCase("post")) {
-                        hasPermission = flowProfilePermission.getPost();
-                    } else if (method.equalsIgnoreCase("put")) {
-                        hasPermission = flowProfilePermission.getPut();
-                    }
-                    break permission;
                 }
-            }
 
+            }
         }
 
         return hasPermission;

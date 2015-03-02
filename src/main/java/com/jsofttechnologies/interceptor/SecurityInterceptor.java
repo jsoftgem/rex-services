@@ -6,8 +6,8 @@ import com.jsofttechnologies.jpa.admin.FlowUser;
 import com.jsofttechnologies.security.SessionHelper;
 import com.jsofttechnologies.services.admin.FlowUserQueryService;
 import com.jsofttechnologies.services.util.FlowPermissionService;
+import com.jsofttechnologies.services.util.FlowSessionHelper;
 import com.jsofttechnologies.services.util.MessageService;
-import com.jsofttechnologies.util.PasswordHash;
 import com.jsofttechnologies.util.ProjectConstants;
 import com.jsofttechnologies.util.ProjectHelper;
 import org.jboss.resteasy.annotations.interception.ServerInterceptor;
@@ -17,7 +17,6 @@ import org.jboss.resteasy.core.ServerResponse;
 import org.jboss.resteasy.spi.Failure;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.jboss.resteasy.spi.interception.PreProcessInterceptor;
-import org.jboss.resteasy.util.Base64;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.PermitAll;
@@ -25,14 +24,10 @@ import javax.ejb.EJB;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.ext.Provider;
-import java.io.IOException;
 import java.lang.reflect.Method;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 @Provider
 @ServerInterceptor
@@ -48,10 +43,16 @@ public class SecurityInterceptor implements PreProcessInterceptor {
 
     @EJB
     private FlowPermissionService flowPermissionService;
+
     @EJB
     private MessageService messageService;
+
     @EJB
     private FlowUserQueryService flowUserQueryService;
+
+    @EJB
+    private FlowSessionHelper flowSessionHelper;
+
     private static final ServerResponse ACCESS_DENIED = new ServerResponse("Access denied for this resource", ProjectConstants.STATUS_NOT_AUTHENTICATED, new Headers<Object>());
     private static final ServerResponse ACCESS_FORBIDDEN = new ServerResponse("Nobody can access this resource", ProjectConstants.STATUS_NOT_AUTHORIZED, new Headers<Object>());
     private static final ServerResponse SERVER_ERROR = new ServerResponse("INTERNAL SERVER ERROR", 500, new Headers<Object>());
@@ -90,7 +91,7 @@ public class SecurityInterceptor implements PreProcessInterceptor {
         boolean skipAuthentication = skipCheck != null && skipCheck.value().equals("authentication");
         boolean skipAction = skipCheck != null && skipCheck.value().equals("action");
 
-        if(skipAuthorization) return null;
+        if (skipAuthorization) return null;
 
         //If no authorization information present; block access
         if ((authorization == null || authorization.isEmpty()) && !skipAuthorization) {
@@ -100,29 +101,15 @@ public class SecurityInterceptor implements PreProcessInterceptor {
         }
 
         //Get encoded username and password
-        final String encodedUserPassword = authorization.get(0).replaceFirst(ProjectConstants.AUTHENTICATION_SCHEME + " ", "");
+        final String sessionKey = authorization.get(0).replaceFirst(ProjectConstants.AUTHENTICATION_SCHEME + " ", "");
 
-        //Decode username and password
-        String usernameAndPassword;
-        try {
-            usernameAndPassword = new String(Base64.decode(encodedUserPassword));
-        } catch (IOException e) {
-            exceptionSummary.handleException(e, getClass());
-            return SERVER_ERROR;
-
-        }
-
-        //Split username and password tokens
-        final StringTokenizer tokenizer = new StringTokenizer(usernameAndPassword, ":");
-        final String username = tokenizer.nextToken();
-        final String password = tokenizer.nextToken();
 
         if ((!skipAuthorization && !skipAuthentication)) {
-        if (!isAuthenticated(username, password)) {
-            jsonMap.put("msg", messageService.getMessage(ProjectConstants.MSG_AUTH_FAILED));
-            ACCESS_DENIED.setEntity(ProjectHelper.json(jsonMap));
-            return ACCESS_DENIED;
-        }
+            if (!isAuthenticated(sessionKey)) {
+                jsonMap.put("msg", messageService.getMessage(ProjectConstants.MSG_AUTH_FAILED));
+                ACCESS_DENIED.setEntity(ProjectHelper.json(jsonMap));
+                return ACCESS_DENIED;
+            }
         }
         if (flowPage != null) {
             if ((!skipAuthorization && !skipAuthentication) && !skipAction) {
@@ -142,7 +129,7 @@ public class SecurityInterceptor implements PreProcessInterceptor {
     private boolean isAuthenticated(String username, String password) {
         try {
             FlowUser flowUser = flowUserQueryService.getFlowUserByUsername(username);
-            if(flowUser !=null)return true;
+            if (flowUser != null) return true;
            /* TODO: return PasswordHash.validatePassword(password, flowUser.getPassword());*/
             return false;
 
@@ -150,8 +137,21 @@ public class SecurityInterceptor implements PreProcessInterceptor {
             exceptionSummary.handleException(e, getClass());
         } catch (InvalidKeySpecException e) {
             exceptionSummary.handleException(e, getClass());
-        */} catch (Exception e){
-            exceptionSummary.handleException(e,getClass());
+        */
+        } catch (Exception e) {
+            exceptionSummary.handleException(e, getClass());
+        }
+
+        return false;
+    }
+
+
+    private boolean isAuthenticated(String sessionKey) {
+        try {
+            FlowSessionHelper.Promise promise = flowSessionHelper.isAuthorized(sessionKey);
+            return promise.getOk();
+        } catch (Exception e) {
+            exceptionSummary.handleException(e, getClass(), sessionKey);
         }
 
         return false;

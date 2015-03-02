@@ -71,7 +71,7 @@ public class FlowUserCrudService extends CrudService<FlowUser, Long> {
         String password = flowUser.getPassword();
         // hashPassword
         try {
-            password = PasswordHash.createHash(password);
+            password = PasswordHash.createHash(password.trim());
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (InvalidKeySpecException e) {
@@ -158,7 +158,7 @@ public class FlowUserCrudService extends CrudService<FlowUser, Long> {
         // hashPassword
         if (password != null) {
             try {
-                password = PasswordHash.createHash(password);
+                password = PasswordHash.createHash(password.trim());
             } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();
             } catch (InvalidKeySpecException e) {
