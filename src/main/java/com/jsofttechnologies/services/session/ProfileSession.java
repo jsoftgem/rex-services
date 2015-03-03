@@ -148,9 +148,8 @@ public class ProfileSession extends FlowService {
         return Response.ok(task, MediaType.TEXT_PLAIN).build();
     }
 
-    @SkipCheck("action")
     @GET
-    @PermitAll
+    @SkipCheck("action")
     @Path("user_detail")
     public Response getUserDetail(@HeaderParam("Authorization") String authorization) {
         StringBuilder userDetail = new StringBuilder("{");

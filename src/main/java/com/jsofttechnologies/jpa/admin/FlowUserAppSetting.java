@@ -2,6 +2,7 @@ package com.jsofttechnologies.jpa.admin;/**
  * Created by Jerico on 1/2/2015.
  */
 
+import com.jsofttechnologies.jpa.util.AppLayout;
 import com.jsofttechnologies.jpa.util.ColumnLengths;
 import com.jsofttechnologies.jpa.util.FlowJpe;
 
@@ -50,8 +51,11 @@ public class FlowUserAppSetting implements FlowJpe {
     private String bgColor;
     @Column(name = "fluid_menu", nullable = false, length = ColumnLengths.TITLE)
     private String menu;
-    @Column(name="fluid_hide_menu",length = ColumnLengths.FLAG)
+    @Column(name = "fluid_hide_menu", length = ColumnLengths.FLAG)
     private Boolean hideMenu;
+    @Column(name = "fluid_layout", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private AppLayout layout;
 
 
     @Override
@@ -116,10 +120,11 @@ public class FlowUserAppSetting implements FlowJpe {
 
     @PrePersist
     public void prePersist() {
+        layout = AppLayout.FLUIDSCREEN;
         createdDt = new Date();
     }
 
-    @Override
+    @PreUpdate
     public void preUpdate() {
         updatedDt = new Date();
     }
@@ -170,5 +175,13 @@ public class FlowUserAppSetting implements FlowJpe {
 
     public void setHideMenu(Boolean hideMenu) {
         this.hideMenu = hideMenu;
+    }
+
+    public AppLayout getLayout() {
+        return layout;
+    }
+
+    public void setLayout(AppLayout layout) {
+        this.layout = layout;
     }
 }

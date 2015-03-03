@@ -2,6 +2,7 @@ package com.jsofttechnologies.services.session;
 
 import com.jsofttechnologies.interceptor.SkipCheck;
 import com.jsofttechnologies.jpa.admin.FlowUserAppSetting;
+import com.jsofttechnologies.jpa.util.AppLayout;
 import com.jsofttechnologies.services.admin.FlowUserAppSettingCrudService;
 import com.jsofttechnologies.services.admin.FlowUserAppSettingQueryService;
 import com.jsofttechnologies.services.util.FlowService;
@@ -42,8 +43,18 @@ public class FlowUserAppSettingSession extends FlowService {
 
             FlowUserAppSetting flowUserAppSetting = flowUserAppSettingQueryService.getByUserId(promise.getFlowUser().getId());
 
-            response = Response.ok(flowUserAppSetting, MediaType.APPLICATION_JSON_TYPE).build();
 
+            if (flowUserAppSetting == null) {
+                flowUserAppSetting = new FlowUserAppSetting();
+                flowUserAppSetting.setUserId(promise.getFlowUser().getId());
+                flowUserAppSetting.setHideMenu(Boolean.FALSE);
+                flowUserAppSetting.setBgColor("#FF6A6A");
+                flowUserAppSetting.setMenu("sidebar-default");
+                flowUserAppSetting.setStyle("style1");
+                flowUserAppSetting.setTheme("yellow-blue");
+                flowUserAppSettingCrudService.create(flowUserAppSetting);
+            }
+            response = Response.ok(flowUserAppSetting, MediaType.APPLICATION_JSON_TYPE).build();
         } else {
             response = promise.getResponse();
         }
@@ -60,7 +71,8 @@ public class FlowUserAppSettingSession extends FlowService {
                                   @QueryParam("theme") String theme,
                                   @QueryParam("bgColor") String bgColor,
                                   @QueryParam("style") String style,
-                                  @QueryParam("hideMenu") Boolean hideMenu) {
+                                  @QueryParam("hideMenu") Boolean hideMenu,
+                                  @QueryParam("layout") AppLayout layout) {
         Response response = null;
 
         FlowSessionHelper.Promise promise = flowSessionHelper.isAuthorized(authorization);
@@ -85,10 +97,19 @@ public class FlowUserAppSettingSession extends FlowService {
             if (style != null) {
                 flowUserAppSetting.setStyle(style);
             }
-            if(hideMenu != null){
+            if (hideMenu != null) {
                 flowUserAppSetting.setHideMenu(hideMenu);
             }
-            response = flowUserAppSettingCrudService.update(flowUserAppSetting, flowUserAppSetting.getId());
+
+            if (layout != null) {
+                flowUserAppSetting.setLayout(layout);
+            }
+
+            if (flowUserAppSetting != null) {
+                response = flowUserAppSettingCrudService.update(flowUserAppSetting, flowUserAppSetting.getId());
+            } else {
+                response = flowUserAppSettingCrudService.create(flowUserAppSetting);
+            }
 
         } else {
             response = promise.getResponse();
