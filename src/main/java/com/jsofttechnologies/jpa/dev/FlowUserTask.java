@@ -15,7 +15,8 @@ import java.util.Date;
         {@NamedQuery(name = FlowUserTask.FIND_ALL, query = "select fut from FlowUserTask fut"),
                 @NamedQuery(name = FlowUserTask.FIND_BY_TASK_AND_USER, query = "select fut from FlowUserTask fut where fut.flowTaskId=:taskId and fut.flowUserId=:userId"),
                 @NamedQuery(name = FlowUserTask.FIND_BY_USER, query = "select fut from FlowUserTask fut where fut.flowUserId=:userId")
-                , @NamedQuery(name = FlowUserTask.FIND_BY_ID, query = "Select fut from FlowUserTask fut where fut.id =:id")}
+                , @NamedQuery(name = FlowUserTask.FIND_BY_ID, query = "Select fut from FlowUserTask fut where fut.id =:id"),
+                @NamedQuery(name = FlowUserTask.FIND_BY_FLOW_ID, query = "select fut from FlowUserTask fut where fut.flowId =:flowId")}
 )
 public class FlowUserTask implements FlowJpe {
 
@@ -23,6 +24,7 @@ public class FlowUserTask implements FlowJpe {
     public static final String FIND_BY_ID = "FlowUserTask.FIND_BY_ID";
     public static final String FIND_BY_TASK_AND_USER = "FlowUserTask.FIND_BY_TASK_AND_USER";
     public static final String FIND_BY_USER = "FlowUserTask.FIND_BY_USER";
+    public static final String FIND_BY_FLOW_ID = "FlowUserTask.FIND_BY_FLOW_ID";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "flow_user_task_id", nullable = false)
@@ -56,7 +58,7 @@ public class FlowUserTask implements FlowJpe {
     @Column(name = "flow_task_size", length = 2)
     private Integer size;
 
-    @Column(name = "flow_task_active",length = ColumnLengths.FLAG)
+    @Column(name = "flow_task_active", length = ColumnLengths.FLAG)
     private Boolean active;
 
     @Column(name = "flow_task_locked", length = ColumnLengths.FLAG)

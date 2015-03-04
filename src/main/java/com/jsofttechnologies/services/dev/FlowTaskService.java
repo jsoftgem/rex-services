@@ -5,16 +5,19 @@ import com.jsofttechnologies.interceptor.SkipCheck;
 import com.jsofttechnologies.jpa.admin.FlowUserGroupModule;
 import com.jsofttechnologies.jpa.dev.FlowPage;
 import com.jsofttechnologies.jpa.dev.FlowTask;
+import com.jsofttechnologies.jpa.dev.FlowUserTask;
 import com.jsofttechnologies.services.admin.FlowUserGroupModuleQueryService;
 import com.jsofttechnologies.services.util.FlowSessionHelper;
 import com.jsofttechnologies.services.util.QueryService;
-import org.jboss.resteasy.spi.HttpRequest;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import java.util.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Jerico on 12/2/2014.
@@ -28,9 +31,6 @@ public class FlowTaskService extends QueryService<FlowTask> {
         super(FlowTask.class, FlowTask.FIND_ALL);
     }
 
-    @Context
-    private HttpRequest request;
-
     @EJB
     private FlowPageQueryService flowPageQueryService;
 
@@ -38,7 +38,7 @@ public class FlowTaskService extends QueryService<FlowTask> {
     private MergeExceptionSummary exceptionSummary;
 
     @EJB
-    private FlowUserTaskCrudService flowUserTaskCrudService;
+    private FlowUserTaskQueryService flowUserTaskQueryService;
 
     @EJB
     private FlowTaskQueryService flowTaskQueryService;
@@ -46,34 +46,28 @@ public class FlowTaskService extends QueryService<FlowTask> {
     @EJB
     private FlowUserGroupModuleQueryService flowUserGroupModuleQueryService;
 
-    @EJB
-    private FlowSessionHelper flowSessionHelper;
 
     @SkipCheck("action")
     @GET
-    @Path("/getTask")
+    @Path("/getSessionTask")
     @Produces("application/json")
-    public FlowTask getTask(@HeaderParam("Authorization") String authorization, @QueryParam("id") Long id, @QueryParam("name") String name, @DefaultValue("25") @QueryParam("size") Integer size, @DefaultValue("false") @QueryParam("active") Boolean active,
+    public FlowTask getSessionTask(@HeaderParam("Authorization") String authorization, @QueryParam("id") Long id, @QueryParam("name") String name, @DefaultValue("25") @QueryParam("size") Integer size, @DefaultValue("false") @QueryParam("active") Boolean active,
                             @DefaultValue("false") @QueryParam("pinned") Boolean pinned, @DefaultValue("false") @QueryParam("locked") Boolean locked, @DefaultValue("true") @QueryParam("showToolBar") Boolean showToolBar,
                             @QueryParam("page") String page, @QueryParam("page-path") String pagePath, @QueryParam("flowId") String flowId, @QueryParam("group-default") @DefaultValue("false") Boolean groupDefault) {
 
-        Map<String, Object> param = new HashMap<>();
         if (id != null) {
             setNamedQuery(FlowTask.FIND_BY_ID);
-            param.put("id", id);
+            putParam("id", id);
         } else if (name != null) {
             setNamedQuery(FlowTask.FIND_BY_NAME);
-            param.put("name", name);
+            putParam("name", name);
         }
-
-        setParam(param);
-
 
         FlowTask flowTask = getSingleResult();
 
         FlowUserGroupModule flowUserGroupModule = null;
         if (groupDefault) {
-            FlowSessionHelper.Promise promise = flowSessionHelper.isAuthorized(authorization);
+            FlowSessionHelper.Promise promise = session.isAuthorized(authorization);
 
             if (promise.getOk()) {
                 if (id == null && name != null) {
@@ -124,15 +118,135 @@ public class FlowTaskService extends QueryService<FlowTask> {
         if (flowId != null) {
             flowTask.setFlowId(flowId);
         }
-
-       /* if (flowId == null) {
-            FlowUserTask flowUserTask = new FlowUserTask();
-            flowUserTask.setSize(flowTask.getSize());
-            flowUserTask.setPinned(flowTask.getPinned());
-            flowUserTask.setLocked(flowTask.getLocked());
-            flowUserTask.setActive(flowTask.getActive());
-            flowUserTaskCrudService.createUpdate(flowUserTask, null, true);
-        }*/
         return flowTask;
     }
+
+    @SkipCheck("action")
+    @GET
+    @Path("/getTask")
+    public Response getTask(@HeaderParam("Authorization") String authorization, @QueryParam("id") Long id, @QueryParam("name") String name, @DefaultValue("25") @QueryParam("size") Integer size, @DefaultValue("false") @QueryParam("active") Boolean active,
+                                   @DefaultValue("false") @QueryParam("pinned") Boolean pinned, @DefaultValue("false") @QueryParam("locked") Boolean locked, @DefaultValue("true") @QueryParam("showToolBar") Boolean showToolBar,
+                                   @QueryParam("page") String page, @QueryParam("page-path") String pagePath, @QueryParam("flowId") String flowId, @QueryParam("group-default") @DefaultValue("false") Boolean groupDefault) {
+
+        FlowSessionHelper.Promise authentication = session.isAuthorized(authorization);
+
+        if (authentication.getOk()) {
+
+            if (id != null) {
+                setNamedQuery(FlowTask.FIND_BY_ID);
+                putParam("id", id);
+            } else if (name != null) {
+                setNamedQuery(FlowTask.FIND_BY_NAME);
+                putParam("name", name);
+            } else {
+                return null;
+            }
+
+            groupDefault = groupDefault ? true : flowId == null;
+
+
+            FlowTask flowTask = getSingleResult();
+
+            FlowUserTask flowUserTask = null;
+            FlowUserGroupModule flowUserGroupModule = flowUserGroupModuleQueryService.findByGroupAndTask(authentication.getFlowUserGroup().getGroupName(), flowTask.getId());
+
+            if (groupDefault) {
+                if (active == null) {
+                    active = flowUserGroupModule.getFlowUserGroupTask().getActive();
+                }
+
+                if (size == null) {
+                    size = flowUserGroupModule.getFlowUserGroupTask().getSize();
+                }
+
+                if (pinned == null) {
+                    pinned = flowUserGroupModule.getFlowUserGroupTask().getPinned();
+                }
+
+                if (locked == null) {
+                    locked = flowUserGroupModule.getFlowUserGroupTask().getLocked();
+                }
+
+                if (showToolBar == null) {
+                    showToolBar = flowUserGroupModule.getFlowUserGroupTask().getToolBar();
+                }
+
+                if (page == null) {
+                    page = flowUserGroupModule.getFlowUserGroupTask().getPage();
+                }
+
+
+            } else {
+                flowUserTask = flowUserTaskQueryService.findFlowId(flowId);
+                if (flowUserTask != null) {
+                    if (active == null) {
+                        active = flowUserTask.getActive();
+                    }
+
+                    if (size == null) {
+                        size = flowUserTask.getSize();
+                    }
+
+                    if (pinned == null) {
+                        pinned = flowUserTask.getPinned();
+                    }
+
+                    if (locked == null) {
+                        locked = flowUserTask.getLocked();
+                    }
+
+                    if (page == null) {
+                        page = flowUserTask.getPage();
+                    }
+
+                    if (pagePath == null) {
+                        pagePath = flowUserTask.getParam();
+                    }
+                }
+                // If some properties from FlowUserTask are null will get their default.
+                if (active == null) {
+                    active = flowUserGroupModule.getFlowUserGroupTask().getActive();
+                }
+
+                if (size == null) {
+                    size = flowUserGroupModule.getFlowUserGroupTask().getSize();
+                }
+
+                if (pinned == null) {
+                    pinned = flowUserGroupModule.getFlowUserGroupTask().getPinned();
+                }
+
+                if (locked == null) {
+                    locked = flowUserGroupModule.getFlowUserGroupTask().getLocked();
+                }
+
+                if (showToolBar == null) {
+                    showToolBar = flowUserGroupModule.getFlowUserGroupTask().getToolBar();
+                }
+
+                if (page == null) {
+                    page = flowUserGroupModule.getFlowUserGroupTask().getPage();
+                }
+
+            }
+
+            if (page != null) {
+                FlowPage flowPage = flowPageQueryService.getInstanceByName(page);
+                flowTask.setPage(flowPage);
+                flowTask.setPageParam(pagePath);
+            }
+
+            flowTask.setActive(active);
+            flowTask.setSize(size);
+            flowTask.setPinned(pinned);
+            flowTask.setLocked(locked);
+            flowTask.setShowToolBar(showToolBar);
+            flowTask.setFlowId(flowId);
+
+            return Response.ok(flowTask, MediaType.APPLICATION_JSON_TYPE).build();
+        }
+
+        return authentication.getResponse();
+    }
+
 }

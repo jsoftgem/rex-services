@@ -8,6 +8,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,5 +33,16 @@ public class FlowUserTaskQueryService extends QueryService<FlowUserTask> {
         setParam(param);
         return getSingleResult();
     }
+
+
+    @GET
+    @Path("find_by_flow_id/{flowId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public FlowUserTask findFlowId(@PathParam("flowId") String flowId) {
+        setNamedQuery(FlowUserTask.FIND_BY_FLOW_ID);
+        putParam("flowId", flowId);
+        return getSingleResult();
+    }
+
 
 }
