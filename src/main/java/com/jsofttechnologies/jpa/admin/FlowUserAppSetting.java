@@ -126,6 +126,10 @@ public class FlowUserAppSetting implements FlowJpe {
 
     @PreUpdate
     public void preUpdate() {
+
+        if (layout == null) {
+            layout = AppLayout.FLUIDSCREEN;
+        }
         updatedDt = new Date();
     }
 
