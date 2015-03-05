@@ -102,7 +102,7 @@ public class FlowUserAppSettingSession extends FlowService {
             }
 
             if (layout != null) {
-                flowUserAppSetting.setLayout(layout);
+                // TODO:  flowUserAppSetting.setLayout(layout);
             }
 
             if (flowUserAppSetting != null) {
