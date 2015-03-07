@@ -10,6 +10,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -44,5 +45,16 @@ public class FlowUserTaskQueryService extends QueryService<FlowUserTask> {
         return getSingleResult();
     }
 
+    public List<FlowUserTask> findAllByUserId(Long userId) {
+        List<FlowUserTask> list = null;
+        try {
+            setNamedQuery(FlowUserTask.FIND_BY_USER);
+            putParam("userId", userId);
+            list = doGetResultList();
+        } catch (Exception e) {
+            exceptionSummary.handleException(e, getClass(), userId);
+        }
+        return list;
+    }
 
 }

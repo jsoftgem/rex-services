@@ -1,6 +1,7 @@
 package com.jsofttechnologies.rexwar.model.management;
 
 import com.jsofttechnologies.jpa.util.FlowJpe;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -11,11 +12,13 @@ import java.util.Date;
 @Entity
 @Table(name = "war_customer_tag")
 @NamedQueries({
-        @NamedQuery(name = WarCustomerTag.FIND_ALL, query = "select e from WarCustomerTag e")
+        @NamedQuery(name = WarCustomerTag.FIND_ALL, query = "select e from WarCustomerTag e"),
+        @NamedQuery(name = WarCustomerTag.FIND_BY_AGENT, query = "select e from WarCustomerTag e where e.agentId=:agentId order by e.index asc")
 })
 public class WarCustomerTag implements FlowJpe {
 
     public static final String FIND_ALL = "WarCustomerTag.FIND_ALL";
+    public static final String FIND_BY_AGENT = "WarCustomerTag.FIND_BY_ASSIGNED_AGENT";
 
     @Id
     @Column(name = "war_customer_tag_id", nullable = false)
@@ -39,7 +42,11 @@ public class WarCustomerTag implements FlowJpe {
     private Long agentId;
     @Column(name = "war_customer_tag_customer", nullable = false)
     private Long customerId;
-    @Column(name = "war_customer_tag_market_school_year", nullable = false)
+    @Formula("(select wy.war_customer_market_school_year_id from war_customer_market_school_year wy " +
+            "inner join war_customer_war_customer_market_school_year wsy on " +
+            "wsy.warCustomerMarketSchoolYears_war_customer_market_school_year_id = wy.war_customer_market_school_year_id " +
+            "inner join war_report_school_year wrsy on wrsy.war_report_school_year_id = wy.school_year " +
+            "where wsy.war_customer_customer_id = war_customer_tag_customer order by wrsy.war_report_school_year_period_year desc limit 1)")
     private Long customerMarketSchoolYearId;
     @Column(name = "war_customer_tag_market_region", nullable = false)
     private Long regionId;
@@ -47,6 +54,14 @@ public class WarCustomerTag implements FlowJpe {
     private String regionCode;
     @Column(name = "war_customer_tag_index", nullable = false)
     private Integer index;
+    @Formula("(select sh.school_name from war_customer_school sh inner join war_customer wc on wc.war_customer_school = sh.war_customer_school_id where wc.customer_id = war_customer_tag_customer)")
+    private String customerName;
+    @Formula("(select concat(wy.market_potential_segment,' - ', wy.market_potential) from war_customer_market_school_year wy " +
+            "inner join war_customer_war_customer_market_school_year wsy on " +
+            "wsy.warCustomerMarketSchoolYears_war_customer_market_school_year_id = wy.war_customer_market_school_year_id " +
+            "inner join war_report_school_year wrsy on wrsy.war_report_school_year_id = wy.school_year " +
+            "where wsy.war_customer_customer_id = war_customer_tag_customer order by wrsy.war_report_school_year_period_year desc limit 1)")
+    private String marketDescription;
 
     @Override
     public void setId(Object id) {
@@ -156,6 +171,22 @@ public class WarCustomerTag implements FlowJpe {
         this.index = index;
     }
 
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getMarketDescription() {
+        return marketDescription;
+    }
+
+    public void setMarketDescription(String marketDescription) {
+        this.marketDescription = marketDescription;
+    }
+
     @PrePersist
     public void prePersist() {
         createdDt = new Date();
@@ -164,5 +195,25 @@ public class WarCustomerTag implements FlowJpe {
     @PreUpdate
     public void preUpdate() {
         updatedDt = new Date();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        WarCustomerTag that = (WarCustomerTag) o;
+
+        if (agentId != null ? !agentId.equals(that.agentId) : that.agentId != null) return false;
+        if (customerId != null ? !customerId.equals(that.customerId) : that.customerId != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = agentId != null ? agentId.hashCode() : 0;
+        result = 31 * result + (customerId != null ? customerId.hashCode() : 0);
+        return result;
     }
 }

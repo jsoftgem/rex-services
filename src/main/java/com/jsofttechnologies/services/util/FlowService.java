@@ -51,8 +51,12 @@ public abstract class FlowService implements Serializable {
     @EJB
     protected FlowSessionHelper session;
 
-
     private final Map<String, Object> serviceCache = new HashMap<>();
+
+    protected String getAuthorization() {
+        return request.getHeader(ProjectConstants.HEADER_AUTHORIZATION);
+    }
+
 
     @GET
     @PermitAll

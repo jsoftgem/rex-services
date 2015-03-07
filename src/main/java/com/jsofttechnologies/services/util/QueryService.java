@@ -143,7 +143,6 @@ public abstract class QueryService<T extends FlowJpe> extends FlowService {
         logger.log(Level.INFO, "doGetResultList: " + namedQuery + " param: " + param);
         try {
             query = entityManager.createNamedQuery(namedQuery, classType);
-
             if (param != null) {
                 for (String key : param.keySet()) {
                     query.setParameter(key, param.get(key));

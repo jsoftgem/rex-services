@@ -62,7 +62,7 @@ public class FlowUserTaskCrudService extends CrudService<FlowUserTask, Long> {
             if (promise.getOk()) {
                 flowUserTask.setFlowUserId(promise.getFlowUser().getId());
                 if (newTask == null || (newTask != null && newTask == Boolean.FALSE)) {
-                    List<FlowUserTask> flowUserTaskList = entityManager.createNamedQuery(FlowUserTask.FIND_BY_ID).setParameter("id", Long.valueOf(flowUserTask.getFlowId())).getResultList();
+                    List<FlowUserTask> flowUserTaskList = entityManager.createNamedQuery(FlowUserTask.FIND_BY_ID).setParameter("id", Long.valueOf(flowUserTask.getFlowId().trim())).getResultList();
                     FlowUserTask persistedFlowUserTask = null;
                     if (flowUserTaskList != null && !flowUserTaskList.isEmpty()) {
                         persistedFlowUserTask = flowUserTaskList.get(0);
@@ -86,14 +86,15 @@ public class FlowUserTaskCrudService extends CrudService<FlowUserTask, Long> {
                                 break;
                             case "close":
                             case "CLOSED":
-                                persistedFlowUserTask.setActive(Boolean.FALSE);
-                                persistedFlowUserTask.setClosed(true);
-                               /* entityManager.remove(persistedFlowUserTask);*/
-                                entityManager.flush();
+                                entityManager.remove(persistedFlowUserTask);
+                                if (entityManager.isJoinedToTransaction()) {
+                                    entityManager.flush();
+                                    entityManager.getTransaction().commit();
+                                }
                                 break;
                         }
                     }
-                    if (field != null && persistedFlowUserTask != null) {
+                    if (field != null && !field.equalsIgnoreCase("close") && persistedFlowUserTask != null) {
                         entityManager.merge(persistedFlowUserTask);
                         return persistedFlowUserTask;
                     }

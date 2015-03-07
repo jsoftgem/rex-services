@@ -102,6 +102,10 @@ public class WarActivity implements FlowJpe {
     private Long agentId;
     @Column(name = "war_activity_week", nullable = false)
     private Integer week;
+    @Column(name = "war_activity_region_id", nullable = false)
+    private Long regionId;
+    @Column(name = "war_activity_region_code", nullable = false)
+    private String regionCode;
 
     @Override
     public void setId(Object id) {
@@ -354,6 +358,25 @@ public class WarActivity implements FlowJpe {
     public void setWeek(Integer week) {
         this.week = week;
     }
+
+    public Long getRegionId() {
+        return regionId;
+    }
+
+    public void setRegionId(Long regionId) {
+        this.regionId = regionId;
+    }
+
+    public String getRegionCode() {
+        return regionCode;
+    }
+
+    public void setRegionCode(String regionCode) {
+        this.regionCode = regionCode;
+    }
+
+
+
 
     @PrePersist
     public void prePersist() {

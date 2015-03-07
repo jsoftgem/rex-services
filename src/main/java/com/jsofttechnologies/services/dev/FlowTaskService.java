@@ -1,8 +1,10 @@
 package com.jsofttechnologies.services.dev;
 
+import com.jsofttechnologies.ds.EntityManagerDAO;
 import com.jsofttechnologies.ejb.MergeExceptionSummary;
 import com.jsofttechnologies.interceptor.SkipCheck;
 import com.jsofttechnologies.jpa.admin.FlowUserGroupModule;
+import com.jsofttechnologies.jpa.admin.FlowUserGroupTask;
 import com.jsofttechnologies.jpa.dev.FlowPage;
 import com.jsofttechnologies.jpa.dev.FlowTask;
 import com.jsofttechnologies.jpa.dev.FlowUserTask;
@@ -47,13 +49,16 @@ public class FlowTaskService extends QueryService<FlowTask> {
     private FlowUserGroupModuleQueryService flowUserGroupModuleQueryService;
 
 
+    @EJB
+    private EntityManagerDAO<FlowUserTask, Long> entityManagerDAO;
+
     @SkipCheck("action")
     @GET
     @Path("/getSessionTask")
     @Produces("application/json")
     public FlowTask getSessionTask(@HeaderParam("Authorization") String authorization, @QueryParam("id") Long id, @QueryParam("name") String name, @DefaultValue("25") @QueryParam("size") Integer size, @DefaultValue("false") @QueryParam("active") Boolean active,
-                            @DefaultValue("false") @QueryParam("pinned") Boolean pinned, @DefaultValue("false") @QueryParam("locked") Boolean locked, @DefaultValue("true") @QueryParam("showToolBar") Boolean showToolBar,
-                            @QueryParam("page") String page, @QueryParam("page-path") String pagePath, @QueryParam("flowId") String flowId, @QueryParam("group-default") @DefaultValue("false") Boolean groupDefault) {
+                                   @DefaultValue("false") @QueryParam("pinned") Boolean pinned, @DefaultValue("false") @QueryParam("locked") Boolean locked, @DefaultValue("true") @QueryParam("showToolBar") Boolean showToolBar,
+                                   @QueryParam("page") String page, @QueryParam("page-path") String pagePath, @QueryParam("flowId") String flowId, @QueryParam("group-default") @DefaultValue("false") Boolean groupDefault) {
 
         if (id != null) {
             setNamedQuery(FlowTask.FIND_BY_ID);
@@ -125,8 +130,9 @@ public class FlowTaskService extends QueryService<FlowTask> {
     @GET
     @Path("/getTask")
     public Response getTask(@HeaderParam("Authorization") String authorization, @QueryParam("id") Long id, @QueryParam("name") String name, @DefaultValue("25") @QueryParam("size") Integer size, @DefaultValue("false") @QueryParam("active") Boolean active,
-                                   @DefaultValue("false") @QueryParam("pinned") Boolean pinned, @DefaultValue("false") @QueryParam("locked") Boolean locked, @DefaultValue("true") @QueryParam("showToolBar") Boolean showToolBar,
-                                   @QueryParam("page") String page, @QueryParam("page-path") String pagePath, @QueryParam("flowId") String flowId, @QueryParam("group-default") @DefaultValue("false") Boolean groupDefault) {
+                            @DefaultValue("false") @QueryParam("pinned") Boolean pinned, @DefaultValue("false") @QueryParam("locked") Boolean locked, @DefaultValue("true") @QueryParam("showToolBar") Boolean showToolBar,
+                            @QueryParam("page") String page, @QueryParam("page-path") String pagePath, @QueryParam("flowId") String flowId, @QueryParam("group-default") @DefaultValue("false") Boolean groupDefault,
+                            @QueryParam("newTask") @DefaultValue("true") Boolean newTask) {
 
         FlowSessionHelper.Promise authentication = session.isAuthorized(authorization);
 
@@ -149,84 +155,111 @@ public class FlowTaskService extends QueryService<FlowTask> {
 
             FlowUserTask flowUserTask = null;
             FlowUserGroupModule flowUserGroupModule = flowUserGroupModuleQueryService.findByGroupAndTask(authentication.getFlowUserGroup().getGroupName(), flowTask.getId());
+            if (flowUserGroupModule != null) {
+                FlowUserGroupTask flowUserGroupTask = flowUserGroupModule.getFlowUserGroupTask();
+                if (groupDefault) {
 
-            if (groupDefault) {
-                if (active == null) {
-                    active = flowUserGroupModule.getFlowUserGroupTask().getActive();
-                }
+                    if (flowUserGroupTask != null) {
+                        if (active == null) {
+                            active = flowUserGroupTask.getActive();
+                        }
 
-                if (size == null) {
-                    size = flowUserGroupModule.getFlowUserGroupTask().getSize();
-                }
+                        if (size == null) {
+                            size = flowUserGroupTask.getSize();
+                        }
 
-                if (pinned == null) {
-                    pinned = flowUserGroupModule.getFlowUserGroupTask().getPinned();
-                }
+                        if (pinned == null) {
+                            pinned = flowUserGroupTask.getPinned();
+                        }
 
-                if (locked == null) {
-                    locked = flowUserGroupModule.getFlowUserGroupTask().getLocked();
-                }
+                        if (locked == null) {
+                            locked = flowUserGroupTask.getLocked();
+                        }
 
-                if (showToolBar == null) {
-                    showToolBar = flowUserGroupModule.getFlowUserGroupTask().getToolBar();
-                }
+                        if (showToolBar == null) {
+                            showToolBar = flowUserGroupTask.getToolBar();
+                        }
 
-                if (page == null) {
-                    page = flowUserGroupModule.getFlowUserGroupTask().getPage();
-                }
+                        if (page == null) {
+                            page = flowUserGroupTask.getPage();
+                        }
+                    }
 
 
-            } else {
-                flowUserTask = flowUserTaskQueryService.findFlowId(flowId);
-                if (flowUserTask != null) {
+                    if (flowId == null) {
+                        flowUserTask = new FlowUserTask();
+                        flowUserTask.setActive(active);
+                        flowUserTask.setSize(size);
+                        flowUserTask.setPinned(pinned);
+                        flowUserTask.setLocked(locked);
+                        flowUserTask.setPage(page);
+                        flowUserTask.setParam(pagePath);
+                        flowUserTask.setFlowTaskId(flowTask.getId());
+                        flowUserTask.setFlowUserId(authentication.getFlowUser().getId());
+                        try {
+                            if (newTask) {
+                                flowUserTask = entityManagerDAO.updateObject(flowUserTask);
+                                flowId = flowUserTask.getId().toString();
+                            }
+                        } catch (Exception e) {
+                            exceptionSummary.handleException(e, flowUserTask.getClass(), flowUserTask);
+                        }
+                    }
+
+                } else {
+                    flowUserTask = flowUserTaskQueryService.findFlowId(flowId);
+                    if (flowUserTask != null) {
+                        if (active == null) {
+                            active = flowUserTask.getActive();
+                        }
+
+                        if (size == null) {
+                            size = flowUserTask.getSize();
+                        }
+
+                        if (pinned == null) {
+                            pinned = flowUserTask.getPinned();
+                        }
+
+                        if (locked == null) {
+                            locked = flowUserTask.getLocked();
+                        }
+
+                        if (page == null) {
+                            page = flowUserTask.getPage();
+                        }
+
+                        if (pagePath == null) {
+                            pagePath = flowUserTask.getParam();
+                        }
+                    }
+                    // If some properties from FlowUserTask are null will get their default.
                     if (active == null) {
-                        active = flowUserTask.getActive();
+                        active = flowUserGroupModule.getFlowUserGroupTask().getActive();
                     }
 
                     if (size == null) {
-                        size = flowUserTask.getSize();
+                        size = flowUserGroupModule.getFlowUserGroupTask().getSize();
                     }
 
                     if (pinned == null) {
-                        pinned = flowUserTask.getPinned();
+                        pinned = flowUserGroupModule.getFlowUserGroupTask().getPinned();
                     }
 
                     if (locked == null) {
-                        locked = flowUserTask.getLocked();
+                        locked = flowUserGroupModule.getFlowUserGroupTask().getLocked();
+                    }
+
+                    if (showToolBar == null) {
+                        showToolBar = flowUserGroupModule.getFlowUserGroupTask().getToolBar();
                     }
 
                     if (page == null) {
-                        page = flowUserTask.getPage();
+                        page = flowUserGroupModule.getFlowUserGroupTask().getPage();
                     }
 
-                    if (pagePath == null) {
-                        pagePath = flowUserTask.getParam();
-                    }
-                }
-                // If some properties from FlowUserTask are null will get their default.
-                if (active == null) {
-                    active = flowUserGroupModule.getFlowUserGroupTask().getActive();
                 }
 
-                if (size == null) {
-                    size = flowUserGroupModule.getFlowUserGroupTask().getSize();
-                }
-
-                if (pinned == null) {
-                    pinned = flowUserGroupModule.getFlowUserGroupTask().getPinned();
-                }
-
-                if (locked == null) {
-                    locked = flowUserGroupModule.getFlowUserGroupTask().getLocked();
-                }
-
-                if (showToolBar == null) {
-                    showToolBar = flowUserGroupModule.getFlowUserGroupTask().getToolBar();
-                }
-
-                if (page == null) {
-                    page = flowUserGroupModule.getFlowUserGroupTask().getPage();
-                }
 
             }
 

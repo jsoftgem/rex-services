@@ -21,9 +21,19 @@ public class WarRegionQueryService extends QueryService<WarCustomerRegion> {
     }
 
     public WarCustomerRegion findByCode(String regionCode) {
-        setNamedQuery(WarCustomerRegion.FIND_BY_CODE);
-        putParam("regionCode", regionCode);
-        return getSingleResult();
+        try {
+
+            setNamedQuery(WarCustomerRegion.FIND_BY_CODE);
+            putParam("regionCode", regionCode);
+            return getSingleResult();
+
+        } catch (Exception e) {
+            exceptionSummary.handleException(e, getClass(), regionCode);
+        }
+
+
+        return null;
+
     }
 
 }

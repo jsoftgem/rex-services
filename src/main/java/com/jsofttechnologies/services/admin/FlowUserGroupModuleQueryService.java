@@ -5,6 +5,7 @@ import com.jsofttechnologies.services.util.QueryService;
 
 import javax.ejb.Stateless;
 import javax.ws.rs.Path;
+import java.util.List;
 
 /**
  * Created by Jerico on 11/20/2014.
@@ -25,6 +26,19 @@ public class FlowUserGroupModuleQueryService extends QueryService<FlowUserGroupM
         putParam("taskId", taskId);
 
         return getSingleResult();
+    }
+
+    public List<FlowUserGroupModule> findByGroupName(String groupName) {
+        List<FlowUserGroupModule> list = null;
+        try {
+            setNamedQuery(FlowUserGroupModule.FIND_BY_USER_GROUP);
+            putParam("groupName", groupName);
+            list = doGetResultList();
+        } catch (Exception e) {
+            exceptionSummary.handleException(e, getClass(), groupName);
+        }
+
+        return list;
     }
 
 }

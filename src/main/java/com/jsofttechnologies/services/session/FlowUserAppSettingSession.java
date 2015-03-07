@@ -52,6 +52,7 @@ public class FlowUserAppSettingSession extends FlowService {
                 flowUserAppSetting.setMenu("sidebar-default");
                 flowUserAppSetting.setStyle("style1");
                 flowUserAppSetting.setTheme("yellow-blue");
+                flowUserAppSetting.setLayout(AppLayout.FLUIDSCREEN);
                 flowUserAppSettingCrudService.create(flowUserAppSetting);
             }
             response = Response.ok(flowUserAppSetting, MediaType.APPLICATION_JSON_TYPE).build();
@@ -102,7 +103,7 @@ public class FlowUserAppSettingSession extends FlowService {
             }
 
             if (layout != null) {
-                // TODO:  flowUserAppSetting.setLayout(layout);
+                flowUserAppSetting.setLayout(layout);
             }
 
             if (flowUserAppSetting != null) {

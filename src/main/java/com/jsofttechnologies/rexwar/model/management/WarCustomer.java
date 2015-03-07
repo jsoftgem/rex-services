@@ -50,7 +50,7 @@ public class WarCustomer implements FlowJpe {
     @Column(name = "customer_code", unique = true, nullable = false)
     private String customerCode;
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    @JoinColumn(name = "war_customer_school", referencedColumnName = "war_customer_school_id")
+    @JoinColumn(name = "war_customer_school", referencedColumnName = "war_customer_school_id", nullable = false)
     private School school;
     @Column(name = "customer_information_on_enrollment")
     private String informationOnEnrollment;
@@ -61,13 +61,13 @@ public class WarCustomer implements FlowJpe {
     @Column(name = "customer_association", length = ColumnLengths.NAME)
     private String association;
     @Enumerated(EnumType.STRING)
-    @Column(name = "customer_buying_process", length = ColumnLengths.NAME, nullable = false)
+    @Column(name = "customer_buying_process", length = ColumnLengths.NAME)
     private BuyingProcess buyingProcess;
     @Enumerated(EnumType.STRING)
-    @Column(name = "customer_nature_of_purchase", length = ColumnLengths.NAME, nullable = false)
+    @Column(name = "customer_nature_of_purchase", length = ColumnLengths.NAME)
     private PurchaseNature natureOfPurchase;
     @Enumerated(EnumType.STRING)
-    @Column(name = "customer_ownership", length = ColumnLengths.NAME, nullable = false)
+    @Column(name = "customer_ownership", length = ColumnLengths.NAME)
     private Ownership ownership;
     @Column(name = "customer_using_journals", length = ColumnLengths.FLAG)
     private Boolean usingJournals;
