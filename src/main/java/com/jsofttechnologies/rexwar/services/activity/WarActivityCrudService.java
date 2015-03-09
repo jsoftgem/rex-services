@@ -4,6 +4,10 @@ import com.jsofttechnologies.interceptor.Notify;
 import com.jsofttechnologies.jpa.util.FlowAlertType;
 import com.jsofttechnologies.rexwar.model.activity.WarActivity;
 import com.jsofttechnologies.rexwar.model.activity.WarPlanner;
+import com.jsofttechnologies.rexwar.model.management.WarAgent;
+import com.jsofttechnologies.rexwar.model.management.WarCustomerRegion;
+import com.jsofttechnologies.rexwar.services.data.WarRegionQueryService;
+import com.jsofttechnologies.rexwar.services.management.WarAgentQueryService;
 import com.jsofttechnologies.services.util.CrudService;
 import com.jsofttechnologies.services.util.FlowSessionHelper;
 import com.jsofttechnologies.util.CalendarUtil;
@@ -35,6 +39,12 @@ public class WarActivityCrudService extends CrudService<WarActivity, Long> {
     @EJB
     private WarPlannerQueryService warPlannerQueryService;
 
+    @EJB
+    private WarRegionQueryService regionQueryService;
+
+    @EJB
+    private WarAgentQueryService warAgentQueryService;
+
     public WarActivityCrudService() {
         super(WarActivity.class);
     }
@@ -42,11 +52,33 @@ public class WarActivityCrudService extends CrudService<WarActivity, Long> {
     @Override
     protected WarActivity preCreateValidation(WarActivity warActivity) throws Exception {
 
+        WarAgent warAgent = warAgentQueryService.getById(warActivity.getAgentId());
+
+        WarCustomerRegion region = regionQueryService.findByCode(warAgent.getRegion());
+
+        warActivity.setRegionId(region.getId());
+
+        warActivity.setRegionCode(region.getRegionCode());
         return warActivity;
     }
 
     @Override
     protected WarActivity preUpdateValidation(WarActivity warActivity) throws Exception {
+
+        if ((warActivity.getEcd() != null && warActivity.getEcd()) ||
+                (warActivity.getIte() != null && warActivity.getIte()) ||
+                (warActivity.getCoe() != null && warActivity.getCoe()) ||
+                (warActivity.getFp() != null && warActivity.getFp()) ||
+                (warActivity.getGd() != null && warActivity.getGd()) ||
+                (warActivity.getDoi() != null && warActivity.getDoi()) ||
+                (warActivity.getPo() != null && warActivity.getPo()) ||
+                (warActivity.getDaotrc() != null && warActivity.getDaotrc()) ||
+                (warActivity.getBookList() != null && warActivity.getBookList()) ||
+                (warActivity.getUcis() != null && warActivity.getUcis()) ||
+                (warActivity.getIes() != null && warActivity.getIes())) {
+            warActivity.setActual(Boolean.TRUE);
+        }
+
         return warActivity;
     }
 

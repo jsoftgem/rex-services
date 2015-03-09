@@ -117,12 +117,14 @@ public abstract class CrudService<T extends FlowJpe, ID extends Number> extends 
 
     public String delete() {
         try {
-            entityManagerDao.deleteObject(getInstance());
+            T t = preDeleteValidation(getInstance());
+            entityManagerDao.deleteObject(t);
         } catch (Exception e) {
             exceptionSummary.handleException(e, getClass(), getInstance());
         }
         return "deleted";
     }
+
 
     @DELETE
     @Path("/{id:[0-9][0-9]*}")
@@ -191,6 +193,10 @@ public abstract class CrudService<T extends FlowJpe, ID extends Number> extends 
     protected abstract T preCreateValidation(T t) throws Exception;
 
     protected abstract T preUpdateValidation(T t) throws Exception;
+
+    protected T preDeleteValidation(T t) {
+        return t;
+    }
 
     protected void postCreateValidation(T t) {
 

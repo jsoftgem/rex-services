@@ -6,6 +6,7 @@ import com.jsofttechnologies.rexwar.model.activity.WarPlanner;
 import com.jsofttechnologies.rexwar.model.activity.view.WarCustomerMarketView;
 import com.jsofttechnologies.rexwar.services.activity.WarActivityCrudService;
 import com.jsofttechnologies.rexwar.services.activity.WarPlannerCrudService;
+import com.jsofttechnologies.rexwar.services.management.WarAgentQueryService;
 import com.jsofttechnologies.rexwar.util.contants.Month;
 import com.jsofttechnologies.services.util.FlowService;
 import com.jsofttechnologies.util.CalendarUtil;
@@ -34,6 +35,8 @@ public class WarPlannerService extends FlowService {
     private WarPlannerCrudService warPlannerCrudService;
     @EJB
     private WarActivityCrudService warActivityCrudService;
+    @EJB
+    private WarAgentQueryService warAgentQueryService;
 
 
     @PUT
@@ -105,11 +108,13 @@ public class WarPlannerService extends FlowService {
                 week = CalendarUtil.getWeek(startDate);
             }
 
-            List<WarCustomerMarketView> warCustomerMarketViewList = storedProcedures.callSchoolYearCustomer(schoolYear, agentId, isMonth, month, week, start, size);
+            String region = warAgentQueryService.getById(agentId).getRegion();
+
+            List<WarCustomerMarketView> warCustomerMarketViewList = storedProcedures.callSchoolYearCustomer(schoolYear, agentId, isMonth, month, week, start, size, region, tag);
 
             int length = warCustomerMarketViewList.size();
 
-            List<WarCustomerMarketView> nextBatch = storedProcedures.callSchoolYearCustomer(schoolYear, agentId, isMonth, month, week, length, size);
+            List<WarCustomerMarketView> nextBatch = storedProcedures.callSchoolYearCustomer(schoolYear, agentId, isMonth, month, week, length, size, region, tag);
 
             int nextBatchSize = 0;
 
@@ -131,7 +136,8 @@ public class WarPlannerService extends FlowService {
                             .addField("week", week)
                             .addField("schoolYear", schoolYear)
                             .addField("agentId", agentId)
-                            .addField("page", page);
+                            .addField("page", page)
+                            .addField("region", region);
 
             response = Response.ok(projectHelper.buildJsonString(), MediaType.APPLICATION_JSON_TYPE).build();
 

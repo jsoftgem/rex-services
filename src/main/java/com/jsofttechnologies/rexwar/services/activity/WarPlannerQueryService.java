@@ -26,12 +26,18 @@ public class WarPlannerQueryService extends QueryService<WarPlanner> {
     @SkipCheck("action")
     @Produces(MediaType.APPLICATION_JSON)
     public WarPlanner getPlanner(@QueryParam("schoolYear") Long schoolYear, @QueryParam("agent") Long agent, @QueryParam("year") Integer year, @QueryParam("month") Month month, @QueryParam("isWeek") @DefaultValue("false") Boolean isWeek) {
-        setNamedQuery(WarPlanner.FIND_BY_AGENT);
-        putParam("schoolYear", schoolYear);
-        putParam("agent", agent);
-        putParam("year", year);
-        putParam("month", month);
-        return getSingleResult();
+        try {
+            setNamedQuery(WarPlanner.FIND_BY_AGENT);
+            putParam("schoolYear", schoolYear);
+            putParam("agent", agent);
+            putParam("year", year);
+            putParam("month", month);
+            return getSingleResult();
+        } catch (Exception e) {
+            exceptionSummary.handleException(e, getClass(), request.getHeaderNames());
+        }
+
+        return null;
     }
 
 

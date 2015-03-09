@@ -1,6 +1,7 @@
 package com.jsofttechnologies.services.util;
 
 import com.jsofttechnologies.ejb.MergeExceptionSummary;
+import com.jsofttechnologies.interceptor.SkipCheck;
 import com.jsofttechnologies.jpa.admin.FlowUploadedFile;
 import com.jsofttechnologies.security.SessionHelper;
 import com.jsofttechnologies.services.admin.FlowUploadedFileCrudService;
@@ -118,7 +119,7 @@ public class UploadService extends FlowService {
     @Path("upload_image/{base_folder}")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response uploadTo(@PathParam("base_folder") String baseFolder, @QueryParam("name") String name,
-            MultipartFormDataInput input) {
+                             MultipartFormDataInput input) {
         Response response = null;
         String imgUri = null;
         String fileName = null;
@@ -167,9 +168,10 @@ public class UploadService extends FlowService {
     }
 
     @POST
+    @SkipCheck("action")
     @Path("upload_file")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response upload(@QueryParam("folder") String baseFolder, @DefaultValue("attachment") @QueryParam("type") String type, MultipartFormDataInput formDataInput) {
+    public Response upload(@QueryParam("file-name") String fileName, @QueryParam("folder") String baseFolder, @DefaultValue("attachment") @QueryParam("type") String type, MultipartFormDataInput formDataInput) {
         Response response = Response.ok().build();
         try {
 
@@ -189,6 +191,7 @@ public class UploadService extends FlowService {
                 flowUploadedFileCrudService.update(flowUploadedFile, flowUploadedFile.getId());
             } else {
                 flowUploadedFile.setSize(bytes.length);
+                flowUploadedFile.setDescription(fileName);
                 flowUploadedFile.setType(type);
                 flowUploadedFile.setContentType(inputPart.getMediaType().toString());
                 flowUploadedFile.setFolder(baseFolder);

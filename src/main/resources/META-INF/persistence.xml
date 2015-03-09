@@ -36,10 +36,12 @@
 
         <class>com.jsofttechnologies.rexwar.model.activity.WarActivity</class>
         <class>com.jsofttechnologies.rexwar.model.activity.WarCustomerMarket</class>
+        <class>com.jsofttechnologies.rexwar.model.activity.WarActivityNote</class>
         <class>com.jsofttechnologies.rexwar.model.activity.WarMarketSegment</class>
         <class>com.jsofttechnologies.rexwar.model.activity.WarMarketSegmentControl</class>
         <class>com.jsofttechnologies.rexwar.model.activity.WarSchoolYear</class>
         <class>com.jsofttechnologies.rexwar.model.activity.WarPlanner</class>
+        <class>com.jsofttechnologies.rexwar.model.activity.WarPlannerAttachment</class>
         <class>com.jsofttechnologies.rexwar.model.activity.view.WarCustomerMarketView</class>
 
         <!-- Management -->
@@ -73,7 +75,10 @@
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
-            <property name="hibernate.hbm2ddl.import_files" value="rex-core.sql"/>
+            <!-- <property name="hibernate.show_sql" value="true"/>
+             <property name="hibernate.format_sql" value="true"/>-->
+            <!--    
+                <property name="hibernate.hbm2ddl.import_files" value="rex-core.sql"/>-->
 
         </properties>
     </persistence-unit>

@@ -34,10 +34,12 @@
 
         <class>com.jsofttechnologies.rexwar.model.activity.WarActivity</class>
         <class>com.jsofttechnologies.rexwar.model.activity.WarCustomerMarket</class>
+        <class>com.jsofttechnologies.rexwar.model.activity.WarActivityNote</class>
         <class>com.jsofttechnologies.rexwar.model.activity.WarMarketSegment</class>
         <class>com.jsofttechnologies.rexwar.model.activity.WarMarketSegmentControl</class>
         <class>com.jsofttechnologies.rexwar.model.activity.WarSchoolYear</class>
         <class>com.jsofttechnologies.rexwar.model.activity.WarPlanner</class>
+        <class>com.jsofttechnologies.rexwar.model.activity.WarPlannerAttachment</class>
         <class>com.jsofttechnologies.rexwar.model.activity.view.WarCustomerMarketView</class>
 
         <!-- Management -->

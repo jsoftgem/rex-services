@@ -22,12 +22,13 @@ import java.io.Serializable;
                         @StoredProcedureParameter(mode = ParameterMode.IN, name = WarCustomerMarketView.IN_WEEK, type = Integer.class),
                         @StoredProcedureParameter(mode = ParameterMode.IN, name = WarCustomerMarketView.IN_SIZE, type = Integer.class),
                         @StoredProcedureParameter(mode = ParameterMode.IN, name = WarCustomerMarketView.IN_START_AT, type = Integer.class),
+                        @StoredProcedureParameter(mode = ParameterMode.IN, name = WarCustomerMarketView.IN_REGION, type = String.class),
+                        @StoredProcedureParameter(mode = ParameterMode.IN, name = WarCustomerMarketView.IN_TAG, type = String.class)
                 }
         )
 })
 @Entity
 @XmlRootElement
-@IdClass(WarCustomerMarketViewID.class)
 public class WarCustomerMarketView implements Serializable {
 
     public static final String PROCEDURE_SCHOOL_YEAR_CUSTOMER = "school_year_customer";
@@ -38,21 +39,17 @@ public class WarCustomerMarketView implements Serializable {
     public static final String IN_WEEK = "week";
     public static final String IN_SIZE = "size";
     public static final String IN_START_AT = "startAt";
+    public static final String IN_REGION = "region";
+    public static final String IN_TAG = "tag";
     @Id
     @Column(name = "customer_id")
     private Long id;
-
-    @Id
-    @Column(name = "customer_market_id")
-    private Long customerMarketId;
-
     @Column(name = "customer_name")
     private String name;
     @Column(name = "customer_market_potential_segment")
     private String marketSegment;
     @Column(name = "customer_market_potential")
     private Integer marketPotential;
-    @Id
     @Column(name = "customer_school_year")
     private Long schoolYear;
     @Column(name = "customer_material_advisor")
@@ -66,6 +63,10 @@ public class WarCustomerMarketView implements Serializable {
     private Integer year;
     @Column(name = "customer_week")
     private Integer week;
+    @Column(name = "customer_index")
+    private Integer index;
+    @Column(name = "customer_region")
+    private String region;
 
     public Long getId() {
         return id;
@@ -73,14 +74,6 @@ public class WarCustomerMarketView implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getCustomerMarketId() {
-        return customerMarketId;
-    }
-
-    public void setCustomerMarketId(Long customerMarketId) {
-        this.customerMarketId = customerMarketId;
     }
 
     public String getName() {
@@ -155,6 +148,21 @@ public class WarCustomerMarketView implements Serializable {
         this.week = week;
     }
 
+    public Integer getIndex() {
+        return index;
+    }
+
+    public void setIndex(Integer index) {
+        this.index = index;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
 
     @Override
     public String toString() {

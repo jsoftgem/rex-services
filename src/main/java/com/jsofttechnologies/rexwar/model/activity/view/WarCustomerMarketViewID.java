@@ -8,7 +8,6 @@ import java.io.Serializable;
 public class WarCustomerMarketViewID implements Serializable {
 
     private Long id;
-    private Long customerMarketId;
     private Long schoolYear;
 
 
@@ -18,14 +17,6 @@ public class WarCustomerMarketViewID implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getCustomerMarketId() {
-        return customerMarketId;
-    }
-
-    public void setCustomerMarketId(Long customerMarketId) {
-        this.customerMarketId = customerMarketId;
     }
 
     public Long getSchoolYear() {
@@ -43,8 +34,6 @@ public class WarCustomerMarketViewID implements Serializable {
 
         WarCustomerMarketViewID that = (WarCustomerMarketViewID) o;
 
-        if (customerMarketId != null ? !customerMarketId.equals(that.customerMarketId) : that.customerMarketId != null)
-            return false;
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (schoolYear != null ? !schoolYear.equals(that.schoolYear) : that.schoolYear != null) return false;
 
@@ -54,7 +43,6 @@ public class WarCustomerMarketViewID implements Serializable {
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (customerMarketId != null ? customerMarketId.hashCode() : 0);
         result = 31 * result + (schoolYear != null ? schoolYear.hashCode() : 0);
         return result;
     }

@@ -21,15 +21,13 @@ public class StoredProcedures {
 
     @PersistenceContext(unitName = ProjectConstants.MAIN_PU)
     private EntityManager entityManager;
-
-
     @EJB
     private MergeExceptionSummary exceptionSummary;
 
     private static final String SCHOOL_YEAR_CUSTOMER = "school_year_customer";
 
     public List<WarCustomerMarketView> callSchoolYearCustomer(Long schoolYear, Long agentId, boolean isMonth, Month month, Integer week,
-                                                              Integer start, Integer size) {
+                                                              Integer start, Integer size, String region, String tag) {
 
         List<WarCustomerMarketView> warCustomerMarketViewList = new ArrayList<>();
 
@@ -43,7 +41,8 @@ public class StoredProcedures {
             query.setParameter(WarCustomerMarketView.IN_WEEK, week);
             query.setParameter(WarCustomerMarketView.IN_SIZE, size);
             query.setParameter(WarCustomerMarketView.IN_START_AT, start);
-
+            query.setParameter(WarCustomerMarketView.IN_REGION, region);
+            query.setParameter(WarCustomerMarketView.IN_TAG, tag.toLowerCase());
             warCustomerMarketViewList = query.getResultList();
 
         } catch (Exception e) {
