@@ -2,7 +2,7 @@
 Fluid Core
 - Jasper reports
 - Fix flow_user_task must get the group default properties. (done)
-- Password validation.
+- Password validation. (done)
 - removal of panels. Must be truly removed. (done)
 
 

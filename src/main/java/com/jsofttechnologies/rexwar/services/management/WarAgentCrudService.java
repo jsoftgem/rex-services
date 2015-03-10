@@ -11,19 +11,16 @@ import com.jsofttechnologies.rexwar.util.WarConstants;
 import com.jsofttechnologies.services.admin.*;
 import com.jsofttechnologies.services.util.CrudService;
 import com.jsofttechnologies.services.util.MessageService;
-import com.jsofttechnologies.util.PasswordHash;
+import com.jsofttechnologies.util.PasswordUtil;
 import com.jsofttechnologies.util.ProjectHelper;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.faces.flow.Flow;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 
 /**
  * Created by Jerico on 1/11/2015.
@@ -91,10 +88,8 @@ public class WarAgentCrudService extends CrudService<WarAgent, Long> {
         String password = warAgent.getUser().getPassword();
         // hashPassword
         try {
-            password = PasswordHash.createHash(password);
-        } catch (NoSuchAlgorithmException e) {
-            exceptionSummary.handleException(e, getClass());
-        } catch (InvalidKeySpecException e) {
+            password = PasswordUtil.hashPassword(password);
+        } catch (Exception e) {
             exceptionSummary.handleException(e, getClass());
         }
         warAgent.getUser().setPassword(password);
@@ -131,13 +126,11 @@ public class WarAgentCrudService extends CrudService<WarAgent, Long> {
 
         String password = warAgent.getUser().getPassword();
         // hashPassword
-        if (password != null) {
+        if (password != null && !password.equals(attachedInstance.getUser().getPassword())) {
             try {
-                password = PasswordHash.createHash(password);
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            } catch (InvalidKeySpecException e) {
-                e.printStackTrace();
+                password = PasswordUtil.hashPassword(password);
+            } catch (Exception e) {
+                exceptionSummary.handleException(e, getClass());
             }
             warAgent.getUser().setPassword(password);
         } else {

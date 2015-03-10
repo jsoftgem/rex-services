@@ -1,14 +1,19 @@
 package com.jsofttechnologies.rexwar.services.report;
 
 import com.jsofttechnologies.interceptor.SkipCheck;
+import com.jsofttechnologies.rexwar.model.management.WarAgent;
 import com.jsofttechnologies.rexwar.model.reports.WarReportMonthlyCustomerView;
+import com.jsofttechnologies.rexwar.services.management.WarAgentQueryService;
 import com.jsofttechnologies.rexwar.util.WarConstants;
 import com.jsofttechnologies.rexwar.util.contants.Month;
+import com.jsofttechnologies.services.util.FlowPermissionService;
 import com.jsofttechnologies.services.util.FlowService;
+import com.jsofttechnologies.services.util.FlowSessionHelper;
 import com.jsofttechnologies.util.ProjectConstants;
 import com.jsofttechnologies.util.ProjectHelper;
 import com.jsofttechnologies.util.TableUtil;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -31,6 +36,12 @@ public class WarReportMonthlyService extends FlowService {
     @PersistenceContext(unitName = ProjectConstants.MAIN_PU)
     private EntityManager entityManager;
 
+    @EJB
+    private FlowPermissionService flowPermissionService;
+    @EJB
+    private WarAgentQueryService warAgentQueryService;
+
+
     @GET
     @SkipCheck("action")
     @Path("customers")
@@ -45,6 +56,15 @@ public class WarReportMonthlyService extends FlowService {
             @QueryParam("start") @DefaultValue("0") Integer start, @QueryParam("tag") @DefaultValue("20") String tag) {
         Response response = null;
 
+
+        if (flowPermissionService.hasProfileEJB(WarConstants.AGENT_PROFILE)) {
+            isAgent = Boolean.TRUE;
+            isRegion = Boolean.TRUE;
+            FlowSessionHelper.Promise session = getUserSession();
+            WarAgent warAgent = warAgentQueryService.findAgentByUsername(session.getFlowUser().getUsername());
+            agentId = warAgent.getId();
+            region = warAgent.getRegion();
+        }
 
         List<WarReportMonthlyCustomerView> warReportMonthlyCustomerViewList = new ArrayList<>();
 
@@ -111,16 +131,14 @@ public class WarReportMonthlyService extends FlowService {
                     query += " order by w.report_customer asc";
                     break;
                 case "20":
-                    query += " order by w.report_frequency desc";
+                    query += " order by w.report_tag_index desc";
                     break;
                 case "50":
-                    query += " order by w.report_frequency desc";
+                    query += " order by w.report_tag_index desc";
                     break;
             }
 
             warReportMonthlyCustomerViewList = entityManager.createNativeQuery(query, WarReportMonthlyCustomerView.class)
-                  /*  .setFirstResult(start)
-                    .setMaxResults(size)*/
                     .getResultList();
 
 

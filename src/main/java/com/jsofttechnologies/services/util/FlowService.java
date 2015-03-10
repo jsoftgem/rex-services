@@ -2,6 +2,7 @@ package com.jsofttechnologies.services.util;
 
 import com.jsofttechnologies.ds.StoredProcedures;
 import com.jsofttechnologies.ejb.MergeExceptionSummary;
+import com.jsofttechnologies.util.PasswordUtil;
 import com.jsofttechnologies.util.ProjectConstants;
 
 import javax.annotation.security.PermitAll;
@@ -12,7 +13,9 @@ import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -57,6 +60,18 @@ public abstract class FlowService implements Serializable {
         return request.getHeader(ProjectConstants.HEADER_AUTHORIZATION);
     }
 
+    protected FlowSessionHelper.Promise getUserSession() {
+        return session.isAuthorized(getAuthorization());
+    }
+
+
+    @GET
+    @PermitAll
+    @Path("/getHashedPassword")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getHashed(@QueryParam("password") String password) {
+        return PasswordUtil.hashPassword(password);
+    }
 
     @GET
     @PermitAll

@@ -32,6 +32,10 @@ public class ProjectHelper {
         return json(json);
     }
 
+    public JSONObject buildJSONObject() {
+        return jsonObject(json);
+    }
+
     public static Response error(Exception e) {
         e.printStackTrace();
         return Response.serverError()
@@ -45,6 +49,15 @@ public class ProjectHelper {
                 .entity("{\"msg\":\"" + msg + "\"}")
                 .type(MediaType.APPLICATION_JSON).build();
 
+    }
+
+    public static JSONObject jsonObject(Map<String, Object> jsonMap) {
+        JSONObject jsonObject = new JSONObject();
+        for (String key : jsonMap.keySet()) {
+            jsonObject.put(key, jsonMap.get(key));
+
+        }
+        return jsonObject;
     }
 
     public static String json(Map<String, Object> jsonMap) {

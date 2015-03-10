@@ -73,6 +73,12 @@ public class FlowUserManager {
     }
 
 
+    public void refreshUserMap() {
+        entityManager.clear();
+        userMap.clear();
+        userIdMap.clear();
+    }
+
     public Set<FlowUserProfile> getMergeUserProfile(String username) {
         return getUserProfileSet(getUserId(username));
     }

@@ -2,8 +2,8 @@ package com.jsofttechnologies.rexwar.services.management;
 
 import com.jsofttechnologies.jpa.admin.FlowUser;
 import com.jsofttechnologies.jpa.admin.FlowUserGroup;
+import com.jsofttechnologies.rexwar.model.management.WarAgent;
 import com.jsofttechnologies.rexwar.model.management.WarCustomer;
-import com.jsofttechnologies.rexwar.model.management.WarCustomerMarketSchoolYear;
 import com.jsofttechnologies.rexwar.model.tables.School;
 import com.jsofttechnologies.rexwar.util.WarConstants;
 import com.jsofttechnologies.services.util.CrudService;
@@ -25,12 +25,17 @@ public class WarCustomerCrudService extends CrudService<WarCustomer, Long> {
     @Context
     private HttpServletRequest request;
 
+
     @EJB
     private FlowSessionHelper sessionHelper;
+
+    @EJB
+    private WarAgentQueryService warAgentQueryService;
 
     public WarCustomerCrudService() {
         super(WarCustomer.class);
     }
+
 
     @Override
     protected WarCustomer preCreateValidation(WarCustomer warCustomer) throws Exception {
@@ -123,8 +128,8 @@ public class WarCustomerCrudService extends CrudService<WarCustomer, Long> {
             FlowUserGroup flowUserGroup = promise.getFlowUserGroup();
 
             if (flowUserGroup.getGroupName().equals(WarConstants.AGENT_GROUP)) {
-
-                if (flowUser.getId() != warCustomer.getOwnerAgentId()) {
+                WarAgent warAgent = warAgentQueryService.findAgentByUsername(flowUser.getUsername());
+                if (warAgent.getId() != warCustomer.getOwnerAgentId()) {
                     throw throwException("WAR_CUSTOMER_AGENT_NOT_OWNER");
                 }
             }

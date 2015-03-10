@@ -11,17 +11,17 @@ import java.io.Serializable;
  */
 @Entity
 @XmlRootElement
+@IdClass(WarReportMonthlyCustomerViewID.class)
 public class WarReportMonthlyCustomerView implements Serializable {
+    @Id
     @Column(name = "report_customer_id", nullable = false)
     private Long customerId;
     @Column(name = "report_customer", nullable = false)
     private String customerName;
+    @Id
     @Column(name = "report_month")
     @Enumerated(EnumType.STRING)
     private Month month;
-    @Id
-    @Column(name = "report_customer_market_id", nullable = false)
-    private Long customerMakertId;
     @Column(name = "report_agent")
     private Long agent;
     @Column(name = "report_school_year")
@@ -56,6 +56,8 @@ public class WarReportMonthlyCustomerView implements Serializable {
     private Integer ucis;
     @Column(name = "report_implemented_ex_sem")
     private Integer ies;
+    @Column(name = "report_tag_index")
+    private Integer index;
 
     public Long getCustomerId() {
         return customerId;
@@ -79,14 +81,6 @@ public class WarReportMonthlyCustomerView implements Serializable {
 
     public void setMonth(Month month) {
         this.month = month;
-    }
-
-    public Long getCustomerMakertId() {
-        return customerMakertId;
-    }
-
-    public void setCustomerMakertId(Long customerMakertId) {
-        this.customerMakertId = customerMakertId;
     }
 
     public Long getAgent() {
@@ -223,5 +217,13 @@ public class WarReportMonthlyCustomerView implements Serializable {
 
     public void setIes(Integer ies) {
         this.ies = ies;
+    }
+
+    public Integer getIndex() {
+        return index;
+    }
+
+    public void setIndex(Integer index) {
+        this.index = index;
     }
 }

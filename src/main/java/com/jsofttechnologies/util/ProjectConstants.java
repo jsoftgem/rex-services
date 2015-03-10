@@ -4,7 +4,7 @@ package com.jsofttechnologies.util;
  * Created by Jerico on 6/13/2014.
  */
 public class ProjectConstants {
-
+    public static final String SALT = "3559493";
     public static final String SERVICE_DOWNLOAD = "services/download_service";
     public static final String SERVICE_DOWNLOAD_USER_PROFILE_IMAGE = SERVICE_DOWNLOAD
             + "/user_profile_image";

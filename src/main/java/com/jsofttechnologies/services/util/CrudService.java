@@ -165,7 +165,7 @@ public abstract class CrudService<T extends FlowJpe, ID extends Number> extends 
                     .type(MediaType.APPLICATION_JSON_TYPE).build();
         } catch (Exception e) {
             exceptionSummary.handleException(e, getClass(), t);
-            response = ProjectHelper.error(createErrorMessage(t));
+            response = ProjectHelper.error(e.getMessage());
         }
         return response;
     }
@@ -185,7 +185,7 @@ public abstract class CrudService<T extends FlowJpe, ID extends Number> extends 
                     .type(MediaType.APPLICATION_JSON_TYPE).build();
         } catch (Exception e) {
             exceptionSummary.handleException(e, getClass(), t);
-            response = ProjectHelper.error(updateErrorMessage(t));
+            response = ProjectHelper.error(e.getMessage());
         }
         return response;
     }

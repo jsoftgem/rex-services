@@ -4,6 +4,7 @@ import com.jsofttechnologies.ejb.MergeExceptionSummary;
 import com.jsofttechnologies.interceptor.SkipCheck;
 import com.jsofttechnologies.jpa.admin.FlowProfilePermission;
 import com.jsofttechnologies.jpa.admin.FlowUserProfile;
+import com.jsofttechnologies.rexwar.util.WarConstants;
 import com.jsofttechnologies.services.admin.FlowUserQueryService;
 
 import javax.annotation.security.PermitAll;
@@ -26,6 +27,35 @@ public class FlowPermissionService extends FlowService {
 
     @EJB
     private MergeExceptionSummary exceptionSummary;
+
+    public Boolean hasProfileEJB(String profiles) {
+
+        String[] split = profiles.split(",");
+
+        String authorization = request.getHeader("Authorization");
+
+        FlowSessionHelper.Promise promise = session.isAuthorized(authorization);
+
+        boolean valid = false;
+
+        if (promise.getOk()) {
+            if (promise.getFlowUserGroup().getGroupName().equals(WarConstants.AGENT_GROUP)) {
+                parentLoop:
+                for (String prof : split) {
+                    for (FlowUserProfile profile : promise.getFlowUser().getFlowUserProfileSet()) {
+                        if (prof.equals(profile.getProfileName())) {
+                            valid = true;
+                            break parentLoop;
+                        }
+
+                    }
+
+                }
+            }
+        }
+
+        return valid;
+    }
 
 
     @POST

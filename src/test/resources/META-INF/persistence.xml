@@ -64,6 +64,7 @@
         <class>com.jsofttechnologies.rexwar.model.reports.WarReportWeeklyAgentViewCustomer</class>
         <class>com.jsofttechnologies.rexwar.model.reports.WarReportWeeklyAgentView</class>
         <class>com.jsofttechnologies.rexwar.model.reports.WarReportMonthlyCustomerView</class>
+        <class>com.jsofttechnologies.rexwar.model.reports.WarReportMonthlyCustomerViewID</class>
 
         <!-- Sale -->
         <class>com.jsofttechnologies.rexwar.model.sales.HistoricalSale</class>

@@ -5,7 +5,7 @@ import com.jsofttechnologies.jpa.admin.FlowUser;
 import com.jsofttechnologies.jpa.admin.FlowUserGroup;
 import com.jsofttechnologies.model.PaperBag;
 import com.jsofttechnologies.services.util.CrudService;
-import com.jsofttechnologies.util.PasswordHash;
+import com.jsofttechnologies.util.PasswordUtil;
 import com.jsofttechnologies.util.ProjectConstants;
 import com.jsofttechnologies.util.ProjectHelper;
 
@@ -16,8 +16,6 @@ import javax.persistence.PersistenceContext;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,11 +69,9 @@ public class FlowUserCrudService extends CrudService<FlowUser, Long> {
         String password = flowUser.getPassword();
         // hashPassword
         try {
-            password = PasswordHash.createHash(password.trim());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (InvalidKeySpecException e) {
-            e.printStackTrace();
+            password = PasswordUtil.hashPassword(password);
+        } catch (Exception e) {
+            exceptionSummary.handleException(e, getClass());
         }
         flowUser.setPassword(password);
 
@@ -158,11 +154,9 @@ public class FlowUserCrudService extends CrudService<FlowUser, Long> {
         // hashPassword
         if (password != null) {
             try {
-                password = PasswordHash.createHash(password.trim());
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            } catch (InvalidKeySpecException e) {
-                e.printStackTrace();
+                password = PasswordUtil.hashPassword(password);
+            } catch (Exception e) {
+                exceptionSummary.handleException(e, getClass());
             }
             attachedInstance.setPassword(password);
         }

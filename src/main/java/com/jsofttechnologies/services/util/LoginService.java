@@ -8,6 +8,7 @@ import com.jsofttechnologies.rexwar.model.management.WarAgent;
 import com.jsofttechnologies.rexwar.services.management.WarAgentCrudService;
 import com.jsofttechnologies.rexwar.services.management.WarAgentQueryService;
 import com.jsofttechnologies.rexwar.util.WarConstants;
+import com.jsofttechnologies.util.PasswordUtil;
 import com.jsofttechnologies.util.ProjectConstants;
 
 import javax.ejb.EJB;
@@ -21,8 +22,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
 import java.util.Date;
 
@@ -106,14 +105,10 @@ public class LoginService extends FlowService {
 
             String userPassword = flowUser.getPassword();
 
-            if (flowUser != null) {
-                valid = true;
-            /*valid = PasswordHash.validatePassword(password.trim(), userPassword);); TODO: fix validation*/
-            }
-     /*   } catch (NoSuchAlgorithmException e) {
-            exceptionSummary.handleException(e, getClass());
-        } catch (InvalidKeySpecException e) {
-            exceptionSummary.handleException(e, getClass());*/
+            String currentPassword = PasswordUtil.hashPassword(password.trim());
+
+            valid = userPassword.equals(currentPassword);
+            
         } catch (Exception e) {
             exceptionSummary.handleException(e, getClass());
         }

@@ -48,6 +48,13 @@ public class TableFactories extends FlowService {
         return Month.values();
     }
 
+    @Path("/weeks")
+    @GET
+    @SkipCheck("action")
+    public Integer[] weeks() {
+        return new Integer[]{1, 2, 3, 4, 5};
+    }
+
     @Path("/years")
     @GET
     @SkipCheck("authorization")
