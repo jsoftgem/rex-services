@@ -206,7 +206,7 @@
     <profiles>
 
         <profile>
-            <id>install-datasource</id>
+            <id>wildfly</id>
             <build>
                 <finalName>rex-services</finalName>
                 <plugins>
@@ -261,7 +261,7 @@
                         <version>1.0.2.Final</version>
                         <configuration>
                             <jboss-home>${env.JBOSS_HOME}</jboss-home>
-                            <port>10990</port>
+                            <port>9990</port>
                             <username>jerico</username>
                             <password>JERKallstar98</password>
                         </configuration>

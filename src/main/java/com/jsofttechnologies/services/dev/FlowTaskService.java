@@ -183,10 +183,12 @@ public class FlowTaskService extends QueryService<FlowTask> {
                         if (page == null) {
                             page = flowUserGroupTask.getPage();
                         }
+
+
                     }
 
 
-                    if (flowId == null) {
+                    if (flowId == null && newTask) {
                         flowUserTask = new FlowUserTask();
                         flowUserTask.setActive(active);
                         flowUserTask.setSize(size);
@@ -196,6 +198,7 @@ public class FlowTaskService extends QueryService<FlowTask> {
                         flowUserTask.setParam(pagePath);
                         flowUserTask.setFlowTaskId(flowTask.getId());
                         flowUserTask.setFlowUserId(authentication.getFlowUser().getId());
+
                         try {
                             if (newTask) {
                                 flowUserTask = entityManagerDAO.updateObject(flowUserTask);
