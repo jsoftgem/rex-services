@@ -33,7 +33,7 @@ public abstract class QueryService<T extends FlowJpe> extends FlowService {
     private static final long serialVersionUID = 2361737015284852479L;
 
     @PersistenceContext(unitName = ProjectConstants.MAIN_PU)
-    private EntityManager entityManager;
+    protected EntityManager entityManager;
 
 
     @Context
