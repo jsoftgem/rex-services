@@ -42,7 +42,7 @@ public class WarSchoolYearCrudService extends CrudService<WarSchoolYear, Long> {
             warSchoolYear.setCreateByUserId(flowUser.getId());
 
 
-            Set<WarCustomerMarket> customerMarketList = warSchoolYear.getWarCustomerMarkets();
+         /*   Set<WarCustomerMarket> customerMarketList = warSchoolYear.getWarCustomerMarkets();
 
             for (WarCustomerMarket customerMarket : customerMarketList) {
                 customerMarket.setSchoolYear(warSchoolYear);
@@ -53,7 +53,7 @@ public class WarSchoolYearCrudService extends CrudService<WarSchoolYear, Long> {
 
             for (WarMarketSegment segment : warMarketSegments) {
                 segment.setSchoolYear(warSchoolYear);
-            }
+            }*/
 
         }
 
@@ -62,10 +62,12 @@ public class WarSchoolYearCrudService extends CrudService<WarSchoolYear, Long> {
 
     @Override
     protected WarSchoolYear preUpdateValidation(WarSchoolYear warSchoolYear) throws Exception {
+/*
 
         Set<WarCustomerMarket> customerMarketList = warSchoolYear.getWarCustomerMarkets();
 
         customerMarketList.stream().filter(customerMarket -> customerMarket.getSchoolYear() == null).forEach(customerMarket -> customerMarket.setSchoolYear(warSchoolYear));
+*/
 
         return warSchoolYear;
     }

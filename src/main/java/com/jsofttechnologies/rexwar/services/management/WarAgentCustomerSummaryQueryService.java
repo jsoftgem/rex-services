@@ -6,6 +6,7 @@ import com.jsofttechnologies.rexwar.model.reports.WarAgentCustomerSummary;
 import com.jsofttechnologies.rexwar.services.activity.WarSchoolYearQueryService;
 import com.jsofttechnologies.services.util.FlowService;
 import com.jsofttechnologies.util.ProjectHelper;
+import jdk.nashorn.internal.parser.JSONParser;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -44,9 +45,7 @@ public class WarAgentCustomerSummaryQueryService extends FlowService {
             JSONObject responseJSON = new JSONObject();
             if (schoolYearId != null) {
                 List<WarAgentCustomerSummary> warAgentCustomerSummaryList = storedProcedures.callAgentCustomerSummary(customer, schoolYearId);
-                responseJSON.put("chart", creatChart(warAgentCustomerSummaryList));
-
-
+                responseJSON.put("chart", new JSONObject(creatChart(warAgentCustomerSummaryList)));
                 WarSchoolYear schoolYear = schoolYearQueryService.getById(schoolYearId);
                 responseJSON.put("schoolYear", new JSONObject(schoolYear));
 
