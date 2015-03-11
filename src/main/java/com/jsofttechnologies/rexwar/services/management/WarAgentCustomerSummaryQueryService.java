@@ -125,22 +125,42 @@ public class WarAgentCustomerSummaryQueryService extends FlowService {
             JSONObject jsonObject = new JSONObject();
             switch (i) {
                 case 1:
+                    jsonObject.put("fillColor", "rgba(109,182,255,0.5)");
+                    jsonObject.put("strokeColor", "rgba(109,182,255,0.8)");
+                    jsonObject.put("highlightFill", "rgba(109,182,255,0.75)");
+                    jsonObject.put("highlightStroke", "rgba(109,182,255,1)");
                     jsonObject.put("label", "Week 1");
                     jsonObject.put("data", set1);
                     break;
                 case 2:
+                    jsonObject.put("fillColor", "rgba(109,219,73,0.5)");
+                    jsonObject.put("strokeColor", "rgba(109,219,73,0.8)");
+                    jsonObject.put("highlightFill", "rgba(109,219,73,0.75)");
+                    jsonObject.put("highlightStroke", "rgba(109,219,73,1)");
                     jsonObject.put("label", "Week 2");
                     jsonObject.put("data", set2);
                     break;
                 case 3:
+                    jsonObject.put("fillColor", "rgba(59,89,152,0.5)");
+                    jsonObject.put("strokeColor", "rgba(59,89,152,0.8)");
+                    jsonObject.put("highlightFill", "rgba(59,89,152,0.75)");
+                    jsonObject.put("highlightStroke", "rgba(59,89,152,1)");
                     jsonObject.put("label", "Week 3");
                     jsonObject.put("data", set3);
                     break;
                 case 4:
+                    jsonObject.put("fillColor", "rgba(99,85,74,0.5)");
+                    jsonObject.put("strokeColor", "rgba(99,85,74,0.8)");
+                    jsonObject.put("highlightFill", "rgba(99,85,74,0.75)");
+                    jsonObject.put("highlightStroke", "rgba(99,85,74,1)");
                     jsonObject.put("label", "Week 4");
                     jsonObject.put("data", set4);
                     break;
                 default:
+                    jsonObject.put("fillColor", "rgba(255,167,0,0.5)");
+                    jsonObject.put("strokeColor", "rgba(255,167,0,0.8)");
+                    jsonObject.put("highlightFill", "rgba(255,167,0,0.75)");
+                    jsonObject.put("highlightStroke", "rgba(255,167,0,1)");
                     jsonObject.put("label", "Week 5");
                     jsonObject.put("data", set5);
                     break;
