@@ -48,10 +48,10 @@ public class WarSchoolYear implements FlowJpe {
     private Month periodMonthTo;
     @Column(name = "war_report_school_year_period_year_to", nullable = false)
     private int periodYearTo;
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    /*@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<WarMarketSegment> warMarketSegments;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set<WarCustomerMarket> warCustomerMarkets;
+    private Set<WarCustomerMarket> warCustomerMarkets;*/
     @Column(name = "created_by_id", nullable = false)
     private Long createByUserId;
     @Transient
@@ -149,6 +149,7 @@ public class WarSchoolYear implements FlowJpe {
         this.periodYearTo = periodYearTo;
     }
 
+/*
     public Set<WarMarketSegment> getWarMarketSegments() {
         return warMarketSegments;
     }
@@ -164,6 +165,7 @@ public class WarSchoolYear implements FlowJpe {
     public void setWarCustomerMarkets(Set<WarCustomerMarket> warCustomerMarkets) {
         this.warCustomerMarkets = warCustomerMarkets;
     }
+*/
 
     public Long getCreateByUserId() {
         return createByUserId;
