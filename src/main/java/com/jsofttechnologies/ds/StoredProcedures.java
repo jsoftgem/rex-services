@@ -2,6 +2,7 @@ package com.jsofttechnologies.ds;
 
 import com.jsofttechnologies.ejb.MergeExceptionSummary;
 import com.jsofttechnologies.rexwar.model.activity.view.WarCustomerMarketView;
+import com.jsofttechnologies.rexwar.model.reports.WarAgentCustomerSummary;
 import com.jsofttechnologies.rexwar.util.contants.Month;
 import com.jsofttechnologies.util.ProjectConstants;
 
@@ -52,5 +53,21 @@ public class StoredProcedures {
         return warCustomerMarketViewList;
     }
 
+
+    public List<WarAgentCustomerSummary> callAgentCustomerSummary(Long customerId, Long schoolYearId) {
+
+        List<WarAgentCustomerSummary> warAgentCustomerSummaryList = new ArrayList<>();
+
+        try {
+            StoredProcedureQuery query = entityManager.createNamedStoredProcedureQuery(WarAgentCustomerSummary.PROCEDURE_AGENT_CUSTOMER_SUMMARY);
+            query.setParameter(WarAgentCustomerSummary.IN_CUSTOMER_ID, customerId);
+            query.setParameter(WarAgentCustomerSummary.IN_SCHOOL_YEAR_ID, schoolYearId);
+            warAgentCustomerSummaryList = query.getResultList();
+        } catch (Exception e) {
+            exceptionSummary.handleException(e, getClass());
+        }
+
+        return warAgentCustomerSummaryList;
+    }
 
 }

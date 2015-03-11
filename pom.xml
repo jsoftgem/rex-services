@@ -261,7 +261,7 @@
                         <version>1.0.2.Final</version>
                         <configuration>
                             <jboss-home>${env.JBOSS_HOME}</jboss-home>
-                            <port>9990</port>
+                            <port>10990</port>
                             <username>jerico</username>
                             <password>JERKallstar98</password>
                         </configuration>

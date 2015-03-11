@@ -129,8 +129,8 @@ public class FlowTaskService extends QueryService<FlowTask> {
     @SkipCheck("action")
     @GET
     @Path("/getTask")
-    public Response getTask(@HeaderParam("Authorization") String authorization, @QueryParam("id") Long id, @QueryParam("name") String name, @DefaultValue("25") @QueryParam("size") Integer size, @DefaultValue("false") @QueryParam("active") Boolean active,
-                            @DefaultValue("false") @QueryParam("pinned") Boolean pinned, @DefaultValue("false") @QueryParam("locked") Boolean locked, @DefaultValue("false") @QueryParam("showToolBar") Boolean showToolBar,
+    public Response getTask(@HeaderParam("Authorization") String authorization, @QueryParam("id") Long id, @QueryParam("name") String name, @QueryParam("size") Integer size, @QueryParam("active") Boolean active,
+                            @QueryParam("pinned") Boolean pinned, @QueryParam("locked") Boolean locked, @QueryParam("showToolBar") Boolean showToolBar,
                             @QueryParam("page") String page, @QueryParam("page-path") String pagePath, @QueryParam("flowId") String flowId, @QueryParam("group-default") @DefaultValue("false") Boolean groupDefault,
                             @QueryParam("newTask") @DefaultValue("true") Boolean newTask) {
 

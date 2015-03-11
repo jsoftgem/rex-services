@@ -66,10 +66,13 @@
 
         <!-- Report -->
         <class>com.jsofttechnologies.rexwar.model.reports.WarReportWeeklyAgentView</class>
+        <class>com.jsofttechnologies.rexwar.model.reports.WarReportWeeklyAgentViewID</class>
         <class>com.jsofttechnologies.rexwar.model.reports.WarReportWeeklyAgentViewCustomer</class>
+        <class>com.jsofttechnologies.rexwar.model.reports.WarReportWeeklyAgentViewCustomerID</class>
         <class>com.jsofttechnologies.rexwar.model.reports.WarReportMonthlyCustomerView</class>
         <class>com.jsofttechnologies.rexwar.model.reports.WarReportMonthlyCustomerViewID</class>
-
+        <class>com.jsofttechnologies.rexwar.model.reports.WarAgentCustomerSummary</class>
+        <class>com.jsofttechnologies.rexwar.model.reports.WarAgentCustomerSummaryID</class>
         <!-- Sale -->
         <class>com.jsofttechnologies.rexwar.model.sales.HistoricalSale</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
