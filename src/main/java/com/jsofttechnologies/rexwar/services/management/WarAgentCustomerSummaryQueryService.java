@@ -2,11 +2,11 @@ package com.jsofttechnologies.rexwar.services.management;
 
 import com.jsofttechnologies.rexwar.model.activity.WarSchoolYear;
 import com.jsofttechnologies.rexwar.model.management.WarCustomer;
+import com.jsofttechnologies.rexwar.model.reports.WarAgentActivitySummary;
 import com.jsofttechnologies.rexwar.model.reports.WarAgentCustomerSummary;
 import com.jsofttechnologies.rexwar.services.activity.WarSchoolYearQueryService;
 import com.jsofttechnologies.services.util.FlowService;
 import com.jsofttechnologies.util.ProjectHelper;
-import jdk.nashorn.internal.parser.JSONParser;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -53,8 +53,26 @@ public class WarAgentCustomerSummaryQueryService extends FlowService {
 
             WarCustomer warCustomer = warCustomerQueryService.getById(customer);
             responseJSON.put("customer", new JSONObject(warCustomer));
-            response = Response.ok(responseJSON.toString(), MediaType.APPLICATION_JSON_TYPE).build();
 
+            List<WarAgentActivitySummary> warAgentActivitySummaryList = storedProcedures.callAgentActivitySummary(customer, schoolYearId);
+            JSONObject activityJSON = new JSONObject();
+            ArrayList<String> labels = new ArrayList<>();
+            labels.add("Exam Copies Distribution");
+            labels.add("Invitation to Events");
+            labels.add("Confirmation of Events");
+            labels.add("Giveaways Distribution");
+            labels.add("Delivery of Incentive/Donation");
+            labels.add("Purchase Order");
+            labels.add("Follow up payment");
+            labels.add("Delivery of Add'l Order / TRM / Compli");
+            labels.add("Booklist");
+            labels.add("Updated Customer Info Sheet");
+            labels.add("Implemented Ex-Sem");
+            activityJSON.put("labels", new JSONArray(labels.toArray(new String[labels.size()])));
+            activityJSON.put("activities", new JSONArray(warAgentActivitySummaryList.toArray(new WarAgentActivitySummary[warAgentActivitySummaryList.size()])));
+            responseJSON.put("activitySummary", activityJSON);
+
+            response = Response.ok(responseJSON.toString(), MediaType.APPLICATION_JSON_TYPE).build();
         } catch (Exception e) {
             response = ProjectHelper.error(e.getMessage());
             exceptionSummary.handleException(e, getClass());
@@ -174,5 +192,31 @@ public class WarAgentCustomerSummaryQueryService extends FlowService {
         return chart.buildJsonString();
     }
 
+    private String creatActivityChart(List<WarAgentActivitySummary> activitySummaryList) {
+        ProjectHelper chart = new ProjectHelper().createJson();
+
+        Map<String, List<WarAgentCustomerSummary>> chartMap = new HashMap<>();
+
+        for (WarAgentActivitySummary customerSummary : activitySummaryList) {
+
+        }
+
+        ArrayList<String> labels = new ArrayList<>();
+        labels.add("Exam Copies Distribution");
+        labels.add("Invitation to Events");
+        labels.add("Confirmation of Events");
+        labels.add("Giveaways Distribution");
+        labels.add("Delivery of Incentive/Donation");
+        labels.add("Purchase Order");
+        labels.add("Delivery of Add'l Order / TRM / Compli");
+        labels.add("Booklist");
+        labels.add("Updated Customer Info Sheet");
+        labels.add("Implemented Ex-Sem");
+
+        chart.addField("labels", new JSONArray(labels.toArray(new String[labels.size()])));
+
+
+        return chart.buildJsonString();
+    }
 
 }

@@ -59,7 +59,20 @@ public class WarCustomerTagQueryService extends QueryService<WarCustomerTag> {
     @Path("is_top_20")
     /*TODO: determine top 20 customer*/
     public Boolean isTop20(@QueryParam("customerId") Long customerId, @QueryParam("agentId") Long agentId) {
-        return false;
+
+        List<WarCustomerTag> warCustomerTags = null;
+        try {
+            setNamedQuery(WarCustomerTag.FIND_IF_TOP_20);
+            putParam("agentId", agentId);
+            putParam("customerId", customerId);
+
+            warCustomerTags = doGetResultList();
+
+        } catch (Exception e) {
+            exceptionSummary.handleException(e, getClass());
+        }
+
+        return warCustomerTags != null && !warCustomerTags.isEmpty();
     }
 
 

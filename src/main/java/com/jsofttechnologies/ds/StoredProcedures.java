@@ -2,6 +2,7 @@ package com.jsofttechnologies.ds;
 
 import com.jsofttechnologies.ejb.MergeExceptionSummary;
 import com.jsofttechnologies.rexwar.model.activity.view.WarCustomerMarketView;
+import com.jsofttechnologies.rexwar.model.reports.WarAgentActivitySummary;
 import com.jsofttechnologies.rexwar.model.reports.WarAgentCustomerSummary;
 import com.jsofttechnologies.rexwar.util.contants.Month;
 import com.jsofttechnologies.util.ProjectConstants;
@@ -62,6 +63,22 @@ public class StoredProcedures {
             StoredProcedureQuery query = entityManager.createNamedStoredProcedureQuery(WarAgentCustomerSummary.PROCEDURE_AGENT_CUSTOMER_SUMMARY);
             query.setParameter(WarAgentCustomerSummary.IN_CUSTOMER_ID, customerId);
             query.setParameter(WarAgentCustomerSummary.IN_SCHOOL_YEAR_ID, schoolYearId);
+            warAgentCustomerSummaryList = query.getResultList();
+        } catch (Exception e) {
+            exceptionSummary.handleException(e, getClass());
+        }
+
+        return warAgentCustomerSummaryList;
+    }
+
+    public List<WarAgentActivitySummary> callAgentActivitySummary(Long customerId, Long schoolYearId) {
+
+        List<WarAgentActivitySummary> warAgentCustomerSummaryList = new ArrayList<>();
+
+        try {
+            StoredProcedureQuery query = entityManager.createNamedStoredProcedureQuery(WarAgentActivitySummary.PROCEDURE_AGENT_ACTIVITY_SUMMARY);
+            query.setParameter(WarAgentActivitySummary.IN_CUSTOMER_ID, customerId);
+            query.setParameter(WarAgentActivitySummary.IN_SCHOOL_YEAR_ID, schoolYearId);
             warAgentCustomerSummaryList = query.getResultList();
         } catch (Exception e) {
             exceptionSummary.handleException(e, getClass());

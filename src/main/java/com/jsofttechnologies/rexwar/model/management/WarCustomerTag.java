@@ -13,12 +13,14 @@ import java.util.Date;
 @Table(name = "war_customer_tag")
 @NamedQueries({
         @NamedQuery(name = WarCustomerTag.FIND_ALL, query = "select e from WarCustomerTag e"),
-        @NamedQuery(name = WarCustomerTag.FIND_BY_AGENT, query = "select e from WarCustomerTag e where e.agentId=:agentId order by e.index asc")
+        @NamedQuery(name = WarCustomerTag.FIND_BY_AGENT, query = "select e from WarCustomerTag e where e.agentId=:agentId order by e.index asc"),
+        @NamedQuery(name = WarCustomerTag.FIND_IF_TOP_20, query = "select e from WarCustomerTag e where e.agentId=:agentId and e.customerId=:customerId and e.index <= 20 order by e.index asc")
 })
 public class WarCustomerTag implements FlowJpe {
 
     public static final String FIND_ALL = "WarCustomerTag.FIND_ALL";
     public static final String FIND_BY_AGENT = "WarCustomerTag.FIND_BY_ASSIGNED_AGENT";
+    public static final String FIND_IF_TOP_20 = "WarCustomerTag.FIND_IF_TOP_20";
 
     @Id
     @Column(name = "war_customer_tag_id", nullable = false)

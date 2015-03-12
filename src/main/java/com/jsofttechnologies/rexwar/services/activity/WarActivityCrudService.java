@@ -8,6 +8,7 @@ import com.jsofttechnologies.rexwar.model.management.WarAgent;
 import com.jsofttechnologies.rexwar.model.management.WarCustomerRegion;
 import com.jsofttechnologies.rexwar.services.data.WarRegionQueryService;
 import com.jsofttechnologies.rexwar.services.management.WarAgentQueryService;
+import com.jsofttechnologies.rexwar.services.management.WarCustomerTagQueryService;
 import com.jsofttechnologies.services.util.CrudService;
 import com.jsofttechnologies.services.util.FlowSessionHelper;
 import com.jsofttechnologies.util.CalendarUtil;
@@ -45,6 +46,9 @@ public class WarActivityCrudService extends CrudService<WarActivity, Long> {
     @EJB
     private WarAgentQueryService warAgentQueryService;
 
+    @EJB
+    private WarCustomerTagQueryService warCustomerTagQueryService;
+
     public WarActivityCrudService() {
         super(WarActivity.class);
     }
@@ -76,7 +80,12 @@ public class WarActivityCrudService extends CrudService<WarActivity, Long> {
                 (warActivity.getBookList() != null && warActivity.getBookList()) ||
                 (warActivity.getUcis() != null && warActivity.getUcis()) ||
                 (warActivity.getIes() != null && warActivity.getIes())) {
-            warActivity.setActual(Boolean.TRUE);
+            if (warActivity.getPlanned()) {
+                warActivity.setActual(Boolean.TRUE);
+            } else {
+                boolean valid = warCustomerTagQueryService.isTop20(warActivity.getCustomerMarketId(), warActivity.getAgentId());
+                warActivity.setActual(valid);
+            }
         }
 
         return warActivity;
