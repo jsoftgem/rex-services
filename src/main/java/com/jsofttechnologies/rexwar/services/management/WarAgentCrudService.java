@@ -11,7 +11,7 @@ import com.jsofttechnologies.rexwar.util.WarConstants;
 import com.jsofttechnologies.services.admin.*;
 import com.jsofttechnologies.services.util.CrudService;
 import com.jsofttechnologies.services.util.MessageService;
-import com.jsofttechnologies.util.PasswordUtil;
+import com.jsofttechnologies.util.PasswordHash;
 import com.jsofttechnologies.util.ProjectHelper;
 
 import javax.ejb.EJB;
@@ -29,6 +29,7 @@ import javax.ws.rs.core.Response;
 @Path("services/war/agent_crud")
 @Notify(task = "agent_task", page = "agent_edit", alertType = FlowAlertType.BROADCAST)
 public class WarAgentCrudService extends CrudService<WarAgent, Long> {
+
 
     @EJB
     private FlowUserGroupQueryService flowUserGroupQueryService;
@@ -88,11 +89,20 @@ public class WarAgentCrudService extends CrudService<WarAgent, Long> {
         String password = warAgent.getUser().getPassword();
         // hashPassword
         try {
-            password = PasswordUtil.hashPassword(password);
+            password = PasswordHash.createHash(password);
         } catch (Exception e) {
             exceptionSummary.handleException(e, getClass());
         }
         warAgent.getUser().setPassword(password);
+
+
+        if (warAgent.getIsManager()) {
+            WarAgent manager = warAgentQueryService.findManagerByRegion(warAgent.getRegion());
+            if (manager != null && manager.getActive()) {
+                throwException("WAR_AGENT_EXISTING_MANAGER", manager.getRegion(), manager.getUser().getFlowUserDetail().getFullName());
+            }
+        }
+
 
         return warAgent;
     }
@@ -128,7 +138,7 @@ public class WarAgentCrudService extends CrudService<WarAgent, Long> {
         // hashPassword
         if (password != null && !password.equals(attachedInstance.getUser().getPassword())) {
             try {
-                password = PasswordUtil.hashPassword(password);
+                password = PasswordHash.createHash(password);
             } catch (Exception e) {
                 exceptionSummary.handleException(e, getClass());
             }
@@ -156,7 +166,6 @@ public class WarAgentCrudService extends CrudService<WarAgent, Long> {
         flowUserGroupCrudService.update(t.getUser().getFlowUserGroup(), t.getUser().getFlowUserGroup().getId());
     }
 
-
     @DELETE
     @Path("/delete/{id:[0-9][0-9]*}")
     public Response delete(@PathParam("id") Long id) {
@@ -183,5 +192,6 @@ public class WarAgentCrudService extends CrudService<WarAgent, Long> {
 
         return response;
     }
+
 
 }

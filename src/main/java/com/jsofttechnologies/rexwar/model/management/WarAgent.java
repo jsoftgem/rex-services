@@ -18,13 +18,16 @@ import java.util.Date;
 @NamedQueries({
         @NamedQuery(name = WarAgent.FIND_ALL, query = "select a from WarAgent a"),
         @NamedQuery(name = WarAgent.FIND_AGENT_BY_USERNAME, query = "select a from WarAgent a where a.user.username=:username"),
-        @NamedQuery(name = WarAgent.FIND_AGENT_BY_MANAGER, query = "select a from WarAgent a where a.isManager = false and a.region =:region")
+        @NamedQuery(name = WarAgent.FIND_AGENT_BY_MANAGER, query = "select a from WarAgent a where a.isManager = false and a.region =:region"),
+        @NamedQuery(name = WarAgent.FIND_MANAGER_BY_REGION, query = "select a from WarAgent a where a.isManager = true and a.region =:region"),
+
 })
 public class WarAgent implements FlowJpe {
 
     public static final String FIND_ALL = "WarAgent.FIND_ALL";
     public static final String FIND_AGENT_BY_USERNAME = "WarAgent.FIND_AGENT_BY_USERNAME";
     public static final String FIND_AGENT_BY_MANAGER = "WarAgent.FIND_AGENT_BY_MANAGER";
+    public static final String FIND_MANAGER_BY_REGION = "WarAgent.FIND_MANAGER_BY_REGION";
     @Id
     @Column(name = "war_agent_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)

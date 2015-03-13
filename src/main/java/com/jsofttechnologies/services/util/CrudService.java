@@ -29,6 +29,7 @@ public abstract class CrudService<T extends FlowJpe, ID extends Number> extends 
     @EJB
     private EntityManagerDAO<T, ID> entityManagerDao;
 
+
     private ID id;
     private T instance;
     private Class<T> classType;

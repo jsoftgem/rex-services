@@ -1,5 +1,6 @@
 package com.jsofttechnologies.rexwar.model.management;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.jsofttechnologies.jpa.util.FlowJpe;
 import org.hibernate.annotations.Formula;
 
@@ -64,6 +65,9 @@ public class WarCustomerTag implements FlowJpe {
             "inner join war_report_school_year wrsy on wrsy.war_report_school_year_id = wy.school_year " +
             "where wsy.war_customer_customer_id = war_customer_tag_customer order by wrsy.war_report_school_year_period_year desc limit 1)")
     private String marketDescription;
+    @Transient
+    @JsonProperty
+    private Boolean toBeUpdated;
 
     @Override
     public void setId(Object id) {
@@ -208,6 +212,7 @@ public class WarCustomerTag implements FlowJpe {
 
         if (agentId != null ? !agentId.equals(that.agentId) : that.agentId != null) return false;
         if (customerId != null ? !customerId.equals(that.customerId) : that.customerId != null) return false;
+        if (index != null ? !index.equals(that.index) : that.index != null) return false;
 
         return true;
     }
@@ -216,6 +221,15 @@ public class WarCustomerTag implements FlowJpe {
     public int hashCode() {
         int result = agentId != null ? agentId.hashCode() : 0;
         result = 31 * result + (customerId != null ? customerId.hashCode() : 0);
+        result = 31 * result + (index != null ? index.hashCode() : 0);
         return result;
+    }
+
+    public Boolean getToBeUpdated() {
+        return toBeUpdated;
+    }
+
+    public void setToBeUpdated(Boolean toBeUpdated) {
+        this.toBeUpdated = toBeUpdated;
     }
 }

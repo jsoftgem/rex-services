@@ -8,7 +8,7 @@ import com.jsofttechnologies.rexwar.model.management.WarAgent;
 import com.jsofttechnologies.rexwar.services.management.WarAgentCrudService;
 import com.jsofttechnologies.rexwar.services.management.WarAgentQueryService;
 import com.jsofttechnologies.rexwar.util.WarConstants;
-import com.jsofttechnologies.util.PasswordUtil;
+import com.jsofttechnologies.util.PasswordHash;
 import com.jsofttechnologies.util.ProjectConstants;
 
 import javax.ejb.EJB;
@@ -105,10 +105,8 @@ public class LoginService extends FlowService {
 
             String userPassword = flowUser.getPassword();
 
-            String currentPassword = PasswordUtil.hashPassword(password.trim());
+            valid = PasswordHash.validatePassword(password, userPassword);
 
-            valid = userPassword.equals(currentPassword);
-            
         } catch (Exception e) {
             exceptionSummary.handleException(e, getClass());
         }

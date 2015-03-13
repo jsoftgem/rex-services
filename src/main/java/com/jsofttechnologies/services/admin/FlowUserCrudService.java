@@ -1,11 +1,12 @@
 package com.jsofttechnologies.services.admin;
 
+import com.jsofttechnologies.ejb.FlowUserManager;
 import com.jsofttechnologies.ejb.MergeExceptionSummary;
 import com.jsofttechnologies.jpa.admin.FlowUser;
 import com.jsofttechnologies.jpa.admin.FlowUserGroup;
 import com.jsofttechnologies.model.PaperBag;
 import com.jsofttechnologies.services.util.CrudService;
-import com.jsofttechnologies.util.PasswordUtil;
+import com.jsofttechnologies.util.PasswordHash;
 import com.jsofttechnologies.util.ProjectConstants;
 import com.jsofttechnologies.util.ProjectHelper;
 
@@ -31,6 +32,8 @@ public class FlowUserCrudService extends CrudService<FlowUser, Long> {
 
     @PersistenceContext(unitName = ProjectConstants.MAIN_PU)
     private EntityManager entityManager;
+    @EJB
+    private FlowUserManager flowUserManager;
 
     @EJB
     private MergeExceptionSummary exceptionSummary;
@@ -69,7 +72,7 @@ public class FlowUserCrudService extends CrudService<FlowUser, Long> {
         String password = flowUser.getPassword();
         // hashPassword
         try {
-            password = PasswordUtil.hashPassword(password);
+            password = PasswordHash.createHash(password);
         } catch (Exception e) {
             exceptionSummary.handleException(e, getClass());
         }
@@ -85,11 +88,12 @@ public class FlowUserCrudService extends CrudService<FlowUser, Long> {
             flowUser.getFlowUserGroup().getFlowUsers().add(flowUser);
             flowUserGroupCrudService.update(flowUser.getFlowUserGroup(), flowUser.getFlowUserGroup().getId());
         }
+
     }
 
     @Override
     protected void postUpdateValidation(FlowUser flowUser) {
-
+        flowUserManager.refreshUserMap();
     }
 
     @SuppressWarnings("unchecked")
@@ -154,11 +158,12 @@ public class FlowUserCrudService extends CrudService<FlowUser, Long> {
         // hashPassword
         if (password != null) {
             try {
-                password = PasswordUtil.hashPassword(password);
+                password = PasswordHash.createHash(password);
             } catch (Exception e) {
                 exceptionSummary.handleException(e, getClass());
             }
             attachedInstance.setPassword(password);
+            flowUser.setPassword(password);
         }
 
         if (attachedInstance.getFlowUserDetail() != null) {

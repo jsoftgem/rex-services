@@ -2,11 +2,13 @@ package com.jsofttechnologies.services.util;
 
 import com.jsofttechnologies.ds.StoredProcedures;
 import com.jsofttechnologies.ejb.MergeExceptionSummary;
-import com.jsofttechnologies.util.PasswordUtil;
+import com.jsofttechnologies.util.PasswordHash;
 import com.jsofttechnologies.util.ProjectConstants;
 
 import javax.annotation.security.PermitAll;
 import javax.ejb.EJB;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -21,6 +23,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,6 +58,9 @@ public abstract class FlowService implements Serializable {
     @EJB
     protected FlowSessionHelper session;
 
+    @PersistenceContext(unitName = ProjectConstants.MAIN_PU)
+    protected EntityManager currentEntityManager;
+
     private final Map<String, Object> serviceCache = new HashMap<>();
 
     protected String getAuthorization() {
@@ -70,7 +77,14 @@ public abstract class FlowService implements Serializable {
     @Path("/getHashedPassword")
     @Produces(MediaType.TEXT_PLAIN)
     public String getHashed(@QueryParam("password") String password) {
-        return PasswordUtil.hashPassword(password);
+        try {
+            return PasswordHash.createHash(password);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (InvalidKeySpecException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @GET

@@ -1,13 +1,11 @@
 package com.jsofttechnologies.rexwar.services.management;
 
-import com.jsofttechnologies.ejb.MergeExceptionSummary;
 import com.jsofttechnologies.rexwar.model.management.WarAgent;
-import com.jsofttechnologies.rexwar.services.data.WarRegionQueryService;
 import com.jsofttechnologies.services.util.QueryService;
 
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.ws.rs.Path;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 /**
@@ -36,5 +34,21 @@ public class WarAgentQueryService extends QueryService<WarAgent> {
 
         return null;
     }
+
+    @POST
+    @Path("find_manager_by_region/{region}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public WarAgent findManagerByRegion(@PathParam("region") String region) {
+        WarAgent warAgent = null;
+        try {
+            setNamedQuery(WarAgent.FIND_MANAGER_BY_REGION);
+            putParam("region", region);
+            warAgent = getSingleResult();
+        } catch (Exception e) {
+            exceptionSummary.handleException(e, getClass(), region);
+        }
+        return warAgent;
+    }
+
 
 }

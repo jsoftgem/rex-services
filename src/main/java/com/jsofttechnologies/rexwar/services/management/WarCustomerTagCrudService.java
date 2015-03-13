@@ -36,6 +36,7 @@ public class WarCustomerTagCrudService extends CrudService<WarCustomerTag, Long>
         super(WarCustomerTag.class);
     }
 
+
     @Override
     protected WarCustomerTag preCreateValidation(WarCustomerTag warCustomerTag) throws Exception {
 
@@ -49,6 +50,10 @@ public class WarCustomerTagCrudService extends CrudService<WarCustomerTag, Long>
 
     @Override
     protected WarCustomerTag preUpdateValidation(WarCustomerTag warCustomerTag) throws Exception {
+        if (warCustomerTag.getRegionId() == null && warCustomerTag.getRegionCode() != null) {
+            WarCustomerRegion region = warRegionQueryService.findByCode(warCustomerTag.getRegionCode());
+            warCustomerTag.setRegionId(region.getId());
+        }
         return warCustomerTag;
     }
 
@@ -65,20 +70,19 @@ public class WarCustomerTagCrudService extends CrudService<WarCustomerTag, Long>
             List<WarCustomerTag> newList = Arrays.asList(customerTags);
 
             Set<WarCustomerTag> differenceSet = Sets.symmetricDifference(new HashSet<>(originalList), new HashSet<>(newList));
+
+            Set<WarCustomerTag> toBeRemoved = new HashSet<>();
+
             if (!differenceSet.isEmpty()) {
                 for (WarCustomerTag warCustomerTag : differenceSet) {
-                    if (originalList.contains(warCustomerTag)) {
-                        response = delete(warCustomerTag.getId());
-                    } else {
+                    if (warCustomerTag.getToBeUpdated() != null && warCustomerTag.getToBeUpdated()) {
                         if (warCustomerTag.getId() == null) {
-                            response = create(warCustomerTag);
+                            create(warCustomerTag);
                         } else {
-                            response = update(warCustomerTag, warCustomerTag.getId());
+                            update(warCustomerTag, warCustomerTag.getId());
                         }
-
-                    }
-                    if (response.getStatus() > 300) {
-                        break;
+                    } else {
+                        toBeRemoved.add(warCustomerTag);
                     }
                 }
             } else {
@@ -86,6 +90,26 @@ public class WarCustomerTagCrudService extends CrudService<WarCustomerTag, Long>
                     response = update(warCustomerTag, warCustomerTag.getId());
                 }
             }
+
+
+            if (!toBeRemoved.isEmpty()) {
+                StringBuilder builder = new StringBuilder();
+                builder.append("delete from WarCustomerTag e where e.id in (");
+                WarCustomerTag[] remove = toBeRemoved.toArray(new WarCustomerTag[toBeRemoved.size()]);
+                for (int i = 0; i < remove.length; i++) {
+                    if (i == remove.length - 1) {
+                        builder.append(remove[i].getId());
+                    } else {
+                        builder.append(remove[i].getId());
+                        builder.append(",");
+                    }
+
+                }
+                builder.append(")");
+                currentEntityManager.createQuery(builder.toString()).executeUpdate();
+                currentEntityManager.clear();
+            }
+
 
         }
 
