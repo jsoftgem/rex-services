@@ -8,4 +8,5 @@ Fluid Core
 
 
 Rex
+- generate good reports. (accurate, hue)
 - Use Jasper Report to export the reports.

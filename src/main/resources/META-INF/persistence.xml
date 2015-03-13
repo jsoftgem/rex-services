@@ -68,6 +68,8 @@
         <class>com.jsofttechnologies.rexwar.model.reports.WarReportWeeklyAgentView</class>
         <class>com.jsofttechnologies.rexwar.model.reports.WarReportWeeklyAgentViewID</class>
         <class>com.jsofttechnologies.rexwar.model.reports.WarAgentActivitySummary</class>
+        <class>com.jsofttechnologies.rexwar.model.reports.WarMonthlyCustomerSummary</class>
+        <class>com.jsofttechnologies.rexwar.model.reports.WarMonthlyCustomerSummaryID</class>
         <class>com.jsofttechnologies.rexwar.model.reports.WarReportWeeklyAgentViewCustomer</class>
         <class>com.jsofttechnologies.rexwar.model.reports.WarReportWeeklyAgentViewCustomerID</class>
         <class>com.jsofttechnologies.rexwar.model.reports.WarReportMonthlyCustomerView</class>

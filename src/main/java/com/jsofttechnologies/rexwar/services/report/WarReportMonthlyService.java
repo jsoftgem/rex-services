@@ -17,10 +17,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
@@ -40,6 +37,16 @@ public class WarReportMonthlyService extends FlowService {
     private FlowPermissionService flowPermissionService;
     @EJB
     private WarAgentQueryService warAgentQueryService;
+
+
+    @POST
+    @SkipCheck("action")
+    @Path("customer_summary/{school_year}")
+    public Response findWarReportPerSchoolYear(@PathParam("school_year") Long schoolYear) {
+        Response response = null;
+        //TODO : generate good reports. (accurate, hue)
+        return response;
+    }
 
 
     @GET

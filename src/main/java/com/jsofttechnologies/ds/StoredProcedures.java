@@ -4,6 +4,7 @@ import com.jsofttechnologies.ejb.MergeExceptionSummary;
 import com.jsofttechnologies.rexwar.model.activity.view.WarCustomerMarketView;
 import com.jsofttechnologies.rexwar.model.reports.WarAgentActivitySummary;
 import com.jsofttechnologies.rexwar.model.reports.WarAgentCustomerSummary;
+import com.jsofttechnologies.rexwar.model.reports.WarMonthlyCustomerSummary;
 import com.jsofttechnologies.rexwar.util.contants.Month;
 import com.jsofttechnologies.util.ProjectConstants;
 
@@ -79,6 +80,24 @@ public class StoredProcedures {
             StoredProcedureQuery query = entityManager.createNamedStoredProcedureQuery(WarAgentActivitySummary.PROCEDURE_AGENT_ACTIVITY_SUMMARY);
             query.setParameter(WarAgentActivitySummary.IN_CUSTOMER_ID, customerId);
             query.setParameter(WarAgentActivitySummary.IN_SCHOOL_YEAR_ID, schoolYearId);
+            warAgentCustomerSummaryList = query.getResultList();
+        } catch (Exception e) {
+            exceptionSummary.handleException(e, getClass());
+        }
+
+        return warAgentCustomerSummaryList;
+    }
+
+
+    public List<WarMonthlyCustomerSummary> callMonthlyCustomerActivity(Long scoolYear, Long agent, String regionCode, String tag, Integer size) {
+        List<WarMonthlyCustomerSummary> warAgentCustomerSummaryList = new ArrayList<>();
+        try {
+            StoredProcedureQuery query = entityManager.createNamedStoredProcedureQuery(WarMonthlyCustomerSummary.PROCEDURE_MONTHLY_CUSTOMER_SUMMARY);
+            query.setParameter(WarMonthlyCustomerSummary.IN_SCHOOL_YEAR, scoolYear);
+            query.setParameter(WarMonthlyCustomerSummary.IN_AGENT, agent);
+            query.setParameter(WarMonthlyCustomerSummary.IN_REGION_CODE, regionCode);
+            query.setParameter(WarMonthlyCustomerSummary.IN_TAG, tag);
+            query.setParameter(WarMonthlyCustomerSummary.IN_SIZE, size);
             warAgentCustomerSummaryList = query.getResultList();
         } catch (Exception e) {
             exceptionSummary.handleException(e, getClass());

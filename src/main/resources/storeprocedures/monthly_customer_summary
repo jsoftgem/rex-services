@@ -1,0 +1,170 @@
+delimiter $$
+create procedure monthly_customer_summary (in schoolyear bigint(20), 
+in agent bigint(20), in regionCode varchar(50), in tag varchar(20), 
+in size int(3))
+begin
+
+if(lcase(tag) = 'all')  then
+
+if(agent is not null) then
+	select ws.school_name as customer, schoolyear as school_year, agent as agent, 
+	regionCode as region, tag as tag, wt.war_customer_tag_index as top, m.MONTH, mcr.* FROM war_customer wc
+	join war_customer_school ws on ws.war_customer_school_id = wc.war_customer_school
+	left join war_customer_tag wt on wt.war_customer_tag_customer = wc.customer_id 
+	and wt.war_customer_tag_agent = wc.customer_owner_agent_id
+	join  (
+SELECT 'January' AS
+MONTH
+UNION SELECT 'February' AS
+MONTH
+UNION SELECT 'March' AS
+MONTH
+UNION SELECT 'April' AS
+MONTH
+UNION SELECT 'May' AS
+MONTH
+UNION SELECT 'June' AS
+MONTH
+UNION SELECT 'July' AS
+MONTH
+UNION SELECT 'August' AS
+MONTH
+UNION SELECT 'September' AS
+MONTH
+UNION SELECT 'October' AS
+MONTH
+UNION SELECT 'November' AS
+MONTH
+UNION SELECT 'December' AS
+MONTH
+) AS m 
+left join monthly_customer_report_activtiy mcr on lcase(mcr.report_month) = lcase(m.MONTH)
+and mcr.report_school_year = schoolyear and mcr.report_region = regionCode 
+and mcr.report_agent = agent
+and mcr.report_customer_id = wc.customer_id 
+order by  ws.school_name asc;
+
+else 
+	select ws.school_name as customer, schoolyear as school_year,  wc.customer_owner_agent_id as agent, 
+	regionCode as region, tag as tag, wt.war_customer_tag_index as top, m.MONTH, mcr.* FROM war_customer wc
+	join war_customer_school ws on ws.war_customer_school_id = wc.war_customer_school
+	left join war_customer_tag wt on wt.war_customer_tag_customer = wc.customer_id 
+	and wt.war_customer_tag_agent = wc.customer_owner_agent_id
+	join  (
+SELECT 'January' AS
+MONTH
+UNION SELECT 'February' AS
+MONTH
+UNION SELECT 'March' AS
+MONTH
+UNION SELECT 'April' AS
+MONTH
+UNION SELECT 'May' AS
+MONTH
+UNION SELECT 'June' AS
+MONTH
+UNION SELECT 'July' AS
+MONTH
+UNION SELECT 'August' AS
+MONTH
+UNION SELECT 'September' AS
+MONTH
+UNION SELECT 'October' AS
+MONTH
+UNION SELECT 'November' AS
+MONTH
+UNION SELECT 'December' AS
+MONTH
+) AS m 
+left join monthly_customer_report_activtiy mcr on lcase(mcr.report_month) = lcase(m.MONTH)
+and mcr.report_school_year = schoolyear and mcr.report_region = regionCode 
+and mcr.report_customer_id = wc.customer_id 
+group by mcr.report_agent, customer, school_year, MONTH
+order by  ws.school_name asc;
+	end if;
+
+else
+if(agent is not null) then
+	select ws.school_name as customer, schoolyear as school_year, agent as agent, 
+	regionCode as region, tag as tag, wt.war_customer_tag_index as top, m.MONTH, mcr.* FROM war_customer wc
+	join war_customer_school ws on ws.war_customer_school_id = wc.war_customer_school
+	join war_customer_tag wt on wt.war_customer_tag_customer = wc.customer_id 
+	and wt.war_customer_tag_agent = wc.customer_owner_agent_id
+	join  (
+SELECT 'January' AS
+MONTH
+UNION SELECT 'February' AS
+MONTH
+UNION SELECT 'March' AS
+MONTH
+UNION SELECT 'April' AS
+MONTH
+UNION SELECT 'May' AS
+MONTH
+UNION SELECT 'June' AS
+MONTH
+UNION SELECT 'July' AS
+MONTH
+UNION SELECT 'August' AS
+MONTH
+UNION SELECT 'September' AS
+MONTH
+UNION SELECT 'October' AS
+MONTH
+UNION SELECT 'November' AS
+MONTH
+UNION SELECT 'December' AS
+MONTH
+) AS m 
+left join monthly_customer_report_activtiy mcr on lcase(mcr.report_month) = lcase(m.MONTH)
+and mcr.report_school_year = schoolyear and mcr.report_region = regionCode 
+and mcr.report_agent = agent
+and mcr.report_customer_id = wc.customer_id 
+order by  ws.school_name, top asc;
+
+else 
+	select ws.school_name as customer, schoolyear as school_year,  wc.customer_owner_agent_id as agent, 
+	regionCode as region, tag as tag, wt.war_customer_tag_index as top, m.MONTH, mcr.* FROM war_customer wc
+	join war_customer_school ws on ws.war_customer_school_id = wc.war_customer_school
+	join war_customer_tag wt on wt.war_customer_tag_customer = wc.customer_id 
+	and wt.war_customer_tag_agent = wc.customer_owner_agent_id
+	join  (
+SELECT 'January' AS
+MONTH
+UNION SELECT 'February' AS
+MONTH
+UNION SELECT 'March' AS
+MONTH
+UNION SELECT 'April' AS
+MONTH
+UNION SELECT 'May' AS
+MONTH
+UNION SELECT 'June' AS
+MONTH
+UNION SELECT 'July' AS
+MONTH
+UNION SELECT 'August' AS
+MONTH
+UNION SELECT 'September' AS
+MONTH
+UNION SELECT 'October' AS
+MONTH
+UNION SELECT 'November' AS
+MONTH
+UNION SELECT 'December' AS
+MONTH
+) AS m 
+left join monthly_customer_report_activtiy mcr on lcase(mcr.report_month) = lcase(m.MONTH)
+and mcr.report_school_year = schoolyear and mcr.report_region = regionCode 
+and mcr.report_customer_id = wc.customer_id 
+group by mcr.report_agent, customer, school_year, MONTH
+order by  ws.school_name, top asc;
+	end if;
+
+
+end if;
+
+
+
+
+end $$
