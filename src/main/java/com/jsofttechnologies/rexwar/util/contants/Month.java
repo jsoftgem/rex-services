@@ -1,7 +1,6 @@
 package com.jsofttechnologies.rexwar.util.contants;
 
 import java.util.Calendar;
-import java.util.Comparator;
 import java.util.Date;
 
 /**
@@ -10,18 +9,20 @@ import java.util.Date;
 public enum Month {
 
 
-    JANUARY("January", Calendar.JANUARY), FEBRUARY("February", Calendar.FEBRUARY), MARCH("March", Calendar.MARCH), APRIL("April", Calendar.APRIL), MAY("May", Calendar.MAY),
-    JUNE("June", Calendar.JUNE), JULY("July", Calendar.JULY), AUGUST("August", Calendar.AUGUST), SEPTEMBER("September", Calendar.SEPTEMBER), OCTOBER("October", Calendar.OCTOBER),
-    NOVEMBER("November", Calendar.NOVEMBER), DECEMBER("December", Calendar.DECEMBER);
+    JANUARY("January", "JAN", Calendar.JANUARY), FEBRUARY("February", "FEB", Calendar.FEBRUARY), MARCH("March", "MAR", Calendar.MARCH), APRIL("April", "APR", Calendar.APRIL), MAY("May", "MAY", Calendar.MAY),
+    JUNE("June", "JUN", Calendar.JUNE), JULY("July", "JUL", Calendar.JULY), AUGUST("August", "AUG", Calendar.AUGUST), SEPTEMBER("September", "SEP", Calendar.SEPTEMBER), OCTOBER("October", "OCT", Calendar.OCTOBER),
+    NOVEMBER("November", "NOV", Calendar.NOVEMBER), DECEMBER("December", "DEC", Calendar.DECEMBER);
 
 
     private int calendar;
     private String label;
+    private String shortLabel;
 
 
-    Month(String label, int calendar) {
+    Month(String label, String shortLabel, int calendar) {
         this.calendar = calendar;
         this.label = label;
+        this.shortLabel = shortLabel;
     }
 
     public Date getAsDate() {
@@ -38,7 +39,56 @@ public enum Month {
         return label;
     }
 
+    public String getShortLabel() {
+        return shortLabel;
+    }
+
     public int getCalendar() {
         return calendar;
+    }
+
+
+    public static Month getMonth(int calendar) {
+        Month month = null;
+        switch (calendar) {
+            case Calendar.JANUARY:
+                month = JANUARY;
+                break;
+            case Calendar.FEBRUARY:
+                month = FEBRUARY;
+                break;
+            case Calendar.MARCH:
+                month = MARCH;
+                break;
+            case Calendar.APRIL:
+                month = APRIL;
+                break;
+            case Calendar.MAY:
+                month = MAY;
+                break;
+            case Calendar.JUNE:
+                month = JUNE;
+                break;
+            case Calendar.JULY:
+                month = JULY;
+                break;
+            case Calendar.AUGUST:
+                month = AUGUST;
+                break;
+            case Calendar.SEPTEMBER:
+                month = SEPTEMBER;
+                break;
+            case Calendar.OCTOBER:
+                month = OCTOBER;
+                break;
+            case Calendar.NOVEMBER:
+                month = NOVEMBER;
+                break;
+            case Calendar.DECEMBER:
+                month = DECEMBER;
+                break;
+        }
+
+        return month;
     }
 }

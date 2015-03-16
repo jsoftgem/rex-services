@@ -51,4 +51,20 @@ public class WarAgentQueryService extends QueryService<WarAgent> {
     }
 
 
+    @GET
+    @Path("find_by_region/{region}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<WarAgent> findByRegion(@PathParam("region") String region) {
+        List<WarAgent> warAgents = null;
+        try {
+            setNamedQuery(WarAgent.FIND_BY_REGION);
+            putParam("region", region);
+            warAgents = doGetResultList();
+        } catch (Exception e) {
+            exceptionSummary.handleException(e, getClass(), region);
+        }
+        return warAgents;
+    }
+
+
 }

@@ -24,10 +24,10 @@ public class WarReportWeeklyAgentViewTest {
 
     @Test
     public void testEntity() {
-        List<WarReportWeeklyAgentView> viewList = entityManager.createNativeQuery("select * from weekly_agent_report_activity", WarReportWeeklyAgentView.class).getResultList();
+       /* List<WarReportWeeklyAgentView> viewList = entityManager.createNativeQuery("select * from weekly_agent_report_activity", WarReportWeeklyAgentView.class).getResultList();
         for (WarReportWeeklyAgentView warReportWeeklyAgentView : viewList) {
             System.out.println(warReportWeeklyAgentView);
-        }
+        }*/
     }
 
 }

@@ -62,6 +62,14 @@ public class FlowPage implements FlowJpe {
     private String styleURI;
     @Column(name = "page_link_enabled")
     private Boolean pageLinkEnabled;
+    @Column(name = "get_param")
+    private String getParam;
+    @Column(name = "put_param")
+    private String putParam;
+    @Column(name = "post_param")
+    private String postParam;
+    @Column(name = "delete_param")
+    private String deleteParam;
 
     @Override
     public void setId(Object id) {
@@ -263,5 +271,37 @@ public class FlowPage implements FlowJpe {
     @PostPersist
     public void postPersist() {
         this.styleURI = String.format("services/flow_style_query?compId=%d&compType=%s", this.id, FlowComponentType.PAGE.getType());
+    }
+
+    public String getGetParam() {
+        return getParam;
+    }
+
+    public void setGetParam(String getParam) {
+        this.getParam = getParam;
+    }
+
+    public String getPutParam() {
+        return putParam;
+    }
+
+    public void setPutParam(String putParam) {
+        this.putParam = putParam;
+    }
+
+    public String getPostParam() {
+        return postParam;
+    }
+
+    public void setPostParam(String postParam) {
+        this.postParam = postParam;
+    }
+
+    public String getDeleteParam() {
+        return deleteParam;
+    }
+
+    public void setDeleteParam(String deleteParam) {
+        this.deleteParam = deleteParam;
     }
 }

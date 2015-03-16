@@ -4,6 +4,9 @@ package com.jsofttechnologies.util;
  * Created by Jerico on 6/13/2014.
  */
 public class ProjectConstants {
+    public static final String ENV_PROD = "Production";
+    public static final String ENV_DEV = "Development";
+    public static final String FILE_SERVER_PATH = "C:/fileserver";
     public static final String SALT = "3559493";
     public static final String SERVICE_DOWNLOAD = "services/download_service";
     public static final String SERVICE_DOWNLOAD_USER_PROFILE_IMAGE = SERVICE_DOWNLOAD
@@ -20,7 +23,6 @@ public class ProjectConstants {
     public static final String MAIN_PU_PORT = "8080";
     public static final String MAIN_PU_DB = "rex-core-db.odb";
     public static final String MAIN_PU_URL = "objectdb://" + MAIN_PU_HOST + ":" + MAIN_PU_PORT + "/" + MAIN_PU_DB;
-    public static final String FILE_SERVER_PATH = "C:/fileserver";
     public static final String KEY_SESSION = "SID";
     public static final String KEY_SESSION_USER = "SU";
     public static final String KEY_AGENT = "User-Agent";

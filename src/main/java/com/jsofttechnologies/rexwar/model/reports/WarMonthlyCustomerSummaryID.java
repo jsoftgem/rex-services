@@ -1,9 +1,11 @@
 package com.jsofttechnologies.rexwar.model.reports;
 
+import java.io.Serializable;
+
 /**
  * Created by jerico on 3/14/2015.
  */
-public class WarMonthlyCustomerSummaryID {
+public class WarMonthlyCustomerSummaryID implements Serializable {
     private String month;
     private String customer;
     private Long schoolYearId;

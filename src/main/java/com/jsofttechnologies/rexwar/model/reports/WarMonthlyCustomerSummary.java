@@ -54,36 +54,11 @@ public class WarMonthlyCustomerSummary implements Serializable {
     private Long customerId;
     @Column(name = "report_materials_advisor")
     private String materialsAdvisor;
-    @Column(name = "report_planner_id")
-    private Long reportPlannerId;
-    @Column(name = "report_date")
-    @Temporal(TemporalType.DATE)
-    private Date reportDate;
     @Column(name = "report_month")
     @Enumerated(EnumType.STRING)
     private Month reportMonth;
     @Column(name = "report_year")
     private Integer year;
-    @Column(name = "report_week")
-    private Integer reportWeek;
-    @Column(name = "report_planned_target")
-    private Integer plannedTarget;
-    @Column(name = "report_unplanned_target")
-    private Integer unplannedTarget;
-    @Column(name = "report_planned_actual")
-    private Integer plannedActual;
-    @Column(name = "report_unplanned_actual")
-    private Integer unplannedActual;
-    @Column(name = "report_total_activity")
-    private Integer totalActivity;
-    @Column(name = "report_total_actual")
-    private Integer totalActual;
-    @Column(name = "report_planned_call_productivity")
-    private Double plannedCallProductivity;
-    @Column(name = "report_unplanned_call_productivity")
-    private Double unplannedCallProductivity;
-    @Column(name = "report_total_call_productivity")
-    private Double totalCallProductivity;
     @Column(name = "report_exam_copies_distribution")
     private Integer ecd;
     @Column(name = "report_invitation_to_events")
@@ -106,6 +81,12 @@ public class WarMonthlyCustomerSummary implements Serializable {
     private Integer ucis;
     @Column(name = "report_implemented_ex_sem")
     private Integer ies;
+    @Column(name = "top")
+    private Integer top;
+    @Column(name = "report_frequency")
+    private Integer frequency;
+    @Column(name = "war_agent_initials")
+    private String agentInitials;
 
     public String getMonth() {
         return month;
@@ -155,22 +136,6 @@ public class WarMonthlyCustomerSummary implements Serializable {
         this.materialsAdvisor = materialsAdvisor;
     }
 
-    public Long getReportPlannerId() {
-        return reportPlannerId;
-    }
-
-    public void setReportPlannerId(Long reportPlannerId) {
-        this.reportPlannerId = reportPlannerId;
-    }
-
-    public Date getReportDate() {
-        return reportDate;
-    }
-
-    public void setReportDate(Date reportDate) {
-        this.reportDate = reportDate;
-    }
-
     public Month getReportMonth() {
         return reportMonth;
     }
@@ -193,86 +158,6 @@ public class WarMonthlyCustomerSummary implements Serializable {
 
     public void setRegion(String region) {
         this.region = region;
-    }
-
-    public Integer getReportWeek() {
-        return reportWeek;
-    }
-
-    public void setReportWeek(Integer reportWeek) {
-        this.reportWeek = reportWeek;
-    }
-
-    public Integer getPlannedTarget() {
-        return plannedTarget;
-    }
-
-    public void setPlannedTarget(Integer plannedTarget) {
-        this.plannedTarget = plannedTarget;
-    }
-
-    public Integer getUnplannedTarget() {
-        return unplannedTarget;
-    }
-
-    public void setUnplannedTarget(Integer unplannedTarget) {
-        this.unplannedTarget = unplannedTarget;
-    }
-
-    public Integer getPlannedActual() {
-        return plannedActual;
-    }
-
-    public void setPlannedActual(Integer plannedActual) {
-        this.plannedActual = plannedActual;
-    }
-
-    public Integer getUnplannedActual() {
-        return unplannedActual;
-    }
-
-    public void setUnplannedActual(Integer unplannedActual) {
-        this.unplannedActual = unplannedActual;
-    }
-
-    public Integer getTotalActivity() {
-        return totalActivity;
-    }
-
-    public void setTotalActivity(Integer totalActivity) {
-        this.totalActivity = totalActivity;
-    }
-
-    public Integer getTotalActual() {
-        return totalActual;
-    }
-
-    public void setTotalActual(Integer totalActual) {
-        this.totalActual = totalActual;
-    }
-
-    public Double getPlannedCallProductivity() {
-        return plannedCallProductivity;
-    }
-
-    public void setPlannedCallProductivity(Double plannedCallProductivity) {
-        this.plannedCallProductivity = plannedCallProductivity;
-    }
-
-    public Double getUnplannedCallProductivity() {
-        return unplannedCallProductivity;
-    }
-
-    public void setUnplannedCallProductivity(Double unplannedCallProductivity) {
-        this.unplannedCallProductivity = unplannedCallProductivity;
-    }
-
-    public Double getTotalCallProductivity() {
-        return totalCallProductivity;
-    }
-
-    public void setTotalCallProductivity(Double totalCallProductivity) {
-        this.totalCallProductivity = totalCallProductivity;
     }
 
     public Integer getEcd() {
@@ -361,5 +246,29 @@ public class WarMonthlyCustomerSummary implements Serializable {
 
     public void setIes(Integer ies) {
         this.ies = ies;
+    }
+
+    public Integer getTop() {
+        return top;
+    }
+
+    public void setTop(Integer top) {
+        this.top = top;
+    }
+
+    public Integer getFrequency() {
+        return frequency;
+    }
+
+    public void setFrequency(Integer frequency) {
+        this.frequency = frequency;
+    }
+
+    public String getAgentInitials() {
+        return agentInitials;
+    }
+
+    public void setAgentInitials(String agentInitials) {
+        this.agentInitials = agentInitials;
     }
 }

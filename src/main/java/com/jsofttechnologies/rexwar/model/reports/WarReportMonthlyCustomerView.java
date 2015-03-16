@@ -24,6 +24,8 @@ public class WarReportMonthlyCustomerView implements Serializable {
     private Month month;
     @Column(name = "report_agent")
     private Long agent;
+    @Column(name = "report_materials_advisor")
+    private String materialsAdvisor;
     @Column(name = "report_school_year")
     private Long schoolYear;
     @Column(name = "report_year")
@@ -89,6 +91,14 @@ public class WarReportMonthlyCustomerView implements Serializable {
 
     public void setAgent(Long agent) {
         this.agent = agent;
+    }
+
+    public String getMaterialsAdvisor() {
+        return materialsAdvisor;
+    }
+
+    public void setMaterialsAdvisor(String materialsAdvisor) {
+        this.materialsAdvisor = materialsAdvisor;
     }
 
     public Long getSchoolYear() {

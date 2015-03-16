@@ -106,6 +106,8 @@ public class WarActivity implements FlowJpe {
     private Long regionId;
     @Column(name = "war_activity_region_code", nullable = false)
     private String regionCode;
+    @Column(name = "war_activity_worked_with")
+    private Boolean workedWith;
 
     @Override
     public void setId(Object id) {
@@ -375,8 +377,13 @@ public class WarActivity implements FlowJpe {
         this.regionCode = regionCode;
     }
 
+    public Boolean getWorkedWith() {
+        return workedWith;
+    }
 
-
+    public void setWorkedWith(Boolean workedWith) {
+        this.workedWith = workedWith;
+    }
 
     @PrePersist
     public void prePersist() {

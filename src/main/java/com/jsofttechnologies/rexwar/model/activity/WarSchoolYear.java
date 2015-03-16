@@ -6,7 +6,6 @@ import com.jsofttechnologies.rexwar.util.contants.Month;
 import javax.persistence.*;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Set;
 
 /**
  * Created by Jerico on 1/28/2015 00:50.
@@ -38,20 +37,16 @@ public class WarSchoolYear implements FlowJpe {
     private Date endDt;
     @Column(name = "description", nullable = false)
     private String description;
-    @Column(name = "war_report_school_year_period_month")
+    @Column(name = "war_report_school_year_period_month", nullable = false)
     @Enumerated(EnumType.STRING)
     private Month periodMonth;
     @Column(name = "war_report_school_year_period_year", nullable = false)
     private int periodYear;
-    @Column(name = "war_report_school_year_period_month_to")
+    @Column(name = "war_report_school_year_period_month_to", nullable = false)
     @Enumerated(EnumType.STRING)
     private Month periodMonthTo;
     @Column(name = "war_report_school_year_period_year_to", nullable = false)
     private int periodYearTo;
-    /*@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set<WarMarketSegment> warMarketSegments;
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set<WarCustomerMarket> warCustomerMarkets;*/
     @Column(name = "created_by_id", nullable = false)
     private Long createByUserId;
     @Transient
@@ -148,24 +143,6 @@ public class WarSchoolYear implements FlowJpe {
     public void setPeriodYearTo(int periodYearTo) {
         this.periodYearTo = periodYearTo;
     }
-
-/*
-    public Set<WarMarketSegment> getWarMarketSegments() {
-        return warMarketSegments;
-    }
-
-    public void setWarMarketSegments(Set<WarMarketSegment> warMarketSegments) {
-        this.warMarketSegments = warMarketSegments;
-    }
-
-    public Set<WarCustomerMarket> getWarCustomerMarkets() {
-        return warCustomerMarkets;
-    }
-
-    public void setWarCustomerMarkets(Set<WarCustomerMarket> warCustomerMarkets) {
-        this.warCustomerMarkets = warCustomerMarkets;
-    }
-*/
 
     public Long getCreateByUserId() {
         return createByUserId;
