@@ -69,10 +69,10 @@ public class WarCustomerCrudService extends CrudService<WarCustomer, Long> {
 
         }
 
-        if (warCustomer.getBuyingProcess() == null) {
+       /* if (warCustomer.getBuyingProcess() == null) {
             throw throwException("WAR_CUSTOMER_NULL_BUYING_PROCESS");
         }
-
+*/
 
         if (promise.getOk()) {
 
@@ -115,10 +115,10 @@ public class WarCustomerCrudService extends CrudService<WarCustomer, Long> {
             }
 
         }
-
+/*
         if (warCustomer.getBuyingProcess() == null) {
             throw throwException("WAR_CUSTOMER_NULL_BUYING_PROCESS");
-        }
+        }*/
 
 
         if (promise.getOk()) {

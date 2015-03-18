@@ -3,6 +3,7 @@ package com.jsofttechnologies.ejb;
 import com.jsofttechnologies.jpa.admin.FlowUser;
 import com.jsofttechnologies.jpa.admin.FlowUserGroup;
 import com.jsofttechnologies.jpa.admin.FlowUserProfile;
+import com.jsofttechnologies.services.admin.FlowUserQueryService;
 import com.jsofttechnologies.util.ProjectConstants;
 
 import javax.ejb.EJB;
@@ -25,7 +26,8 @@ public class FlowUserManager {
 
     @PersistenceContext(unitName = ProjectConstants.MAIN_PU)
     private EntityManager entityManager;
-
+    @EJB
+    private FlowUserQueryService flowUserQueryService;
 
     @EJB
     private MergeExceptionSummary exceptionSummary;
@@ -85,7 +87,7 @@ public class FlowUserManager {
 
 
     public FlowUser getUser(Long id) {
-        if (userMap == null) userMap = new HashMap<>();
+/*        if (userMap == null) userMap = new HashMap<>();
         if (!userMap.containsKey(id)) {
             try {
                 FlowUser user = entityManager.find(FlowUser.class, id);
@@ -96,11 +98,13 @@ public class FlowUserManager {
             }
 
         }
-        return userMap.get(id);
+        return userMap.get(id);*/
+
+        return flowUserQueryService.getFlowUserById(id);
     }
 
     public Long getUserId(String username) {
-        if (userIdMap == null) userIdMap = new HashMap<>();
+       /* if (userIdMap == null) userIdMap = new HashMap<>();
 
         if (!userIdMap.containsKey(username)) {
             try {
@@ -111,7 +115,8 @@ public class FlowUserManager {
                 exceptionSummary.handleException(e, getClass());
             }
         }
-        return userIdMap.get(username);
+        return userIdMap.get(username);*/
+        return flowUserQueryService.getFlowUserByUsername(username).getId();
     }
 
     public String getGroupName(String username) {
