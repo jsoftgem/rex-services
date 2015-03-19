@@ -6,7 +6,7 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          metadata-complete="false">
 
-    <display-name>rex-com.jsofttechnologies.rexwar</display-name>
+    <display-name>rex-dev</display-name>
 
 
     <listener>

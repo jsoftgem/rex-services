@@ -5,10 +5,10 @@
 
     <groupId>com.jsofttechnologies</groupId>
     <artifactId>rex-services</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>DEV-1</version>
     <packaging>war</packaging>
 
-    <name>rex-com.jsofttechnologies.rexwar</name>
+    <name>rex-dev</name>
 
     <repositories>
         <repository>
@@ -110,12 +110,14 @@
             <groupId>org.hibernate.javax.persistence</groupId>
             <artifactId>hibernate-jpa-2.1-api</artifactId>
             <version>1.0.0.Final</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
             <version>${version.hibernate}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -134,6 +136,7 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>${version.mysql}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -152,7 +155,7 @@
     </dependencies>
 
     <build>
-        <finalName>rex-services</finalName>
+        <finalName>rex-dev</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -261,9 +264,11 @@
                         <version>1.0.2.Final</version>
                         <configuration>
                             <jboss-home>${env.JBOSS_HOME}</jboss-home>
-                            <port>10990</port>
-                            <username>jerico</username>
-                            <password>JERKallstar98</password>
+                            <port>9990</port>
+                            <!--<hostname>war.rexpublishing.com.ph</hostname>-->
+                            <hostname>192.168.102.29</hostname>
+                            <username>warmgnt</username>
+                            <password>warapp</password>
                         </configuration>
                         <executions>
                             <execution>

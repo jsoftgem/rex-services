@@ -61,8 +61,16 @@ public class DownloadService extends FlowService {
                                   @PathParam("file_name") String fileName) {
 
         Response response = null;
-        File fileService = FileUtil
-                .createFolder(ProjectConstants.FILE_SERVER_PATH);
+
+        File fileService = null;
+        if (ProjectConstants.ENV == ProjectConstants.ENV_PROD) {
+            fileService = FileUtil.createFolder(FileUtil
+                    .createFolder(System.getProperty(ProjectConstants.FILE_SERVER_VAR)), ProjectConstants.FILE_SERVER_PATH);
+        } else {
+            fileService = FileUtil
+                    .createFolder(ProjectConstants.FILE_SERVER_PATH);
+        }
+
         File root = FileUtil.createFolder(fileService, baseFolder);
 
         File folder = FileUtil.createFolder(root, "img");
@@ -87,8 +95,16 @@ public class DownloadService extends FlowService {
                                   @PathParam("file_name") String fileName) {
 
         Response response = null;
-        File fileService = FileUtil
-                .createFolder(ProjectConstants.FILE_SERVER_PATH);
+
+        File fileService = null;
+        if (ProjectConstants.ENV == ProjectConstants.ENV_PROD) {
+            fileService = FileUtil.createFolder(FileUtil
+                    .createFolder(System.getProperty(ProjectConstants.FILE_SERVER_VAR)), ProjectConstants.FILE_SERVER_PATH);
+        } else {
+            fileService = FileUtil
+                    .createFolder(ProjectConstants.FILE_SERVER_PATH);
+        }
+
         File root = FileUtil.createFolder(fileService, baseFolder);
 
         File folder = FileUtil.createFolder(root, "video");
@@ -114,8 +130,14 @@ public class DownloadService extends FlowService {
         FlowUploadedFile flowUploadedFile = flowUploadedFileQueryService.getById(id);
         Response response;
 
-        File fileService = FileUtil
-                .createFolder(ProjectConstants.FILE_SERVER_PATH);
+        File fileService = null;
+        if (ProjectConstants.ENV == ProjectConstants.ENV_PROD) {
+            fileService = FileUtil.createFolder(FileUtil
+                    .createFolder(System.getProperty(ProjectConstants.FILE_SERVER_VAR)), ProjectConstants.FILE_SERVER_PATH);
+        } else {
+            fileService = FileUtil
+                    .createFolder(ProjectConstants.FILE_SERVER_PATH);
+        }
 
         File root = FileUtil.createFolders(fileService, flowUploadedFile.getFolder());
 
@@ -126,7 +148,7 @@ public class DownloadService extends FlowService {
         if (file.exists()) {
             response = Response
                     .ok(file)
-                    .header("Content-Disposition", "attachment;filename=\"" + flowUploadedFile.getDescription()+"\"")
+                    .header("Content-Disposition", "attachment;filename=\"" + flowUploadedFile.getDescription() + "\"")
                     .header("Content-Type", flowUploadedFile.getContentType()).build();
         } else {
             response = Response.ok().entity(ProjectConstants.FLOW_DOWNLOAD_DEFAULT_IMG)
@@ -143,9 +165,16 @@ public class DownloadService extends FlowService {
         FlowUploadedFile flowUploadedFile = flowUploadedFileQueryService.getById(id);
         Response response;
 
-        File fileService = FileUtil
-                .createFolder(ProjectConstants.FILE_SERVER_PATH);
 
+        File fileService = null;
+
+        if (ProjectConstants.ENV == ProjectConstants.ENV_PROD) {
+            fileService = FileUtil.createFolder(FileUtil
+                    .createFolder(System.getProperty(ProjectConstants.FILE_SERVER_VAR)), ProjectConstants.FILE_SERVER_PATH);
+        } else {
+            fileService = FileUtil
+                    .createFolder(ProjectConstants.FILE_SERVER_PATH);
+        }
         File root = FileUtil.createFolders(fileService, flowUploadedFile.getFolder());
 
         File folder = FileUtil.createFolder(root, flowUploadedFile.getType());

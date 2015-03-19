@@ -139,11 +139,17 @@ public class UploadService extends FlowService {
 
                 byte[] bytes = IOUtils.toByteArray(inputStream);
 
-                // constructs upload file path
-                File root = FileUtil
-                        .createFolder(ProjectConstants.FILE_SERVER_PATH);
+                File fileService = null;
 
-                File dir = FileUtil.createFolder(root, baseFolder);
+                if (ProjectConstants.ENV == ProjectConstants.ENV_PROD) {
+                    fileService = FileUtil.createFolder(FileUtil
+                            .createFolder(System.getProperty(ProjectConstants.FILE_SERVER_VAR)), ProjectConstants.FILE_SERVER_PATH);
+                } else {
+                    fileService = FileUtil
+                            .createFolder(ProjectConstants.FILE_SERVER_PATH);
+                }
+
+                File dir = FileUtil.createFolder(fileService, baseFolder);
 
                 File folder = FileUtil.createFolder(dir, "img");
 
@@ -198,10 +204,18 @@ public class UploadService extends FlowService {
                 flowUploadedFileCrudService.create(flowUploadedFile);
             }
 
-            File root = FileUtil
-                    .createFolder(ProjectConstants.FILE_SERVER_PATH);
 
-            File dir = FileUtil.createFolders(root, baseFolder);
+            File fileService = null;
+
+            if (ProjectConstants.ENV == ProjectConstants.ENV_PROD) {
+                fileService = FileUtil.createFolder(FileUtil
+                        .createFolder(System.getProperty(ProjectConstants.FILE_SERVER_VAR)), ProjectConstants.FILE_SERVER_PATH);
+            } else {
+                fileService = FileUtil
+                        .createFolder(ProjectConstants.FILE_SERVER_PATH);
+            }
+
+            File dir = FileUtil.createFolders(fileService, baseFolder);
 
             File folder = FileUtil.createFolder(dir, flowUploadedFile.getType());
 
