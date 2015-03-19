@@ -206,6 +206,7 @@ public class UploadService extends FlowService {
 
 
             File fileService = null;
+
             if (ProjectConstants.ENV == ProjectConstants.ENV_PROD) {
                 fileService = FileUtil
                         .createFolder(System.getProperty(ProjectConstants.FILE_SERVER_VAR));
@@ -217,10 +218,6 @@ public class UploadService extends FlowService {
             File dir = FileUtil.createFolders(fileService, baseFolder);
 
             File folder = FileUtil.createFolder(dir, flowUploadedFile.getType());
-
-            folder.setReadable(Boolean.TRUE);
-            folder.setWritable(Boolean.TRUE);
-
 
             File uploadedFile = new File(folder, flowUploadedFile.getName());
 

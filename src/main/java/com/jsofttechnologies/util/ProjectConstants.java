@@ -6,9 +6,9 @@ package com.jsofttechnologies.util;
 public class ProjectConstants {
     public static final String ENV_PROD = "Production";
     public static final String ENV_DEV = "Development";
-    public static final String ENV = ENV_PROD;
+    public static final String ENV = ENV_DEV;
     public static final String FILE_SERVER_HOME = "/home";
-    public static final String FILE_SERVER_PATH = "/fileserver";
+    public static final String FILE_SERVER_PATH = "~/opt/fileserver";
     public static final String FILE_SERVER_VAR = "JBOSS_FILESERVER";
     public static final String SALT = "3559493";
     public static final String SERVICE_DOWNLOAD = "services/download_service";
