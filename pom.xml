@@ -211,7 +211,7 @@
         <profile>
             <id>wildfly</id>
             <build>
-                <finalName>rex-services</finalName>
+                <finalName>rex-dev</finalName>
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
