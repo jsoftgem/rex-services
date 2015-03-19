@@ -6,7 +6,8 @@ package com.jsofttechnologies.util;
 public class ProjectConstants {
     public static final String ENV_PROD = "Production";
     public static final String ENV_DEV = "Development";
-    public static final String FILE_SERVER_PATH = "C:/fileserver";
+    public static final String FILE_SERVER_HOME = "/home";
+    public static final String FILE_SERVER_PATH = "/fileserver";
     public static final String SALT = "3559493";
     public static final String SERVICE_DOWNLOAD = "services/download_service";
     public static final String SERVICE_DOWNLOAD_USER_PROFILE_IMAGE = SERVICE_DOWNLOAD
@@ -15,11 +16,11 @@ public class ProjectConstants {
             + "/image";
     public static final String SERVICE_DOWNLOAD_BY_PATH = SERVICE_DOWNLOAD
             + "/getPath";
-    public static final String APP_NAME = "Merge Application Service";
+    public static final String APP_NAME = "FLOW Application Service";
     public static final String APP_VERSION = "1.0.1";
     public static final String SERVICE_VERSION = "3.0";
     public static final String MAIN_PU = "warpu";
-    public static final String MAIN_PU_HOST = "localhost";
+    public static final String MAIN_PU_HOST = "192.168.102.29";
     public static final String MAIN_PU_PORT = "8080";
     public static final String MAIN_PU_DB = "rex-core-db.odb";
     public static final String MAIN_PU_URL = "objectdb://" + MAIN_PU_HOST + ":" + MAIN_PU_PORT + "/" + MAIN_PU_DB;

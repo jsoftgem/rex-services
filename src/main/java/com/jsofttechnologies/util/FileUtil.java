@@ -17,6 +17,10 @@ public class FileUtil {
     }
 
     public static File createFolder(File dir, String name) {
+        if (dir != null) {
+            dir.setWritable(true);
+            dir.setReadable(true);
+        }
         File file = new File(dir, name);
         if (!file.exists()) {
             file.mkdirs();

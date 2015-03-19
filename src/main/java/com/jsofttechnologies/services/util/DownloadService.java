@@ -61,8 +61,10 @@ public class DownloadService extends FlowService {
                                   @PathParam("file_name") String fileName) {
 
         Response response = null;
+        File home = FileUtil
+                .createFolder(ProjectConstants.FILE_SERVER_HOME);
         File fileService = FileUtil
-                .createFolder(ProjectConstants.FILE_SERVER_PATH);
+                .createFolder(home, ProjectConstants.FILE_SERVER_PATH);
         File root = FileUtil.createFolder(fileService, baseFolder);
 
         File folder = FileUtil.createFolder(root, "img");
@@ -87,8 +89,10 @@ public class DownloadService extends FlowService {
                                   @PathParam("file_name") String fileName) {
 
         Response response = null;
+        File home = FileUtil
+                .createFolder(ProjectConstants.FILE_SERVER_HOME);
         File fileService = FileUtil
-                .createFolder(ProjectConstants.FILE_SERVER_PATH);
+                .createFolder(home, ProjectConstants.FILE_SERVER_PATH);
         File root = FileUtil.createFolder(fileService, baseFolder);
 
         File folder = FileUtil.createFolder(root, "video");
@@ -113,9 +117,10 @@ public class DownloadService extends FlowService {
     public Response getFileContent(@PathParam("id") Long id) {
         FlowUploadedFile flowUploadedFile = flowUploadedFileQueryService.getById(id);
         Response response;
-
+        File home = FileUtil
+                .createFolder(ProjectConstants.FILE_SERVER_HOME);
         File fileService = FileUtil
-                .createFolder(ProjectConstants.FILE_SERVER_PATH);
+                .createFolder(home, ProjectConstants.FILE_SERVER_PATH);
 
         File root = FileUtil.createFolders(fileService, flowUploadedFile.getFolder());
 
@@ -126,7 +131,7 @@ public class DownloadService extends FlowService {
         if (file.exists()) {
             response = Response
                     .ok(file)
-                    .header("Content-Disposition", "attachment;filename=\"" + flowUploadedFile.getDescription()+"\"")
+                    .header("Content-Disposition", "attachment;filename=\"" + flowUploadedFile.getDescription() + "\"")
                     .header("Content-Type", flowUploadedFile.getContentType()).build();
         } else {
             response = Response.ok().entity(ProjectConstants.FLOW_DOWNLOAD_DEFAULT_IMG)
@@ -142,9 +147,10 @@ public class DownloadService extends FlowService {
     public Response getFileInfo(@PathParam("id") Long id) {
         FlowUploadedFile flowUploadedFile = flowUploadedFileQueryService.getById(id);
         Response response;
-
+        File home = FileUtil
+                .createFolder(ProjectConstants.FILE_SERVER_HOME);
         File fileService = FileUtil
-                .createFolder(ProjectConstants.FILE_SERVER_PATH);
+                .createFolder(home, ProjectConstants.FILE_SERVER_PATH);
 
         File root = FileUtil.createFolders(fileService, flowUploadedFile.getFolder());
 

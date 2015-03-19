@@ -32,8 +32,11 @@ public class FlowUploadedFileCrudService extends CrudService<FlowUploadedFile, L
 
     @Override
     protected FlowUploadedFile preDeleteValidation(FlowUploadedFile flowUploadedFile) {
+        File home = FileUtil
+                .createFolder(ProjectConstants.FILE_SERVER_HOME);
+
         File fileService = FileUtil
-                .createFolder(ProjectConstants.FILE_SERVER_PATH);
+                .createFolder(home, ProjectConstants.FILE_SERVER_PATH);
 
         File root = FileUtil.createFolders(fileService, flowUploadedFile.getFolder());
 

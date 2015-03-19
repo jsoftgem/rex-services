@@ -138,10 +138,11 @@ public class UploadService extends FlowService {
                         null);
 
                 byte[] bytes = IOUtils.toByteArray(inputStream);
-
+                File home = FileUtil
+                        .createFolder(ProjectConstants.FILE_SERVER_HOME);
                 // constructs upload file path
                 File root = FileUtil
-                        .createFolder(ProjectConstants.FILE_SERVER_PATH);
+                        .createFolder(home, ProjectConstants.FILE_SERVER_PATH);
 
                 File dir = FileUtil.createFolder(root, baseFolder);
 
@@ -197,13 +198,19 @@ public class UploadService extends FlowService {
                 flowUploadedFile.setFolder(baseFolder);
                 flowUploadedFileCrudService.create(flowUploadedFile);
             }
+            File home = FileUtil
+                    .createFolder(ProjectConstants.FILE_SERVER_HOME);
 
             File root = FileUtil
-                    .createFolder(ProjectConstants.FILE_SERVER_PATH);
+                    .createFolder(home, ProjectConstants.FILE_SERVER_PATH);
 
             File dir = FileUtil.createFolders(root, baseFolder);
 
             File folder = FileUtil.createFolder(dir, flowUploadedFile.getType());
+
+            folder.setReadable(Boolean.TRUE);
+            folder.setWritable(Boolean.TRUE);
+
 
             File uploadedFile = new File(folder, flowUploadedFile.getName());
 
