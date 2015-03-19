@@ -8,7 +8,7 @@
     <version>RELEASE-1</version>
     <packaging>war</packaging>
 
-    <name>rex-dev</name>
+    <name>rex-services</name>
 
     <repositories>
         <repository>
@@ -155,7 +155,7 @@
     </dependencies>
 
     <build>
-        <finalName>rex-dev</finalName>
+        <finalName>rex-services</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
