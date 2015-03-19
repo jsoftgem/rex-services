@@ -61,10 +61,16 @@ public class DownloadService extends FlowService {
                                   @PathParam("file_name") String fileName) {
 
         Response response = null;
-        File home = FileUtil
-                .createFolder(ProjectConstants.FILE_SERVER_HOME);
-        File fileService = FileUtil
-                .createFolder(home, ProjectConstants.FILE_SERVER_PATH);
+
+        File fileService = null;
+        if (ProjectConstants.ENV == ProjectConstants.ENV_PROD) {
+            fileService = FileUtil
+                    .createFolder(System.getProperty(ProjectConstants.FILE_SERVER_VAR));
+        } else {
+            fileService = FileUtil
+                    .createFolder(ProjectConstants.FILE_SERVER_PATH);
+        }
+
         File root = FileUtil.createFolder(fileService, baseFolder);
 
         File folder = FileUtil.createFolder(root, "img");
@@ -89,10 +95,16 @@ public class DownloadService extends FlowService {
                                   @PathParam("file_name") String fileName) {
 
         Response response = null;
-        File home = FileUtil
-                .createFolder(ProjectConstants.FILE_SERVER_HOME);
-        File fileService = FileUtil
-                .createFolder(home, ProjectConstants.FILE_SERVER_PATH);
+
+        File fileService = null;
+        if (ProjectConstants.ENV == ProjectConstants.ENV_PROD) {
+            fileService = FileUtil
+                    .createFolder(System.getProperty(ProjectConstants.FILE_SERVER_VAR));
+        } else {
+            fileService = FileUtil
+                    .createFolder(ProjectConstants.FILE_SERVER_PATH);
+        }
+
         File root = FileUtil.createFolder(fileService, baseFolder);
 
         File folder = FileUtil.createFolder(root, "video");
@@ -117,10 +129,15 @@ public class DownloadService extends FlowService {
     public Response getFileContent(@PathParam("id") Long id) {
         FlowUploadedFile flowUploadedFile = flowUploadedFileQueryService.getById(id);
         Response response;
-        File home = FileUtil
-                .createFolder(ProjectConstants.FILE_SERVER_HOME);
-        File fileService = FileUtil
-                .createFolder(home, ProjectConstants.FILE_SERVER_PATH);
+
+        File fileService = null;
+        if (ProjectConstants.ENV == ProjectConstants.ENV_PROD) {
+            fileService = FileUtil
+                    .createFolder(System.getProperty(ProjectConstants.FILE_SERVER_VAR));
+        } else {
+            fileService = FileUtil
+                    .createFolder(ProjectConstants.FILE_SERVER_PATH);
+        }
 
         File root = FileUtil.createFolders(fileService, flowUploadedFile.getFolder());
 
@@ -147,11 +164,17 @@ public class DownloadService extends FlowService {
     public Response getFileInfo(@PathParam("id") Long id) {
         FlowUploadedFile flowUploadedFile = flowUploadedFileQueryService.getById(id);
         Response response;
-        File home = FileUtil
-                .createFolder(ProjectConstants.FILE_SERVER_HOME);
-        File fileService = FileUtil
-                .createFolder(home, ProjectConstants.FILE_SERVER_PATH);
 
+
+        File fileService = null;
+
+        if (ProjectConstants.ENV == ProjectConstants.ENV_PROD) {
+            fileService = FileUtil
+                    .createFolder(System.getProperty(ProjectConstants.FILE_SERVER_VAR));
+        } else {
+            fileService = FileUtil
+                    .createFolder(ProjectConstants.FILE_SERVER_PATH);
+        }
         File root = FileUtil.createFolders(fileService, flowUploadedFile.getFolder());
 
         File folder = FileUtil.createFolder(root, flowUploadedFile.getType());

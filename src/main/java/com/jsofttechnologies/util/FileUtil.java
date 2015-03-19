@@ -17,10 +17,6 @@ public class FileUtil {
     }
 
     public static File createFolder(File dir, String name) {
-        if (dir != null) {
-            dir.setWritable(true);
-            dir.setReadable(true);
-        }
         File file = new File(dir, name);
         if (!file.exists()) {
             file.mkdirs();
@@ -29,12 +25,6 @@ public class FileUtil {
     }
 
     public static File createFolders(File dir, String name) {
-
-        if (dir != null) {
-            dir.setWritable(true);
-            dir.setReadable(true);
-        }
-
         if (name.contains(".")) {
             String[] folderNames = name.split("\\.");
             File[] folders = new File[folderNames.length];

@@ -138,13 +138,18 @@ public class UploadService extends FlowService {
                         null);
 
                 byte[] bytes = IOUtils.toByteArray(inputStream);
-                File home = FileUtil
-                        .createFolder(ProjectConstants.FILE_SERVER_HOME);
-                // constructs upload file path
-                File root = FileUtil
-                        .createFolder(home, ProjectConstants.FILE_SERVER_PATH);
 
-                File dir = FileUtil.createFolder(root, baseFolder);
+                File fileService = null;
+
+                if (ProjectConstants.ENV == ProjectConstants.ENV_PROD) {
+                    fileService = FileUtil
+                            .createFolder(System.getProperty(ProjectConstants.FILE_SERVER_VAR));
+                } else {
+                    fileService = FileUtil
+                            .createFolder(ProjectConstants.FILE_SERVER_PATH);
+                }
+
+                File dir = FileUtil.createFolder(fileService, baseFolder);
 
                 File folder = FileUtil.createFolder(dir, "img");
 
@@ -198,13 +203,18 @@ public class UploadService extends FlowService {
                 flowUploadedFile.setFolder(baseFolder);
                 flowUploadedFileCrudService.create(flowUploadedFile);
             }
-            File home = FileUtil
-                    .createFolder(ProjectConstants.FILE_SERVER_HOME);
 
-            File root = FileUtil
-                    .createFolder(home, ProjectConstants.FILE_SERVER_PATH);
 
-            File dir = FileUtil.createFolders(root, baseFolder);
+            File fileService = null;
+            if (ProjectConstants.ENV == ProjectConstants.ENV_PROD) {
+                fileService = FileUtil
+                        .createFolder(System.getProperty(ProjectConstants.FILE_SERVER_VAR));
+            } else {
+                fileService = FileUtil
+                        .createFolder(ProjectConstants.FILE_SERVER_PATH);
+            }
+
+            File dir = FileUtil.createFolders(fileService, baseFolder);
 
             File folder = FileUtil.createFolder(dir, flowUploadedFile.getType());
 
