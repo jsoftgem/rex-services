@@ -36,8 +36,8 @@ public class FlowUploadedFileCrudService extends CrudService<FlowUploadedFile, L
         File fileService = null;
 
         if (ProjectConstants.ENV == ProjectConstants.ENV_PROD) {
-            fileService = FileUtil
-                    .createFolder(System.getProperty(ProjectConstants.FILE_SERVER_VAR));
+            fileService = FileUtil.createFolder(FileUtil
+                    .createFolder(System.getProperty(ProjectConstants.FILE_SERVER_VAR)), ProjectConstants.FILE_SERVER_PATH);
         } else {
             fileService = FileUtil
                     .createFolder(ProjectConstants.FILE_SERVER_PATH);
