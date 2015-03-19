@@ -26,6 +26,11 @@ public class FileUtil {
 
     public static File createFolders(File dir, String name) {
 
+        if (dir != null) {
+            dir.setWritable(true);
+            dir.setReadable(true);
+        }
+
         if (name.contains(".")) {
             String[] folderNames = name.split("\\.");
             File[] folders = new File[folderNames.length];
