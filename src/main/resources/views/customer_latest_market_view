@@ -1,0 +1,11 @@
+CREATE VIEW
+  `customer_latest_market_view` AS
+    select
+        `wy`.`market_potential_segment` AS `market_potential_segment`,
+        `wy`.`market_potential` AS `market_potential`,
+        `wsy`.`war_customer_customer_id` AS `war_customer_customer_id`
+    from
+        ((`war_customer_market_school_year` `wy`
+        join `war_customer_war_customer_market_school_year` `wsy` ON ((`wsy`.`warCustomerMarketSchoolYears_war_customer_market_school_year_id` = `wy`.`war_customer_market_school_year_id`)))
+        join `war_report_school_year` `wrsy` ON ((`wrsy`.`war_report_school_year_id` = `wy`.`school_year`)))
+    group by `wsy`.`war_customer_customer_id`

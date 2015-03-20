@@ -5,18 +5,18 @@
 DELIMITER $$
 
 CREATE PROCEDURE `monthly_customer_summary`(in schoolyear bigint(20),
-in agent bigint(20), in regionCode varchar(50), in tag varchar(20), 
+in agent bigint(20), in regionCode varchar(50), in tag varchar(20),
 in size int(3))
 BEGIN
-		
+
 	if(regionCode = '') then
 
 		if(lcase(tag) = 'all')then
 
-			select ws.school_name as customer, schoolyear as school_year, wa.war_agent_id as agent, 
+			select ws.school_name as customer, schoolyear as school_year, wa.war_agent_id as agent,
 			wa.region as region, 'All' as tag, wt.war_customer_tag_index as top, m.MONTH,
 			fud.full_name as report_materials_advisor, wa.war_agent_initials,
-			mcr.* FROM war_agent wa 
+			mcr.* FROM war_agent wa
 			join flow_user fu on fu.flow_user_id = wa.user
 			join flow_user_detail fud on fud.flow_user_detail_id = fu.flow_user_detail_id
 			join  (
@@ -44,20 +44,20 @@ BEGIN
 			MONTH
 			UNION SELECT 'December' AS
 			MONTH
-			) AS m 
+			) AS m
 			join monthly_customer_report_activtiy mcr on lcase(mcr.report_month) = lcase(m.MONTH)
 			and mcr.report_school_year = schoolyear
 			join war_customer wc on wc.customer_id = mcr.report_customer_id
 			join war_customer_school ws on ws.war_customer_school_id = wc.war_customer_school
-			join war_customer_tag wt on wt.war_customer_tag_customer = wc.customer_id 
+			join war_customer_tag wt on wt.war_customer_tag_customer = wc.customer_id
 			and wt.war_customer_tag_agent = wc.customer_owner_agent_id
 			order by ws.school_name asc;
-	
+
 		else
-			select ws.school_name as customer, schoolyear as school_year, wa.war_agent_id as agent, 
+			select ws.school_name as customer, schoolyear as school_year, wa.war_agent_id as agent,
 			wa.region as region, tag as tag, wt.war_customer_tag_index as top, m.MONTH,
 			fud.full_name as report_materials_advisor, wa.war_agent_initials,
-			mcr.* FROM war_agent wa 
+			mcr.* FROM war_agent wa
 			join flow_user fu on fu.flow_user_id = wa.user
 			join flow_user_detail fud on fud.flow_user_detail_id = fu.flow_user_detail_id
 			join  (
@@ -85,23 +85,23 @@ BEGIN
 			MONTH
 			UNION SELECT 'December' AS
 			MONTH
-			) AS m 
+			) AS m
 			join monthly_customer_report_activtiy mcr on lcase(mcr.report_month) = lcase(m.MONTH)
 			and mcr.report_school_year = schoolyear
 			join war_customer wc on wc.customer_id = mcr.report_customer_id
 			join war_customer_school ws on ws.war_customer_school_id = wc.war_customer_school
-			join war_customer_tag wt on wt.war_customer_tag_customer = wc.customer_id 
+			join war_customer_tag wt on wt.war_customer_tag_customer = wc.customer_id
 			and wt.war_customer_tag_agent = wc.customer_owner_agent_id and wt.war_customer_tag_index <= size
 			order by wt.war_customer_tag_index asc;
 		end if;
 
 	elseif(regionCode <> '' and agent = 0) then
-		
+
 		if(lcase(tag) = 'all')then
-			select ws.school_name as customer, schoolyear as school_year, wa.war_agent_id as agent, 
+			select ws.school_name as customer, schoolyear as school_year, wa.war_agent_id as agent,
 			wa.region as region, 'All' as tag, wt.war_customer_tag_index as top, m.MONTH,
 			fud.full_name as report_materials_advisor, wa.war_agent_initials,
-			mcr.* FROM war_agent wa 
+			mcr.* FROM war_agent wa
 			join flow_user fu on fu.flow_user_id = wa.user
 			join flow_user_detail fud on fud.flow_user_detail_id = fu.flow_user_detail_id
 			join  (
@@ -129,21 +129,21 @@ BEGIN
 			MONTH
 			UNION SELECT 'December' AS
 			MONTH
-			) AS m 
+			) AS m
 			join monthly_customer_report_activtiy mcr on lcase(mcr.report_month) = lcase(m.MONTH)
 			and mcr.report_school_year = schoolyear and mcr.report_region = wa.region
 			join war_customer wc on wc.customer_id = mcr.report_customer_id
 			join war_customer_school ws on ws.war_customer_school_id = wc.war_customer_school
-			join war_customer_tag wt on wt.war_customer_tag_customer = wc.customer_id 
+			join war_customer_tag wt on wt.war_customer_tag_customer = wc.customer_id
 			and wt.war_customer_tag_agent = wc.customer_owner_agent_id
 			where wa.region = regionCode
 			order by ws.school_name asc;
-	
+
 		else
-			select ws.school_name as customer, schoolyear as school_year, wa.war_agent_id as agent, 
+			select ws.school_name as customer, schoolyear as school_year, wa.war_agent_id as agent,
 			wa.region as region, tag as tag, wt.war_customer_tag_index as top, m.MONTH,
 			fud.full_name as report_materials_advisor, wa.war_agent_initials,
-			mcr.* FROM war_agent wa 
+			mcr.* FROM war_agent wa
 			join flow_user fu on fu.flow_user_id = wa.user
 			join flow_user_detail fud on fud.flow_user_detail_id = fu.flow_user_detail_id
 			join  (
@@ -171,23 +171,23 @@ BEGIN
 			MONTH
 			UNION SELECT 'December' AS
 			MONTH
-			) AS m 
+			) AS m
 			join monthly_customer_report_activtiy mcr on lcase(mcr.report_month) = lcase(m.MONTH)
 			and mcr.report_school_year = schoolyear and mcr.report_region = wa.region
-			join war_customer wc on wc.customer_id = mcr.report_customer_id 
+			join war_customer wc on wc.customer_id = mcr.report_customer_id
 			join war_customer_school ws on ws.war_customer_school_id = wc.war_customer_school
-			join war_customer_tag wt on wt.war_customer_tag_customer = wc.customer_id 
+			join war_customer_tag wt on wt.war_customer_tag_customer = wc.customer_id
 			and wt.war_customer_tag_agent = wc.customer_owner_agent_id and wt.war_customer_tag_index <= size
 			where wa.region = regionCode
 			order by ws.school_name asc;
 		end if;
 	elseif(regionCode <> '' and agent > 0) then
-		
+
 		if(lcase(tag) = 'all') then
-			select ws.school_name as customer, schoolyear as school_year, wa.war_agent_id as agent, 
+			select ws.school_name as customer, schoolyear as school_year, wa.war_agent_id as agent,
 			wa.region as region, 'All' as tag, wt.war_customer_tag_index as top, m.MONTH,
 			fud.full_name as report_materials_advisor, wa.war_agent_initials,
-			mcr.* FROM war_agent wa 
+			mcr.* FROM war_agent wa
 			join flow_user fu on fu.flow_user_id = wa.user
 			join flow_user_detail fud on fud.flow_user_detail_id = fu.flow_user_detail_id
 			join  (
@@ -215,20 +215,20 @@ BEGIN
 			MONTH
 			UNION SELECT 'December' AS
 			MONTH
-			) AS m 
+			) AS m
 			join monthly_customer_report_activtiy mcr on lcase(mcr.report_month) = lcase(m.MONTH)
 			and mcr.report_school_year = schoolyear and mcr.report_region = wa.region and mcr.report_agent = wa.war_agent_id
 			join war_customer wc on wc.customer_id = mcr.report_customer_id
 			join war_customer_school ws on ws.war_customer_school_id = wc.war_customer_school
-			join war_customer_tag wt on wt.war_customer_tag_customer = wc.customer_id 
+			join war_customer_tag wt on wt.war_customer_tag_customer = wc.customer_id
 			and wt.war_customer_tag_agent = wc.customer_owner_agent_id
 			where wa.region = regionCode and wa.war_agent_id = agent
 			order by ws.school_name asc;
 		else
-			select ws.school_name as customer, schoolyear as school_year, wa.war_agent_id as agent, 
+			select ws.school_name as customer, schoolyear as school_year, wa.war_agent_id as agent,
 			wa.region as region, tag as tag, wt.war_customer_tag_index as top, m.MONTH,
 			fud.full_name as report_materials_advisor, wa.war_agent_initials,
-			mcr.* FROM war_agent wa 
+			mcr.* FROM war_agent wa
 			join flow_user fu on fu.flow_user_id = wa.user
 			join flow_user_detail fud on fud.flow_user_detail_id = fu.flow_user_detail_id
 			join  (
@@ -256,12 +256,12 @@ BEGIN
 			MONTH
 			UNION SELECT 'December' AS
 			MONTH
-			) AS m 
+			) AS m
 			join monthly_customer_report_activtiy mcr on lcase(mcr.report_month) = lcase(m.MONTH)
 			and mcr.report_school_year = schoolyear and mcr.report_region = wa.region and mcr.report_agent = wa.war_agent_id
-			join war_customer wc on wc.customer_id = mcr.report_customer_id 
+			join war_customer wc on wc.customer_id = mcr.report_customer_id
 			join war_customer_school ws on ws.war_customer_school_id = wc.war_customer_school
-			join war_customer_tag wt on wt.war_customer_tag_customer = wc.customer_id 
+			join war_customer_tag wt on wt.war_customer_tag_customer = wc.customer_id
 			and wt.war_customer_tag_agent = wc.customer_owner_agent_id and wt.war_customer_tag_index <= size
 			where wa.region = regionCode and wa.war_agent_id = agent
 			order by wt.war_customer_tag_index asc;
