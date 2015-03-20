@@ -1,0 +1,40 @@
+-- --------------------------------------------------------------------------------
+-- Routine DDL
+-- Note: comments before and after the routine body will not be stored by the server
+-- --------------------------------------------------------------------------------
+DELIMITER $$
+
+CREATE PROCEDURE `agent_customer_summary`(in customerId bigint(20),
+in schoolYearId bigint(20))
+begin
+select m.MONTH, w.WEEK, war.* FROM (
+SELECT 'January' AS
+MONTH
+UNION SELECT 'February' AS
+MONTH
+UNION SELECT 'March' AS
+MONTH
+UNION SELECT 'April' AS
+MONTH
+UNION SELECT 'May' AS
+MONTH
+UNION SELECT 'June' AS
+MONTH
+UNION SELECT 'July' AS
+MONTH
+UNION SELECT 'August' AS
+MONTH
+UNION SELECT 'September' AS
+MONTH
+UNION SELECT 'October' AS
+MONTH
+UNION SELECT 'November' AS
+MONTH
+UNION SELECT 'December' AS
+MONTH
+) AS m
+join (SELECT '1' AS WEEK union select '2' AS WEEK union select '3' as WEEK union select '4' as WEEK union select '5' as WEEK) w
+left join weekly_agent_report_activity war on lcase(war.report_month) = lcase(m.MONTH) and war.report_week = w.WEEK
+and war.report_school_year = schoolYearId and war.report_customer_id = customerId;
+
+end

@@ -167,7 +167,7 @@ public class WarReportMonthlyService extends FlowService {
 
 
             Map<String, List<WarReportMonthlyCustomerView>> regionGroup = new HashMap<>();
-            Map<Long, List<WarReportMonthlyCustomerView>> agentGroup = new HashMap<>();
+            // Map<Long, List<WarReportMonthlyCustomerView>> agentGroup = new HashMap<>();
             Map<AgentCustomerKey, List<WarReportMonthlyCustomerView>> customerGroup = new HashMap<>();
 
             for (WarReportMonthlyCustomerView reportMonthlyCustomerView : warReportMonthlyCustomerViewList) {
@@ -175,19 +175,18 @@ public class WarReportMonthlyService extends FlowService {
                     regionGroup.put(reportMonthlyCustomerView.getRegion(), new ArrayList<>());
                 }
 
-                if (!agentGroup.containsKey(reportMonthlyCustomerView.getAgent())) {
+               /* if (!agentGroup.containsKey(reportMonthlyCustomerView.getAgent())) {
                     agentGroup.put(reportMonthlyCustomerView.getAgent(), new ArrayList<>());
+                }*/
+
+                if (!customerGroup.containsKey(new AgentCustomerKey(reportMonthlyCustomerView.getAgent(), reportMonthlyCustomerView.getCustomerId(), null, null))) {
+                    customerGroup.put(new AgentCustomerKey(reportMonthlyCustomerView.getAgent(), reportMonthlyCustomerView.getCustomerId(), reportMonthlyCustomerView.getCustomerName(), reportMonthlyCustomerView.getIndex()), new ArrayList<>());
                 }
 
-                if (!customerGroup.containsKey(new AgentCustomerKey(reportMonthlyCustomerView.getAgent(), reportMonthlyCustomerView.getCustomerId(), null,null))) {
-                    customerGroup.put(new AgentCustomerKey(reportMonthlyCustomerView.getAgent(), reportMonthlyCustomerView.getCustomerId(), reportMonthlyCustomerView.getCustomerName(),reportMonthlyCustomerView.getIndex()), new ArrayList<>());
-                }
 
-
-                agentGroup.get(reportMonthlyCustomerView.getAgent()).add(reportMonthlyCustomerView);
+                //    agentGroup.get(reportMonthlyCustomerView.getAgent()).add(reportMonthlyCustomerView);
                 regionGroup.get(reportMonthlyCustomerView.getRegion()).add(reportMonthlyCustomerView);
-                customerGroup.get(new AgentCustomerKey(reportMonthlyCustomerView.getAgent(), reportMonthlyCustomerView.getCustomerId(), null,null)).add(reportMonthlyCustomerView);
-
+                customerGroup.get(new AgentCustomerKey(reportMonthlyCustomerView.getAgent(), reportMonthlyCustomerView.getCustomerId(), null, null)).add(reportMonthlyCustomerView);
             }
             JSONArray regionJsonArray = new JSONArray();
             for (String region : regionGroup.keySet()) {
@@ -195,55 +194,60 @@ public class WarReportMonthlyService extends FlowService {
                 jsonObject.put("region", region);
                 JSONArray agentJsonArray = new JSONArray();
 
-                for (Long agentId : agentGroup.keySet()) {
-                    WarAgent warAgent = warAgentQueryService.getById(agentId);
-                    JSONObject agentJSONObject = new JSONObject();
-                    agentJSONObject.put("materialsAdvisor", warAgent.getUser().getFlowUserDetail().getFullName());
-                    agentJSONObject.put("agentId", agentId);
-                    JSONArray customerJsonArray = new JSONArray();
+                Map<Long, JSONObject> agentJSONMap = new HashMap<>();
 
-                    if (agentGroup.containsKey(agentId)) {
+                for (WarReportMonthlyCustomerView agentCustomerView : regionGroup.get(region)) {
 
-                        for (AgentCustomerKey agentCustomerKey : customerGroup.keySet()) {
-                            JSONObject customerJSONObject = new JSONObject();
-                            Integer[] dataTemplate = new Integer[25];
-                            for (int i = 0; i < dataTemplate.length; i++) {
-                                dataTemplate[i] = 0;
-                            }
-                            //TODO: label colors
-                            customerJSONObject.put("fillColor", "rgba(109,219,73,0.5)");
-                            customerJSONObject.put("strokeColor", "rgba(109,219,73,0.8)");
-                            customerJSONObject.put("highlightFill", "rgba(109,219,73,0.75)");
-                            customerJSONObject.put("highlightStroke", "rgba(109,219,73,1)");
-                            customerJSONObject.put("label", agentCustomerKey.getCustomerName());
-                            customerJSONObject.put("id", agentCustomerKey.getCustomerId());
-                            customerJSONObject.put("top",agentCustomerKey.getIndex());
-
-                            int totalVisited = 0;
-
-                            for (WarReportMonthlyCustomerView warReportMonthlyCustomerView : customerGroup.get(agentCustomerKey)) {
-                                totalVisited += warReportMonthlyCustomerView.getCustomerFrequency();
-                                dataTemplate[monthIndex.get(warReportMonthlyCustomerView.getMonth())] = warReportMonthlyCustomerView.getCustomerFrequency();
-                                dataTemplate[labels.indexOf("Exam Copies Distribution")] += warReportMonthlyCustomerView.getEcd();
-                                dataTemplate[labels.indexOf("Invitation to Events")] += warReportMonthlyCustomerView.getIte();
-                                dataTemplate[labels.indexOf("Confirmation of Events")] += warReportMonthlyCustomerView.getCoe();
-                                dataTemplate[labels.indexOf("Giveaways Distribution")] += warReportMonthlyCustomerView.getGd();
-                                dataTemplate[labels.indexOf("Delivery of Incentive/Donation")] += warReportMonthlyCustomerView.getDoi();
-                                dataTemplate[labels.indexOf("Purchase Order")] += warReportMonthlyCustomerView.getPo();
-                                dataTemplate[labels.indexOf("Follow up payment")] += warReportMonthlyCustomerView.getFp();
-                                dataTemplate[labels.indexOf("Delivery of Add'l Order / TRM / Compli")] += warReportMonthlyCustomerView.getDaotrc();
-                                dataTemplate[labels.indexOf("Booklist")] += warReportMonthlyCustomerView.getBookList();
-                                dataTemplate[labels.indexOf("Updated Customer Info Sheet")] += warReportMonthlyCustomerView.getUcis();
-                                dataTemplate[labels.indexOf("Implemented Ex-Sem")] += warReportMonthlyCustomerView.getIes();
-
-                            }
-                            dataTemplate[0] = totalVisited;
-                            customerJSONObject.put("data", new JSONArray(dataTemplate));
-                            customerJsonArray.put(customerJSONObject);
-                        }
+                    JSONObject agentJSONObject = null;
+                    if (agentJSONMap.containsKey(agentCustomerView.getAgent())) {
+                        agentJSONObject = agentJSONMap.get(agentCustomerView.getAgent());
+                    } else {
+                        agentJSONObject = new JSONObject();
+                        agentJSONMap.put(agentCustomerView.getAgent(), agentJSONObject);
+                        agentJSONObject.put("materialsAdvisor", agentCustomerView.getMaterialsAdvisor());
+                        agentJSONObject.put("agentId", agentCustomerView.getAgent());
+                        JSONArray customerJsonArray = new JSONArray();
+                        agentJSONObject.put("customers", customerJsonArray);
+                        agentJsonArray.put(agentJSONObject);
                     }
-                    agentJSONObject.put("customers", customerJsonArray);
-                    agentJsonArray.put(agentJSONObject);
+
+                    JSONArray customerJsonArray = agentJSONObject.getJSONArray("customers");
+
+                    JSONObject customerJSONObject = new JSONObject();
+                    Integer[] dataTemplate = new Integer[25];
+                    for (int i = 0; i < dataTemplate.length; i++) {
+                        dataTemplate[i] = 0;
+                    }
+                    //TODO: label colors
+                    customerJSONObject.put("fillColor", "rgba(109,219,73,0.5)");
+                    customerJSONObject.put("strokeColor", "rgba(109,219,73,0.8)");
+                    customerJSONObject.put("highlightFill", "rgba(109,219,73,0.75)");
+                    customerJSONObject.put("highlightStroke", "rgba(109,219,73,1)");
+                    customerJSONObject.put("label", agentCustomerView.getCustomerName());
+                    customerJSONObject.put("id", agentCustomerView.getCustomerId());
+                    customerJSONObject.put("top", agentCustomerView.getIndex());
+
+                    int totalVisited = 0;
+
+                    for (WarReportMonthlyCustomerView warReportMonthlyCustomerView : customerGroup.get(new AgentCustomerKey(agentCustomerView.getAgent(), agentCustomerView.getCustomerId(), null, null))) {
+                        totalVisited += warReportMonthlyCustomerView.getCustomerFrequency();
+                        dataTemplate[monthIndex.get(warReportMonthlyCustomerView.getMonth())] = warReportMonthlyCustomerView.getCustomerFrequency();
+                        dataTemplate[labels.indexOf("Exam Copies Distribution")] += warReportMonthlyCustomerView.getEcd();
+                        dataTemplate[labels.indexOf("Invitation to Events")] += warReportMonthlyCustomerView.getIte();
+                        dataTemplate[labels.indexOf("Confirmation of Events")] += warReportMonthlyCustomerView.getCoe();
+                        dataTemplate[labels.indexOf("Giveaways Distribution")] += warReportMonthlyCustomerView.getGd();
+                        dataTemplate[labels.indexOf("Delivery of Incentive/Donation")] += warReportMonthlyCustomerView.getDoi();
+                        dataTemplate[labels.indexOf("Purchase Order")] += warReportMonthlyCustomerView.getPo();
+                        dataTemplate[labels.indexOf("Follow up payment")] += warReportMonthlyCustomerView.getFp();
+                        dataTemplate[labels.indexOf("Delivery of Add'l Order / TRM / Compli")] += warReportMonthlyCustomerView.getDaotrc();
+                        dataTemplate[labels.indexOf("Booklist")] += warReportMonthlyCustomerView.getBookList();
+                        dataTemplate[labels.indexOf("Updated Customer Info Sheet")] += warReportMonthlyCustomerView.getUcis();
+                        dataTemplate[labels.indexOf("Implemented Ex-Sem")] += warReportMonthlyCustomerView.getIes();
+
+                    }
+                    dataTemplate[0] = totalVisited;
+                    customerJSONObject.put("data", new JSONArray(dataTemplate));
+                    customerJsonArray.put(customerJSONObject);
                 }
 
 
@@ -267,7 +271,7 @@ public class WarReportMonthlyService extends FlowService {
         private Long agent;
         private Long customerId;
         private String customerName;
-        private  Integer index;
+        private Integer index;
 
         public AgentCustomerKey(Long agent, Long customerId, String customerName, Integer index) {
             this.agent = agent;

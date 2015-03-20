@@ -1,0 +1,62 @@
+CREATE VIEW `weekly_agent_report_activity_customer_day` AS
+    select
+        `a`.`war_activity_week` AS `report_week`,
+        ucase(dayofweek(`a`.`start_dt`)) AS `report_day`,
+        year(`a`.`start_dt`) AS `report_year`,
+        `a`.`war_planner_month` AS `report_month`,
+        `ws`.`school_name` AS `report_customer`,
+        `a`.`war_activity_region_code` AS `report_region`,
+        `wc`.`customer_id` AS `report_customer_id`,
+        `wr`.`market_potential_segment` AS `report_market_potential_segment`,
+        `wr`.`market_potential` AS `report_market_potential`,
+        `a`.`war_activity_school_year` AS `report_school_year`,
+        `a`.`war_activity_agent_id` AS `report_agent`,
+        `a`.`war_activity_planned` AS `report_planned`,
+        `wcr`.`region_name` AS `report_region_name`,
+        sum(if((`a`.`war_activity_actual` = 1),
+            1,
+            0)) AS `report_actual`,
+        sum(if((`a`.`war_activity_book_list` = 1),
+            1,
+            0)) AS `report_booklist`,
+        sum(if((`a`.`war_activity_confirmation_of_events` = 1),
+            1,
+            0)) AS `report_confirmation_of_events`,
+        sum(if((`a`.`war_activity_delivery_of_additional_order_trm_compliance` = 1),
+            1,
+            0)) AS `report_delivery_of_additional_order_trm_compliance`,
+        sum(if((`a`.`war_activity_delivery_of_incentive_donation` = 1),
+            1,
+            0)) AS `report_delivery_of_incentive_donation`,
+        sum(if((`a`.`war_activity_exam_copies_distribution` = 1),
+            1,
+            0)) AS `report_exam_copies_distribution`,
+        sum(if((`a`.`war_activity_giveaways_distribution` = 1),
+            1,
+            0)) AS `report_giveaways_distribution`,
+        sum(if((`a`.`war_activity_implemented_ex_sem` = 1),
+            1,
+            0)) AS `report_implemented_ex_sem`,
+        sum(if((`a`.`war_activity_invitation_to_events` = 1),
+            1,
+            0)) AS `report_invitation_to_events`,
+        sum(if((`a`.`war_activity_purchase_order` = 1),
+            1,
+            0)) AS `report_purchase_order`,
+        `a`.`war_activity_reason_for_non_coverage` AS `report_reason_for_non_coverage`,
+        `a`.`war_activity_customer_specific_activity` AS `report_specific_activity`,
+        sum(if((`a`.`war_activity_updated_customer_info_sheet` = 1),
+            1,
+            0)) AS `report_updated_customer_info_sheet`,
+        sum(if((`a`.`war_activity_follow_up_payment` = 1),
+            1,
+            0)) AS `report_follow_up_payment`,
+        `a`.`start_dt` AS `report_date`
+    from
+        ((((`war_activity` `a`
+        join `customer_latest_market_view` `wr` ON ((`wr`.`war_customer_customer_id` = `a`.`war_activity_customer_market_id`)))
+        join `war_customer` `wc` ON ((`wc`.`customer_id` = `wr`.`war_customer_customer_id`)))
+        join `war_customer_school` `ws` ON ((`ws`.`war_customer_school_id` = `wc`.`war_customer_school`)))
+        join `war_customer_region` `wcr` ON ((`wcr`.`region_code` = `a`.`war_activity_region_code`)))
+    group by `report_month` , `report_week` , `report_agent` , `report_customer` , `report_day`
+    order by `report_date`

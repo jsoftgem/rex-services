@@ -1,0 +1,14 @@
+-- --------------------------------------------------------------------------------
+-- Routine DDL
+-- Note: comments before and after the routine body will not be stored by the server
+-- --------------------------------------------------------------------------------
+DELIMITER $$
+
+CREATE PROCEDURE `agent_activity_summary`(in customerId bigint(20), in schoolYear bigint(20))
+begin
+select * from (SELECT '1' AS WEEK union select '2' AS WEEK union select '3' as WEEK union select '4' as WEEK union select '5' as WEEK) w
+left join weekly_agent_report_activity war  on war.report_week = w.WEEK
+and war.report_school_year = schoolYear and war.report_customer_id = customerId
+group by WEEK order by WEEK;
+
+end

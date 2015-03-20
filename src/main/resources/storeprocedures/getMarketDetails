@@ -1,0 +1,14 @@
+-- --------------------------------------------------------------------------------
+-- Routine DDL
+-- Note: comments before and after the routine body will not be stored by the server
+-- --------------------------------------------------------------------------------
+DELIMITER $$
+
+CREATE PROCEDURE `getMarketDetails`(in customerId bigint)
+begin
+select concat(wy.market_potential_segment,' - ', wy.market_potential) as market_details  from war_customer_market_school_year wy
+inner join war_customer_war_customer_market_school_year wsy on
+wsy.warCustomerMarketSchoolYears_war_customer_market_school_year_id = wy.war_customer_market_school_year_id
+inner join war_report_school_year wrsy on wrsy.war_report_school_year_id = wy.school_year
+where wsy.war_customer_customer_id = customerId order by wrsy.war_report_school_year_period_year desc limit 1;
+end

@@ -84,6 +84,7 @@ public class LoginService extends FlowService {
             WarAgent warAgent = warAgentQueryService.findAgentByUsername(flowUserManager.getUser(flowUserManager.getUserId(username)).getUsername());
             if (warAgent.getActive().booleanValue() == Boolean.TRUE) {
                 warAgent.setOnline(Boolean.TRUE);
+                warAgent.setStartDt(new Date());
                 warAgentCrudService.update(warAgent, warAgent.getId());
             } else {
                 return Response.serverError().entity("{\"msg\":\"" + messageService.getMessage(WarConstants.MSG_AGENT_NOT_ACTIVE) + "\"}").status(ProjectConstants.STATUS_NOT_AUTHORIZED).build();
