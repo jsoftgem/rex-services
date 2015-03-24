@@ -53,9 +53,21 @@ public class WarAgentCustomerSummaryQueryService extends FlowService {
 
             WarCustomer warCustomer = warCustomerQueryService.getById(customer);
             responseJSON.put("customer", new JSONObject(warCustomer));
-            ((JSONObject) responseJSON.get("customer")).put("buyingProcess", warCustomer.getBuyingProcess().toString());
-            ((JSONObject) responseJSON.get("customer")).put("natureOfPurchase", warCustomer.getNatureOfPurchase().toString());
-            ((JSONObject) responseJSON.get("customer")).put("ownership", warCustomer.getOwnership().toString());
+            if (warCustomer.getBuyingProcess() != null) {
+                ((JSONObject) responseJSON.get("customer")).put("buyingProcess", warCustomer.getBuyingProcess().toString());
+            } else {
+                ((JSONObject) responseJSON.get("customer")).put("buyingProcess", "N/A");
+            }
+            if (warCustomer.getNatureOfPurchase() != null) {
+                ((JSONObject) responseJSON.get("customer")).put("natureOfPurchase", warCustomer.getNatureOfPurchase().toString());
+            } else {
+                ((JSONObject) responseJSON.get("customer")).put("natureOfPurchase", "N/A");
+            }
+            if (warCustomer.getOwnership() != null) {
+                ((JSONObject) responseJSON.get("customer")).put("ownership", warCustomer.getOwnership().toString());
+            } else {
+                ((JSONObject) responseJSON.get("customer")).put("ownership", "N/A");
+            }
             List<WarAgentActivitySummary> warAgentActivitySummaryList = storedProcedures.callAgentActivitySummary(customer, schoolYearId);
             JSONObject activityJSON = new JSONObject();
             ArrayList<String> labels = new ArrayList<>();
