@@ -53,7 +53,9 @@ public class WarAgentCustomerSummaryQueryService extends FlowService {
 
             WarCustomer warCustomer = warCustomerQueryService.getById(customer);
             responseJSON.put("customer", new JSONObject(warCustomer));
-
+            ((JSONObject) responseJSON.get("customer")).put("buyingProcess", warCustomer.getBuyingProcess().toString());
+            ((JSONObject) responseJSON.get("customer")).put("natureOfPurchase", warCustomer.getNatureOfPurchase().toString());
+            ((JSONObject) responseJSON.get("customer")).put("ownership", warCustomer.getOwnership().toString());
             List<WarAgentActivitySummary> warAgentActivitySummaryList = storedProcedures.callAgentActivitySummary(customer, schoolYearId);
             JSONObject activityJSON = new JSONObject();
             ArrayList<String> labels = new ArrayList<>();
