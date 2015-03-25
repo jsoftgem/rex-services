@@ -10,6 +10,7 @@ public class ProjectConstants {
     public static final String FILE_SERVER_HOME = "/home";
     public static final String FILE_SERVER_PATH = "/fileserver";
     public static final String FILE_SERVER_VAR = "user.home";
+    public static final String FILE_MIGRATION_PATH = "/migration";
     public static final String SALT = "3559493";
     public static final String SERVICE_DOWNLOAD = "services/download_service";
     public static final String SERVICE_DOWNLOAD_USER_PROFILE_IMAGE = SERVICE_DOWNLOAD

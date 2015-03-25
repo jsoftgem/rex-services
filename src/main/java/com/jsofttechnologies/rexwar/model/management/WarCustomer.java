@@ -23,12 +23,13 @@ import java.util.Set;
 @Entity
 @Table(name = "war_customer")
 @NamedQueries({
-        @NamedQuery(name = WarCustomer.FIND_ALL, query = "select wc from WarCustomer wc")
+        @NamedQuery(name = WarCustomer.FIND_ALL, query = "select wc from WarCustomer wc"),
+        @NamedQuery(name = WarCustomer.FIND_BY_CUSTOMER_CODE, query = "select wc from WarCustomer wc where wc.customerCode = :customerCode")
 })
 public class WarCustomer implements FlowJpe {
 
     public static final String FIND_ALL = "WarCustomer.FIND_ALL";
-
+    public static final String FIND_BY_CUSTOMER_CODE = "WarCustomer.FIND_BY_CUSTOMER_CODE";
     @Id
     @Column(name = "customer_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,12 +57,12 @@ public class WarCustomer implements FlowJpe {
     private String informationOnEnrollment;
     @Column(name = "customer_diocese")
     private String diocese;
-    @Column(name = "customer_congregation", length = ColumnLengths.NAME)
+    @Column(name = "customer_congregation")
     private String congregation;
-    @Column(name = "customer_association", length = ColumnLengths.NAME)
+    @Column(name = "customer_association")
     private String association;
     @Enumerated(EnumType.STRING)
-    @Column(name = "customer_buying_process", length = ColumnLengths.NAME)
+    @Column(name = "customer_buying_process")
     private BuyingProcess buyingProcess;
     @Enumerated(EnumType.STRING)
     @Column(name = "customer_nature_of_purchase", length = ColumnLengths.NAME)

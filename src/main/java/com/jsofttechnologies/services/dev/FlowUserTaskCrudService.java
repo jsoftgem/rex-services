@@ -15,7 +15,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
-import java.util.List;
 
 /**
  * Created by Jerico on 11/2/2014.
@@ -23,6 +22,10 @@ import java.util.List;
 @Path("services/flow_user_task_crud")
 @Stateless
 public class FlowUserTaskCrudService extends CrudService<FlowUserTask, Long> {
+
+
+    @EJB
+    private FlowUserTaskQueryService flowUserTaskQueryService;
 
     public FlowUserTaskCrudService() {
         super(FlowUserTask.class);
@@ -62,12 +65,8 @@ public class FlowUserTaskCrudService extends CrudService<FlowUserTask, Long> {
             if (promise.getOk()) {
                 flowUserTask.setFlowUserId(promise.getFlowUser().getId());
                 if (newTask == null || (newTask != null && newTask == Boolean.FALSE)) {
-                    List<FlowUserTask> flowUserTaskList = entityManager.createNamedQuery(FlowUserTask.FIND_BY_ID).setParameter("id", Long.valueOf(flowUserTask.getFlowId().trim())).getResultList();
-                    FlowUserTask persistedFlowUserTask = null;
-                    if (flowUserTaskList != null && !flowUserTaskList.isEmpty()) {
-                        persistedFlowUserTask = flowUserTaskList.get(0);
-                        persistedFlowUserTask.setFlowId(flowUserTask.getFlowId());
-                    }
+
+                    FlowUserTask persistedFlowUserTask = flowUserTask.getFlowId() != null ? flowUserTaskQueryService.getById(Long.valueOf(flowUserTask.getFlowId().trim())) : null;
                     if (field != null) {
                         switch (field) {
                             case "active":

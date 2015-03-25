@@ -15,7 +15,7 @@ import java.util.Date;
 @Table(name = "war_customer_region")
 @NamedQueries({
         @NamedQuery(name = WarCustomerRegion.FIND_ALL, query = "select rg from WarCustomerRegion rg"),
-        @NamedQuery(name = WarCustomerRegion.FIND_BY_CODE, query = "select rg from WarCustomerRegion rg where rg.regionCode=:regionCode")
+        @NamedQuery(name = WarCustomerRegion.FIND_BY_CODE, query = "select rg from WarCustomerRegion rg where lower(rg.regionCode)=:regionCode")
 })
 public class WarCustomerRegion implements FlowJpe {
 
