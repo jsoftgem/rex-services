@@ -107,6 +107,7 @@ public class MigrationService extends FlowService {
 
             File selectedFolder = FileUtil.createFolder(migration, folder);
 
+            selectedFolder.setWritable(true,true);
 
             if (selectedFolder.listFiles() != null && selectedFolder.listFiles().length > 0) {
 
@@ -120,6 +121,8 @@ public class MigrationService extends FlowService {
                         File agentResult = new File(selectedFolder, "agent-result.csv");
                         if (!agentResult.exists()) {
                             agentResult.createNewFile();
+                            agentResult.setReadable(true);
+                            agentResult.setWritable(true);
                         }
                         File agent = agents[0];
 
