@@ -151,7 +151,6 @@ public class MigrationService extends FlowService {
                                     for (int i = 0; i < csvRecord.size(); i++) {
                                         switch (i) {
                                             case 0:
-                                                warAgent.setIsManager(Boolean.FALSE);
                                                 warAgent.setActive(Boolean.TRUE);
                                                 break;
 
