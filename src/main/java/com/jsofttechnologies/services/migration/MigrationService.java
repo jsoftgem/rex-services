@@ -92,7 +92,15 @@ public class MigrationService extends FlowService {
 
             serviceMap("migration", authorization, String.class, true);
 
-            File root = FileUtil.createFolder(ProjectConstants.FILE_SERVER_PATH);
+            File root = null;
+
+            if (ProjectConstants.ENV == ProjectConstants.ENV_PROD) {
+                root = FileUtil.createFolder(FileUtil
+                        .createFolder(System.getProperty(ProjectConstants.FILE_SERVER_VAR)), ProjectConstants.FILE_SERVER_PATH);
+            } else {
+                root = FileUtil
+                        .createFolder(ProjectConstants.FILE_SERVER_PATH);
+            }
 
             File migration = FileUtil.createFolder(root, ProjectConstants.FILE_MIGRATION_PATH);
 
