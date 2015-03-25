@@ -309,8 +309,8 @@ public class MigrationService extends FlowService {
                                             if (schoolName != null && !schoolName.trim().isEmpty()) {
                                                 if (warCustomer.getId() == null) {
                                                     school = warSchoolQueryService.findBySchoolName(schoolName);
-                                                    warCustomer.setOwnerAgentId(warAgent.getId());
                                                 }
+                                                warCustomer.setOwnerAgentId(warAgent.getId());
                                                 if (school == null) {
                                                     school = new School();
                                                 }
