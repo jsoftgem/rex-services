@@ -61,7 +61,7 @@ public abstract class FlowService implements Serializable {
     @PersistenceContext(unitName = ProjectConstants.MAIN_PU)
     protected EntityManager currentEntityManager;
 
-    private final Map<String, Object> serviceCache = new HashMap<>();
+    private final static Map<String, Object> serviceCache = new HashMap<>();
 
     protected String getAuthorization() {
         return request.getHeader(ProjectConstants.HEADER_AUTHORIZATION);
@@ -142,7 +142,7 @@ public abstract class FlowService implements Serializable {
         if (!serviceCache.containsKey(theKey) || isNew) {
             serviceCache.put(theKey, o);
         }
-        return (T) serviceCache.get(key);
+        return (T) serviceCache.get(theKey);
     }
 
 

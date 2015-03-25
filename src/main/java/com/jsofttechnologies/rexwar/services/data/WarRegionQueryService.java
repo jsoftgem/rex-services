@@ -7,6 +7,7 @@ import com.jsofttechnologies.services.util.QueryService;
 
 import javax.ejb.Stateless;
 import javax.ws.rs.Path;
+import java.util.List;
 
 /**
  * Created by Jerico on 1/13/2015.
@@ -21,11 +22,15 @@ public class WarRegionQueryService extends QueryService<WarCustomerRegion> {
     }
 
     public WarCustomerRegion findByCode(String regionCode) {
+        List<WarCustomerRegion> regions = null;
         try {
-
             setNamedQuery(WarCustomerRegion.FIND_BY_CODE);
-            putParam("regionCode", regionCode);
-            return getSingleResult();
+            putParam("regionCode", regionCode.toLowerCase());
+            regions = doGetResultList();
+
+            if (regions != null && !regions.isEmpty()) {
+                return regions.get(0);
+            }
 
         } catch (Exception e) {
             exceptionSummary.handleException(e, getClass(), regionCode);

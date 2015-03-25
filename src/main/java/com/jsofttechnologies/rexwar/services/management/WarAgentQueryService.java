@@ -39,11 +39,16 @@ public class WarAgentQueryService extends QueryService<WarAgent> {
     @Path("find_manager_by_region/{region}")
     @Produces(MediaType.APPLICATION_JSON)
     public WarAgent findManagerByRegion(@PathParam("region") String region) {
+        List<WarAgent> agents  = null;
         WarAgent warAgent = null;
         try {
             setNamedQuery(WarAgent.FIND_MANAGER_BY_REGION);
             putParam("region", region);
-            warAgent = getSingleResult();
+            agents = doGetResultList();
+
+            if(agents != null && !agents.isEmpty()){
+                warAgent = agents.get(0);
+            }
         } catch (Exception e) {
             exceptionSummary.handleException(e, getClass(), region);
         }
@@ -66,5 +71,21 @@ public class WarAgentQueryService extends QueryService<WarAgent> {
         return warAgents;
     }
 
+    public WarAgent findByInitials(String initials) {
+        List<WarAgent> agents = null;
+        try {
+            setNamedQuery(WarAgent.FIND_BY_INITIALS);
+            putParam("initials", initials.toLowerCase());
+            agents = doGetResultList();
+
+            if (agents != null && !agents.isEmpty()) {
+                return agents.get(0);
+            }
+        } catch (Exception e) {
+            exceptionSummary.handleException(e, getClass(), initials);
+        }
+
+        return null;
+    }
 
 }

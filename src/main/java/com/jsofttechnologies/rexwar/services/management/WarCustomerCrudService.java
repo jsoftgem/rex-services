@@ -39,8 +39,12 @@ public class WarCustomerCrudService extends CrudService<WarCustomer, Long> {
 
     @Override
     protected WarCustomer preCreateValidation(WarCustomer warCustomer) throws Exception {
-
-        String authorization = request.getHeader("Authorization");
+        String authorization = null;
+        if (isCached("migration", String.class)) {
+            authorization = serviceMap("migration", null, String.class, false);
+        } else {
+            authorization = request.getHeader("Authorization");
+        }
         FlowSessionHelper.Promise promise = sessionHelper.isAuthorized(authorization);
 
         if (warCustomer.getCustomerCode() == null || warCustomer.getCustomerCode().isEmpty()) {
@@ -87,7 +91,15 @@ public class WarCustomerCrudService extends CrudService<WarCustomer, Long> {
     @Override
     protected WarCustomer preUpdateValidation(WarCustomer warCustomer) throws Exception {
 
-        String authorization = request.getHeader("Authorization");
+        String authorization = null;
+
+        if (isCached("migration", String.class)) {
+            authorization = serviceMap("migration", null, String.class, false);
+        } else {
+            authorization = request.getHeader("Authorization");
+        }
+
+
         FlowSessionHelper.Promise promise = sessionHelper.isAuthorized(authorization);
 
         if (warCustomer.getCustomerCode() == null || warCustomer.getCustomerCode().isEmpty()) {

@@ -15,12 +15,13 @@ import java.util.Date;
 @Entity
 @Table(name = "war_customer_school")
 @NamedQueries({
-        @NamedQuery(name = School.FIND_ALL, query = "select sc from School sc")
+        @NamedQuery(name = School.FIND_ALL, query = "select sc from School sc"),
+        @NamedQuery(name = School.FIND_BY_SCHOOL_NAME, query = "select sc from School sc where lower(sc.name)=:name")
 })
 public class School implements FlowJpe {
 
     public static final String FIND_ALL = "School.FIND_ALL";
-
+    public static final String FIND_BY_SCHOOL_NAME = "School.FIND_BY_SCHOOL_NAME";
     @Id
     @Column(name = "war_customer_school_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,7 +40,7 @@ public class School implements FlowJpe {
     private Date endDt;
     @Column(name = "description")
     private String description;
-    @Column(name = "school_name", nullable = false, length = ColumnLengths.TITLE)
+    @Column(name = "school_name", nullable = false)
     private String name;
     @Column(name = "school_address_line1", nullable = false)
     private String addressLine1;

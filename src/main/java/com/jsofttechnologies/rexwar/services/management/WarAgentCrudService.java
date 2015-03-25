@@ -21,6 +21,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by Jerico on 1/11/2015.
@@ -70,6 +72,8 @@ public class WarAgentCrudService extends CrudService<WarAgent, Long> {
             group = flowUserGroupQueryService.findGroupByName(WarConstants.AGENT_REGIONAL_MANAGER_GROUP);
             profile = flowUserProfileQueryService.findByProfileName(WarConstants.AGENT_REGIONAL_MANAGER);
         }
+        Set<FlowUserProfile> flowUserProfileSet = new HashSet<>();
+        warAgent.getUser().setFlowUserProfileSet(flowUserProfileSet);
         warAgent.getUser().setFlowUserGroup(group);
         warAgent.getUser().getFlowUserProfileSet().add(profile);
 
