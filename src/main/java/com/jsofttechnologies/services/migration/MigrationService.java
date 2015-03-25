@@ -130,6 +130,7 @@ public class MigrationService extends FlowService {
 
                         if (agent != null) {
                             CSVParser parser = CSVParser.parse(agent, Charset.defaultCharset(), CSVFormat.EXCEL);
+                            System.out.println(parser);
                             int count = 0;
                             userTransaction.begin();
 
@@ -222,15 +223,15 @@ public class MigrationService extends FlowService {
 
 
                                     if (warAgent.getId() == null) {
-                                        warAgentCrudService.create(warAgent);
+                                      //  warAgentCrudService.create(warAgent);
                                     } else {
-                                        warAgentCrudService.update(warAgent, warAgent.getId());
+                                      //  warAgentCrudService.update(warAgent, warAgent.getId());
                                     }
 
                                     if (warRegion.getId() == null) {
-                                        warRegionCrudService.create(warRegion);
+                                    //    warRegionCrudService.create(warRegion);
                                     } else {
-                                        warRegionCrudService.update(warRegion, warRegion.getId());
+                                     //   warRegionCrudService.update(warRegion, warRegion.getId());
                                     }
 
                                     csvPrinter.printRecord(csvRecord);
