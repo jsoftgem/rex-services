@@ -143,6 +143,7 @@ public class MigrationService extends FlowService {
                                     if (warAgent == null) {
                                         warAgent = new WarAgent();
                                         warAgent.setInitials(csvRecord.get(0));
+                                        warAgent.setIsManager(Boolean.FALSE);
                                     }
 
                                     for (int i = 0; i < csvRecord.size(); i++) {
