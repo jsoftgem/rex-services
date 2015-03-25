@@ -65,7 +65,7 @@ public class WarAgentCrudService extends CrudService<WarAgent, Long> {
 
         FlowUserGroup group = null;
         FlowUserProfile profile = null;
-        if (warAgent.getIsManager() != null && !warAgent.getIsManager()) {
+        if (warAgent.getIsManager() == null || (warAgent.getIsManager() != null && !warAgent.getIsManager())) {
             group = flowUserGroupQueryService.findGroupByName(WarConstants.AGENT_GROUP);
             profile = flowUserProfileQueryService.findByProfileName(WarConstants.AGENT_PROFILE);
         } else if (warAgent.getIsManager() != null && warAgent.getIsManager()) {
