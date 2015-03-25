@@ -264,13 +264,10 @@
                         <version>1.0.2.Final</version>
                         <configuration>
                             <jboss-home>${env.JBOSS_HOME}</jboss-home>
-                            <port>10990</port>
-                            <!--<hostname>war.rexpublishing.com.ph</hostname>-->
-                            <!--<hostname>192.168.102.29</hostname>
+                            <port>9990</port>
+                            <hostname>192.168.102.29</hostname>
                             <username>warmgnt</username>
-                            <password>warapp</password>-->
-                            <username>jerico</username>
-                            <password>JERKallstar98</password>
+                            <password>warapp</password>
                         </configuration>
                         <executions>
                             <execution>
