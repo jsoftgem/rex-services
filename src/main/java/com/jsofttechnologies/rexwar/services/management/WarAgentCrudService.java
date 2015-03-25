@@ -100,7 +100,7 @@ public class WarAgentCrudService extends CrudService<WarAgent, Long> {
         warAgent.getUser().setPassword(password);
 
 
-        if (warAgent.getIsManager()) {
+        if (warAgent.getIsManager() != null && warAgent.getIsManager()) {
             WarAgent manager = warAgentQueryService.findManagerByRegion(warAgent.getRegion());
             if (manager != null && manager.getActive()) {
                 throwException("WAR_AGENT_EXISTING_MANAGER", manager.getRegion(), manager.getUser().getFlowUserDetail().getFullName());
