@@ -62,7 +62,7 @@ public class FlowPasswordService extends FlowService {
             FlowUser user = flowUserQueryService.getFlowUserByUsername(username);
             user.setPassword(PasswordHash.createHash(password));
             flowUserEntityManagerDAO.updateObject(user);
-            flowUserManager.refreshUserMap();
+           // flowUserManager.refreshUserMap();
             response = Response.ok().build();
         } catch (Exception e) {
             exceptionSummary.handleException(e, getClass(), username);
