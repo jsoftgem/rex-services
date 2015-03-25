@@ -107,8 +107,6 @@ public class MigrationService extends FlowService {
 
             File selectedFolder = FileUtil.createFolder(migration, folder);
 
-            selectedFolder.setWritable(true, true);
-
             if (selectedFolder.listFiles() != null && selectedFolder.listFiles().length > 0) {
 
                 try {
@@ -121,8 +119,6 @@ public class MigrationService extends FlowService {
                         File agentResult = new File(selectedFolder, "agent-result.csv");
                         if (!agentResult.exists()) {
                             agentResult.createNewFile();
-                            agentResult.setReadable(true);
-                            agentResult.setWritable(true);
                         }
                         File agent = agents[0];
 
@@ -223,15 +219,15 @@ public class MigrationService extends FlowService {
 
 
                                     if (warAgent.getId() == null) {
-                                      //  warAgentCrudService.create(warAgent);
+                                        warAgentCrudService.create(warAgent);
                                     } else {
-                                      //  warAgentCrudService.update(warAgent, warAgent.getId());
+                                        warAgentCrudService.update(warAgent, warAgent.getId());
                                     }
 
                                     if (warRegion.getId() == null) {
-                                    //    warRegionCrudService.create(warRegion);
+                                        warRegionCrudService.create(warRegion);
                                     } else {
-                                     //   warRegionCrudService.update(warRegion, warRegion.getId());
+                                        warRegionCrudService.update(warRegion, warRegion.getId());
                                     }
 
                                     csvPrinter.printRecord(csvRecord);
