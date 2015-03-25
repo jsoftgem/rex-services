@@ -43,13 +43,13 @@ public class FlowUserProfileCrudService extends
 
     @Override
     protected void postCreateValidation(FlowUserProfile flowUserProfile) {
-        flowUserManager.refreshUserMap();
+       // flowUserManager.refreshUserMap();
         super.postCreateValidation(flowUserProfile);
     }
 
     @Override
     protected void postUpdateValidation(FlowUserProfile flowUserProfile) {
-        flowUserManager.refreshUserMap();
+        //flowUserManager.refreshUserMap();
         super.postUpdateValidation(flowUserProfile);
     }
 }

@@ -91,11 +91,6 @@ public class FlowUserCrudService extends CrudService<FlowUser, Long> {
 
     }
 
-    @Override
-    protected void postUpdateValidation(FlowUser flowUser) {
-        flowUserManager.refreshUserMap();
-    }
-
     @SuppressWarnings("unchecked")
     @Override
     public FlowUser preUpdateValidation(FlowUser flowUser) throws Exception {
