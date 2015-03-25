@@ -107,7 +107,7 @@ public class MigrationService extends FlowService {
 
             File selectedFolder = FileUtil.createFolder(migration, folder);
 
-            selectedFolder.setWritable(true,true);
+            selectedFolder.setWritable(true, true);
 
             if (selectedFolder.listFiles() != null && selectedFolder.listFiles().length > 0) {
 
@@ -155,7 +155,7 @@ public class MigrationService extends FlowService {
                                                 break;
 
                                             case 1:
-                                                String name = csvRecord.get(i);
+                                                String name = csvRecord.get(1);
                                                 if (name != null && !name.isEmpty()) {
                                                     FlowUserDetail flowUserDetail = null;
                                                     FlowUser flowUser = null;
@@ -183,7 +183,7 @@ public class MigrationService extends FlowService {
                                                 break;
 
                                             case 2:
-                                                String regionCode = csvRecord.get(i);
+                                                String regionCode = csvRecord.get(2);
                                                 if (regionCode != null && !regionCode.isEmpty()) {
 
                                                     warRegion = warRegionQueryService.findByCode(regionCode);
@@ -196,7 +196,7 @@ public class MigrationService extends FlowService {
                                                 break;
 
                                             case 3:
-                                                String regionName = csvRecord.get(i);
+                                                String regionName = csvRecord.get(3);
                                                 if (regionName != null && !regionName.isEmpty()) {
                                                     if (warRegion != null) {
                                                         warRegion.setRegionName(regionName);
@@ -205,14 +205,14 @@ public class MigrationService extends FlowService {
                                                 }
                                                 break;
                                             case 4:
-                                                String rsm = csvRecord.get(i);
+                                                String rsm = csvRecord.get(4);
                                                 if (rsm != null && !rsm.isEmpty()) {
                                                     warAgent.setIsManager(Boolean.TRUE);
                                                 }
                                                 break;
 
                                             case 5:
-                                                String email = csvRecord.get(i);
+                                                String email = csvRecord.get(5);
                                                 if (email != null && !email.isEmpty()) {
                                                     warAgent.getUser().setEmail(email);
                                                 }
