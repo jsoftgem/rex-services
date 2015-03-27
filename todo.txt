@@ -10,3 +10,10 @@ Fluid Core
 Rex
 - generate good reports. (accurate, hue)
 - Use Jasper Report to export the reports.
+
+
+
+Patch 2
+ - Wildcard on search button in User Manager
+ - Hide "admin - War Project" in Group for non-admin/non-dev users
+ - Automatic Profile assignment per Group
