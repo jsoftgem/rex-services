@@ -39,17 +39,17 @@ public abstract class QueryService<T extends FlowJpe> extends FlowService {
     @Context
     private HttpServletRequest httpServletRequest;
 
-    private Query query;
-    private Integer max;
-    private boolean hasNext;
+    protected Query query;
+    protected Integer max;
+    protected boolean hasNext;
     private boolean hasPrevious;
-    private List<T> resultList;
-    private Integer resultCount = 0;
-    private Integer firstResult = 0;
-    private Integer maxResultCount;
-    private String namedQuery;
-    private Map<String, Object> param;
-    private Class<T> classType;
+    protected List<T> resultList;
+    protected Integer resultCount = 0;
+    protected Integer firstResult = 0;
+    protected Integer maxResultCount;
+    protected String namedQuery;
+    protected Map<String, Object> param;
+    protected Class<T> classType;
 
     public QueryService(Class<T> classType) {
         this.classType = classType;

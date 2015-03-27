@@ -73,6 +73,11 @@ public class WarCustomerCrudService extends CrudService<WarCustomer, Long> {
 
         }
 
+        if (warCustomer.getOwnerAgentId() != null) {
+            WarAgent warAgent = warAgentQueryService.getById(warCustomer.getOwnerAgentId());
+            warCustomer.setRegionCode(warAgent.getRegion());
+        }
+
        /* if (warCustomer.getBuyingProcess() == null) {
             throw throwException("WAR_CUSTOMER_NULL_BUYING_PROCESS");
         }
@@ -83,7 +88,10 @@ public class WarCustomerCrudService extends CrudService<WarCustomer, Long> {
             FlowUser flowUser = promise.getFlowUser();
 
             warCustomer.setCreatedByAgentId(flowUser.getId());
+
+
         }
+
 
         return warCustomer;
     }
@@ -126,6 +134,10 @@ public class WarCustomerCrudService extends CrudService<WarCustomer, Long> {
                 throw throwException("WAR_SCHOOL_NULL_LANDLINE");
             }
 
+        }
+        if (warCustomer.getOwnerAgentId() != null) {
+            WarAgent warAgent = warAgentQueryService.getById(warCustomer.getOwnerAgentId());
+            warCustomer.setRegionCode(warAgent.getRegion());
         }
 /*
         if (warCustomer.getBuyingProcess() == null) {

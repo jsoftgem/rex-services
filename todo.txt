@@ -12,6 +12,8 @@ Rex
 - Use Jasper Report to export the reports.
 
 
+Patch 1
+ - Limit flowUsers, customers, schools, daily per user region
 
 Patch 2
  - Wildcard on search button in User Manager

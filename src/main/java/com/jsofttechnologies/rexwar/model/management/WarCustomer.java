@@ -11,7 +11,6 @@ import com.jsofttechnologies.rexwar.util.contants.BuyingProcess;
 import com.jsofttechnologies.rexwar.util.contants.Month;
 import com.jsofttechnologies.rexwar.util.contants.Ownership;
 import com.jsofttechnologies.rexwar.util.contants.PurchaseNature;
-import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -24,12 +23,14 @@ import java.util.Set;
 @Table(name = "war_customer")
 @NamedQueries({
         @NamedQuery(name = WarCustomer.FIND_ALL, query = "select wc from WarCustomer wc"),
-        @NamedQuery(name = WarCustomer.FIND_BY_CUSTOMER_CODE, query = "select wc from WarCustomer wc where wc.customerCode = :customerCode")
+        @NamedQuery(name = WarCustomer.FIND_BY_CUSTOMER_CODE, query = "select wc from WarCustomer wc where wc.customerCode = :customerCode"),
+        @NamedQuery(name = WarCustomer.FIND_BY_CUSTOMER_REGION, query = "select wc from WarCustomer wc where wc.regionCode = :regionCode")
 })
 public class WarCustomer implements FlowJpe {
 
     public static final String FIND_ALL = "WarCustomer.FIND_ALL";
     public static final String FIND_BY_CUSTOMER_CODE = "WarCustomer.FIND_BY_CUSTOMER_CODE";
+    public static final String FIND_BY_CUSTOMER_REGION = "WarCustomer.FIND_BY_CUSTOMER_REGION";
     @Id
     @Column(name = "customer_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -120,7 +121,7 @@ public class WarCustomer implements FlowJpe {
     @Enumerated(EnumType.STRING)
     @Column(name = "customer_cycle_collection_to")
     private Month collectionTo;
-    @Formula("(select wr.region_code from war_customer_region wr join war_agent wa on wa.region = wr.region_code where wa.war_agent_id = customer_owner_agent_id)")
+    @Column(name = "customer_region_code")
     private String regionCode;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<WarCustomerMarketSchoolYear> warCustomerMarketSchoolYears;

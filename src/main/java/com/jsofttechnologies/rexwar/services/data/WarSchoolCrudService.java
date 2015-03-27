@@ -7,6 +7,7 @@ package com.jsofttechnologies.rexwar.services.data;
 
 import com.jsofttechnologies.interceptor.Notify;
 import com.jsofttechnologies.jpa.util.FlowAlertType;
+import com.jsofttechnologies.rexwar.model.management.WarAgent;
 import com.jsofttechnologies.rexwar.model.tables.School;
 import com.jsofttechnologies.services.util.CrudService;
 import javax.ejb.Stateless;
