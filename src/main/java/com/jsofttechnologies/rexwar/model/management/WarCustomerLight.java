@@ -46,6 +46,8 @@ public class WarCustomerLight implements FlowJpe {
     private School school;
     @Column(name = "customer_owner_agent_id")
     private Long ownerAgentId;
+    @Column(name = "customer_region_code", nullable = false)
+    private String regionCode;
     @Formula("(select d.full_name from war_agent agent " +
             "join flow_user u " +
             "on u.flow_user_id = agent.user " +
@@ -146,6 +148,14 @@ public class WarCustomerLight implements FlowJpe {
         this.ownerAgentId = ownerAgentId;
     }
 
+    public String getRegionCode() {
+        return regionCode;
+    }
+
+    public void setRegionCode(String regionCode) {
+        this.regionCode = regionCode;
+    }
+
     public String getOwnerName() {
         return ownerName;
     }
@@ -169,6 +179,8 @@ public class WarCustomerLight implements FlowJpe {
     public void setMarketDetail(String marketDetail) {
         this.marketDetail = marketDetail;
     }
+
+
 
     @PrePersist
     public void prePersist() {

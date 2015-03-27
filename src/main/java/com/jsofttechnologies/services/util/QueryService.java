@@ -42,7 +42,7 @@ public abstract class QueryService<T extends FlowJpe> extends FlowService {
     protected Query query;
     protected Integer max;
     protected boolean hasNext;
-    private boolean hasPrevious;
+    protected boolean hasPrevious;
     protected List<T> resultList;
     protected Integer resultCount = 0;
     protected Integer firstResult = 0;

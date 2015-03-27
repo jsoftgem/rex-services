@@ -173,7 +173,9 @@ public class MigrationService extends FlowService {
                                                     flowUserDetail.setSecretAnswer(user);
                                                     flowUser.setUsername(user);
                                                     flowUser.setEmail(user + "@" + WarConstants.EMAIL_SUFFIX);
-                                                    // flowUser.setPassword(PasswordHash.createHash(user));
+                                                    if(warAgent.getId()==null){
+                                                        flowUser.setPassword(user);
+                                                    }
 
                                                 }
 
