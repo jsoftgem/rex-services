@@ -116,10 +116,17 @@ public class WarAgentCrudService extends CrudService<WarAgent, Long> {
 
         WarAgent attachedInstance = warAgentQueryService.getById(warAgent.getId());
 
-        FlowUserGroup agentGroup = flowUserGroupQueryService.findGroupByName(WarConstants.AGENT_GROUP);
-        FlowUserProfile agentProfile = flowUserProfileQueryService.findByProfileName(WarConstants.AGENT_PROFILE);
-        warAgent.getUser().setFlowUserGroup(agentGroup);
-        warAgent.getUser().getFlowUserProfileSet().add(agentProfile);
+        FlowUserGroup group = null;
+        FlowUserProfile profile = null;
+        if (warAgent.getIsManager() == null || (warAgent.getIsManager() != null && !warAgent.getIsManager())) {
+            group = flowUserGroupQueryService.findGroupByName(WarConstants.AGENT_GROUP);
+            profile = flowUserProfileQueryService.findByProfileName(WarConstants.AGENT_PROFILE);
+        } else if (warAgent.getIsManager() != null && warAgent.getIsManager()) {
+            group = flowUserGroupQueryService.findGroupByName(WarConstants.AGENT_REGIONAL_MANAGER_GROUP);
+            profile = flowUserProfileQueryService.findByProfileName(WarConstants.AGENT_REGIONAL_MANAGER);
+        }
+        warAgent.getUser().setFlowUserGroup(group);
+        warAgent.getUser().getFlowUserProfileSet().add(profile);
 
         if (!attachedInstance.getUser().getUsername().equals(warAgent.getUser().getUsername())) {
             FlowUser flowUser = flowUserQueryService.getFlowUserByUsername(warAgent.getUser().getUsername());

@@ -80,7 +80,7 @@ public class LoginService extends FlowService {
         if (promise.getOk()) {
             //return Response.ok(new ProjectHelper().createJson().addField("username", username).addField("host", promise.getFlowSession().getUserHost()).buildJsonString()).type(MediaType.TEXT_PLAIN_TYPE).status(Response.Status.CONFLICT).build();
         } else {*/
-        if (flowUserManager.getGroup(username).getGroupName().equals(WarConstants.AGENT_GROUP)) {
+        if (flowUserManager.getGroup(username).getGroupName().equals(WarConstants.AGENT_GROUP) || flowUserManager.getGroup(username).getGroupName().equals(WarConstants.AGENT_REGIONAL_MANAGER_GROUP)) {
             WarAgent warAgent = warAgentQueryService.findAgentByUsername(flowUserManager.getUser(flowUserManager.getUserId(username)).getUsername());
             if (warAgent.getActive().booleanValue() == Boolean.TRUE) {
                 warAgent.setOnline(Boolean.TRUE);

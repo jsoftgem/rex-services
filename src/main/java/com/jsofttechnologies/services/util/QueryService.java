@@ -77,6 +77,7 @@ public abstract class QueryService<T extends FlowJpe> extends FlowService {
     }
 
     public void setNamedQuery(String namedQuery) {
+        if (param != null) param.clear();
         this.namedQuery = namedQuery;
     }
 
@@ -149,7 +150,6 @@ public abstract class QueryService<T extends FlowJpe> extends FlowService {
                 }
 
             }
-
             maxResultCount = query.getMaxResults();
             if (getFirstResult() != null) {
                 query.setFirstResult(getFirstResult());
@@ -163,7 +163,6 @@ public abstract class QueryService<T extends FlowJpe> extends FlowService {
         } catch (Exception e) {
             exceptionSummary.handleException(e, getClass(), param);
         }
-
         return resultList;
     }
 
@@ -269,6 +268,7 @@ public abstract class QueryService<T extends FlowJpe> extends FlowService {
                 }
             }
             t = (T) query.getSingleResult();
+
         } catch (Exception e) {
             exceptionSummary.handleException(e, getClass(), param);
         }

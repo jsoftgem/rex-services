@@ -22,6 +22,7 @@ import java.util.Date;
         @NamedQuery(name = WarAgent.FIND_MANAGER_BY_REGION, query = "select a from WarAgent a where a.isManager = true and a.region =:region"),
         @NamedQuery(name = WarAgent.FIND_BY_REGION, query = "select a from WarAgent a where a.region =:region"),
         @NamedQuery(name = WarAgent.FIND_BY_INITIALS, query = "select a from WarAgent a where lower(a.initials) =:initials"),
+        @NamedQuery(name = WarAgent.FIND_ALL_NO_MANAGER, query = "select a from WarAgent a where a.isManager = false")
 
 })
 public class WarAgent implements FlowJpe {
@@ -32,6 +33,7 @@ public class WarAgent implements FlowJpe {
     public static final String FIND_MANAGER_BY_REGION = "WarAgent.FIND_MANAGER_BY_REGION";
     public static final String FIND_BY_REGION = "WarAgent.FIND_BY_REGION";
     public static final String FIND_BY_INITIALS = "WarAgent.FIND_BY_INITIALS";
+    public static final String FIND_ALL_NO_MANAGER = "WarAgent.FIND_ALL_NO_MANAGER";
     @Id
     @Column(name = "war_agent_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)

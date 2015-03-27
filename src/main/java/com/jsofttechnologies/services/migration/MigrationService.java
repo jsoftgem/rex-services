@@ -20,7 +20,6 @@ import com.jsofttechnologies.services.admin.FlowUserProfileQueryService;
 import com.jsofttechnologies.services.util.FlowService;
 import com.jsofttechnologies.services.util.LoginService;
 import com.jsofttechnologies.util.FileUtil;
-import com.jsofttechnologies.util.PasswordHash;
 import com.jsofttechnologies.util.ProjectConstants;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -174,7 +173,7 @@ public class MigrationService extends FlowService {
                                                     flowUserDetail.setSecretAnswer(user);
                                                     flowUser.setUsername(user);
                                                     flowUser.setEmail(user + "@" + WarConstants.EMAIL_SUFFIX);
-                                                    flowUser.setPassword(PasswordHash.createHash(user));
+                                                    // flowUser.setPassword(PasswordHash.createHash(user));
 
                                                 }
 
@@ -243,6 +242,7 @@ public class MigrationService extends FlowService {
                                 csvPrinter.flush();
 
                             }
+                            parser.close();
                             userTransaction.commit();
                             csvPrinter.close();
                         }
@@ -367,6 +367,7 @@ public class MigrationService extends FlowService {
                                     exceptionSummary.handleException(e, getClass(), csvRecord);
                                 }
                             }
+                            parser.close();
 
                             fileWriter.append("Done " + count + "/" + totalRecords);
                             fileWriter.close();
