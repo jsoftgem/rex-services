@@ -130,6 +130,10 @@ public class DownloadService extends FlowService {
         FlowUploadedFile flowUploadedFile = flowUploadedFileQueryService.getById(id);
         Response response;
 
+        if (id == null) {
+            return Response.ok("", MediaType.APPLICATION_JSON_TYPE).build();
+        }
+
         File fileService = null;
         if (ProjectConstants.ENV == ProjectConstants.ENV_PROD) {
             fileService = FileUtil.createFolder(FileUtil

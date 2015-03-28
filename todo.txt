@@ -4,8 +4,7 @@ Fluid Core
 - Fix flow_user_task must get the group default properties. (done)
 - Password validation. (done)
 - removal of panels. Must be truly removed. (done)
-
-
+- Task Manager
 
 Rex
 - generate good reports. (accurate, hue)
@@ -19,3 +18,6 @@ Patch 2
  - Wildcard on search button in User Manager
  - Hide "admin - War Project" in Group for non-admin/non-dev users
  - Automatic Profile assignment per Group
+
+
+Nightly 1

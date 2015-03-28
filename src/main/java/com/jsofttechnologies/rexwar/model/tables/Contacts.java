@@ -3,9 +3,7 @@ package com.jsofttechnologies.rexwar.model.tables;/**
  */
 
 
-import com.jsofttechnologies.jpa.util.ColumnLengths;
 import com.jsofttechnologies.jpa.util.FlowJpe;
-import com.jsofttechnologies.rexwar.util.contants.ContactType;
 import com.jsofttechnologies.rexwar.util.contants.RelationType;
 import org.hibernate.annotations.Formula;
 
@@ -40,11 +38,8 @@ public class Contacts implements FlowJpe {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "end_dt")
     private Date endDt;
-    @Column(name = "description")
+    @Column(name = "description", nullable = false)
     private String description;
-    @Enumerated(EnumType.STRING)
-    @Column(name = "contact_type", length = ColumnLengths.TYPE)
-    private ContactType type;
     @Column(name = "contact_detail")
     private String detail;
     @Column(name = "contact_level", nullable = false)
@@ -52,11 +47,11 @@ public class Contacts implements FlowJpe {
     @Column(name = "contact_position", nullable = false)
     private Long position;
     @Temporal(TemporalType.DATE)
-    @Column(name = "contact_birthdate", nullable = false)
+    @Column(name = "contact_birthdate")
     private Date birthdate;
-    @Column(name = "decision_maker", nullable = false)
+    @Column(name = "decision_maker")
     private Boolean decisionMaker;
-    @Column(name = "relationship_type", nullable = false)
+    @Column(name = "relationship_type")
     private String relationshipType;
     @Formula("(select pos.description from war_customer_contacts_position pos where pos.position_id = contact_position)")
     private String positionDesc;
@@ -131,14 +126,6 @@ public class Contacts implements FlowJpe {
     @Override
     public String getDescription() {
         return description;
-    }
-
-    public ContactType getType() {
-        return type;
-    }
-
-    public void setType(ContactType type) {
-        this.type = type;
     }
 
     public void setDetail(String detail) {
@@ -255,10 +242,51 @@ public class Contacts implements FlowJpe {
             relationshipType = RelationType.NONE.toString();
         }
         createdDt = new Date();
+
+        StringBuilder contactDetails = new StringBuilder();
+
+        if (homePhone != null) {
+            contactDetails.append("Home: ").append(homePhone).append("\n");
+        }
+
+        if (workPhone != null) {
+            contactDetails.append("Work: ").append(workPhone).append("\n");
+        }
+
+        if (email != null) {
+            contactDetails.append("Email: ").append(email).append("\n");
+        }
+        if (yahoo != null) {
+            contactDetails.append("Yahoo Messenger: ").append(yahoo).append("\n");
+        }
+        if (skype != null) {
+            contactDetails.append("Skype: ").append(skype).append("\n");
+        }
+        this.detail = contactDetails.toString();
     }
 
     @PreUpdate
     public void preUpdate() {
         updatedDt = new Date();
+        StringBuilder contactDetails = new StringBuilder();
+
+        if (homePhone != null) {
+            contactDetails.append("Home: ").append(homePhone).append("\n");
+        }
+
+        if (workPhone != null) {
+            contactDetails.append("Work: ").append(workPhone).append("\n");
+        }
+
+        if (email != null) {
+            contactDetails.append("Email: ").append(email).append("\n");
+        }
+        if (yahoo != null) {
+            contactDetails.append("Yahoo Messenger: ").append(yahoo).append("\n");
+        }
+        if (skype != null) {
+            contactDetails.append("Skype: ").append(skype).append("\n");
+        }
+        this.detail = contactDetails.toString();
     }
 }
