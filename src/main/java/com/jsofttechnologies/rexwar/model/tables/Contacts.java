@@ -60,6 +60,18 @@ public class Contacts implements FlowJpe {
     private String relationshipType;
     @Formula("(select pos.description from war_customer_contacts_position pos where pos.position_id = contact_position)")
     private String positionDesc;
+    @Column(name = "contact_home")
+    private String homePhone;
+    @Column(name = "contact_work")
+    private String workPhone;
+    @Column(name = "contact_email")
+    private String email;
+    @Column(name = "contact_yahoo")
+    private String yahoo;
+    @Column(name = "contact_skype")
+    private String skype;
+    @Column(name = "contact_mobile")
+    private String mobile;
 
     @Override
     public void setId(Object id) {
@@ -183,6 +195,54 @@ public class Contacts implements FlowJpe {
 
     public void setPositionDesc(String positionDesc) {
         this.positionDesc = positionDesc;
+    }
+
+    public String getHomePhone() {
+        return homePhone;
+    }
+
+    public void setHomePhone(String homePhone) {
+        this.homePhone = homePhone;
+    }
+
+    public String getWorkPhone() {
+        return workPhone;
+    }
+
+    public void setWorkPhone(String workPhone) {
+        this.workPhone = workPhone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getYahoo() {
+        return yahoo;
+    }
+
+    public void setYahoo(String yahoo) {
+        this.yahoo = yahoo;
+    }
+
+    public String getSkype() {
+        return skype;
+    }
+
+    public void setSkype(String skype) {
+        this.skype = skype;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 
     @PrePersist
