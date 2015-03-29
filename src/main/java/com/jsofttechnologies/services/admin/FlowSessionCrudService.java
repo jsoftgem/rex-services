@@ -7,7 +7,7 @@ import com.jsofttechnologies.services.util.CrudService;
 import javax.ejb.Stateless;
 import javax.ws.rs.Path;
 
-@Path("services/merge_session_crud")
+@Path("services/flow_session_crud")
 @Stateless
 public class FlowSessionCrudService extends CrudService<FlowSession, Long> {
 

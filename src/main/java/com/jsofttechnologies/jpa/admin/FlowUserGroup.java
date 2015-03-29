@@ -15,13 +15,15 @@ import java.util.Set;
 @NamedQueries({
         @NamedQuery(name = FlowUserGroup.FIND_ALL, query = "select fug from FlowUserGroup fug"),
         @NamedQuery(name = FlowUserGroup.FIND_GROUP_BY_USER_ID, query = "select fug from FlowUserGroup fug, FlowUser fu where fug.id = fu.flowUserGroup.id and fu.id=:userId"),
-        @NamedQuery(name = FlowUserGroup.FIND_GROUP_BY_NAME, query = "select fug from FlowUserGroup fug where fug.groupName =:groupName")
+        @NamedQuery(name = FlowUserGroup.FIND_GROUP_BY_NAME, query = "select fug from FlowUserGroup fug where fug.groupName =:groupName"),
+        @NamedQuery(name = FlowUserGroup.FIND_GROUP_NOT_ADMIN, query = "select fug from FlowUserGroup fug where fug.groupName !='admin'")
 })
 public class FlowUserGroup implements FlowJpe {
 
     public static final String FIND_ALL = "FlowUserGroup.FIND_ALL";
     public static final String FIND_GROUP_BY_USER_ID = "FlowUserGroup.FIND_GROUP_BY_USER_ID";
     public static final String FIND_GROUP_BY_NAME = "FlowUserGroup.FIND_GROUP_BY_NAME";
+    public static final String FIND_GROUP_NOT_ADMIN = "FlowUserGroup.FIND_GROUP_NOT_ADMIN";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -70,6 +72,7 @@ public class FlowUserGroup implements FlowJpe {
     private String emails;
     @Column(name = "emblem_id")
     private Long emblemId;
+
     @Override
     public void setId(Object id) {
         this.id = id != null ? Long.valueOf(id.toString()) : null;

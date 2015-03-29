@@ -62,5 +62,6 @@ public class ProjectConstants {
     public static final String FLOW_UPLODATED_TYPE_EMBLEM = "emblem";
     public static final String FLOW_DOWNLOAD_DEFAULT_EMBLEM = "/services/download/group";
     public static final String FLOW_DOWNLOAD_DEFAULT_IMG = "";
+    public static final String GROUP_ADMIN = "admin";
 
 }

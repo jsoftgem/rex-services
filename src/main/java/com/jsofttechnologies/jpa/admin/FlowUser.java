@@ -1,6 +1,7 @@
 package com.jsofttechnologies.jpa.admin;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.jsofttechnologies.jpa.util.FlowJpe;
 
 import javax.persistence.*;
@@ -64,6 +65,9 @@ public class FlowUser implements FlowJpe, Principal {
     private Date endDt;
     @Column(name = "description")
     private String description;
+    @Transient
+    @JsonProperty
+    private String group;
 
     @Override
     public Long getId() {
@@ -121,6 +125,9 @@ public class FlowUser implements FlowJpe, Principal {
 
     public void setFlowUserGroup(FlowUserGroup flowUserGroup) {
         this.flowUserGroup = flowUserGroup;
+        if(this.flowUserGroup != null){
+            this.group = this.flowUserGroup.getGroupTitle();
+        }
     }
 
     @Override
@@ -230,5 +237,14 @@ public class FlowUser implements FlowJpe, Principal {
         int result = username != null ? username.hashCode() : 0;
         result = 31 * result + (email != null ? email.hashCode() : 0);
         return result;
+    }
+
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
     }
 }

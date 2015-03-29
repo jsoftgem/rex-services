@@ -6,6 +6,7 @@ import com.jsofttechnologies.rexwar.services.management.WarAgentQueryService;
 import com.jsofttechnologies.rexwar.util.WarConstants;
 import com.jsofttechnologies.services.util.FlowSessionHelper;
 import com.jsofttechnologies.services.util.QueryService;
+import com.jsofttechnologies.util.ProjectConstants;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -44,7 +45,7 @@ public class FlowUserGroupQueryService extends QueryService<FlowUserGroup> {
     }
 
     @GET
-    @Path("find_by_group_by_user_level")
+    @Path("/find_by_group_by_user_level")
     public Response findGroupByUserLevel(@HeaderParam("Authorization") String authorization) {
         Response response = null;
         try {
@@ -56,17 +57,9 @@ public class FlowUserGroupQueryService extends QueryService<FlowUserGroup> {
                 FlowUserGroup flowUserGroup = authorized.getFlowUserGroup();
 
                 switch (flowUserGroup.getGroupName()) {
-
-                    case WarConstants.AGENT_GROUP:
-                    case WarConstants.AGENT_GENERAL_MANAGER_GROUP:
-                    case WarConstants.AGENT_REGIONAL_MANAGER_GROUP:
                     case WarConstants.WAR_ADMIN_GROUP:
-                        setNamedQuery(FlowUserGroup.FIND_ALL);
-                        List<FlowUserGroup> flowUserGroups = doGetResultList();
-                        FlowUserGroup admin = new FlowUserGroup();
-                        admin.setGroupName("admin");
-                        flowUserGroups.remove(admin);
-                        response = Response.ok(flowUserGroups, MediaType.APPLICATION_JSON_TYPE).build();
+                        setNamedQuery(FlowUserGroup.FIND_GROUP_NOT_ADMIN);
+                        response = Response.ok(doGetResultList(), MediaType.APPLICATION_JSON_TYPE).build();
                         break;
                     default:
                         setNamedQuery(FlowUserGroup.FIND_ALL);

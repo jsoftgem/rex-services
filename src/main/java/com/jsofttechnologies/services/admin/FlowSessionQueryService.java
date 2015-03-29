@@ -8,7 +8,7 @@ import javax.ejb.Stateless;
 import javax.ws.rs.Path;
 import java.util.List;
 
-@Path("services/merge_session_query")
+@Path("services/flow_session_query")
 @Stateless
 public class FlowSessionQueryService extends QueryService<FlowSession> {
 

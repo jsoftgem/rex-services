@@ -10,7 +10,7 @@ import javax.ws.rs.Path;
  * Created by Jerico on 7/23/2014.
  */
 @Stateless
-@Path("services/merge_summary_query")
+@Path("services/flow_summary_query")
 public class FlowSummaryQueryService extends QueryService<FlowSummary> {
 
 	/**

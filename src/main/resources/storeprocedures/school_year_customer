@@ -6,143 +6,146 @@ DELIMITER $$
 
 CREATE PROCEDURE `school_year_customer`(
 in school_year bigint(20),
-in agent_id bigint(20),
-in isMonth integer(1),
+in agent_id bigint(20), 
+in isMonth integer(1), 
 in plannedMonth varchar(50),
 in week integer(1),
-in resultSize integer(3),
-in firstIndex integer(3),
+in size integer(3),
+in startAt integer(3),
 in region varchar(20),
 in tag varchar(3))
-	
-		BEGIN
-			
-			if(tag = 'all') then
+begin
+if(tag = 'all')
+ then 
+if(isMonth = 1) 
+then
+select
+wc.customer_id as customer_index,
+wcs.school_name as customer_name,
+wc.customer_id as customer_id, 
+wc.customer_owner_agent_id as customer_material_advisor,
+md.market_potential_segment as customer_market_potential_segment,
+md.market_potential as customer_market_potential,
+wa.region as customer_region, 
+sum(v_arac.report_actual) as customer_frequency,
+v_arac.report_month as customer_month,
+v_arac.report_year as customer_year,
+v_arac.report_week as customer_week,
+v_arac.report_school_year  as customer_school_year
 
-					if(isMonth = 1) then
-						select
-						wc.customer_id as customer_index,
-						wcs.school_name as customer_name,
-						wc.customer_id as customer_id,
-						wc.customer_owner_agent_id as customer_material_advisor,
-						md.market_potential_segment as customer_market_potential_segment,
-						md.market_potential as customer_market_potential,
-						wa.region as customer_region,
-						sum(v_arac.report_actual) as customer_frequency,
-						v_arac.report_month as customer_month,
-						v_arac.report_year as customer_year,
-						v_arac.report_week as customer_week,
-						v_arac.report_school_year  as customer_school_year
-						from war_customer wc
-						inner join (select wy.market_potential_segment, wy.market_potential, war_customer_customer_id from war_customer_market_school_year wy
-						inner join war_customer_war_customer_market_school_year wsy on wsy.warCustomerMarketSchoolYears_war_customer_market_school_year_id = wy.war_customer_market_school_year_id
-						inner join war_report_school_year wrsy on wrsy.war_report_school_year_id = wy.school_year
-						group by war_customer_customer_id) md  on md.war_customer_customer_id = wc.customer_id
-						inner join war_customer_school wcs on wcs.war_customer_school_id = wc.war_customer_school
-						inner join war_agent wa on wa.war_agent_id =  wc.customer_owner_agent_id
-						left outer join weekly_agent_report_activity_customer_day v_arac on v_arac.report_region = wa.region and v_arac.report_school_year = school_year
-						and v_arac.report_customer_id = wc.customer_id
-						and v_arac.report_agent = agent_id
-						and v_arac.report_month = plannedMonth
-						where wa.region = region and wc.customer_owner_agent_id = agent_id
-						group by v_arac.report_year, v_arac.report_month, wcs.school_name
-						limit firstIndex, resultSize;
-					else 
-						select
-						wc.customer_id as customer_index,
-						wcs.school_name as customer_name,
-						wc.customer_id as customer_id,
-						wc.customer_owner_agent_id as customer_material_advisor,
-						md.market_potential_segment as customer_market_potential_segment,
-						md.market_potential as customer_market_potential,
-						wa.region as customer_region,
-						sum(v_arac.report_actual) as customer_frequency,
-						v_arac.report_month as customer_month,
-						v_arac.report_year as customer_year,
-						v_arac.report_week as customer_week,
-						v_arac.report_school_year  as customer_school_year
-						from war_customer wc
-						inner join (select wy.market_potential_segment, wy.market_potential, war_customer_customer_id from war_customer_market_school_year wy
-						inner join war_customer_war_customer_market_school_year wsy on wsy.warCustomerMarketSchoolYears_war_customer_market_school_year_id = wy.war_customer_market_school_year_id
-						inner join war_report_school_year wrsy on wrsy.war_report_school_year_id = wy.school_year
-						group by war_customer_customer_id) md  on md.war_customer_customer_id = wc.customer_id
-						inner join war_customer_school wcs on wcs.war_customer_school_id = wc.war_customer_school
-						inner join war_agent wa on wa.war_agent_id =  wc.customer_owner_agent_id
-						left outer join weekly_agent_report_activity_customer_day v_arac on v_arac.report_region = wa.region and v_arac.report_school_year = school_year
-						and v_arac.report_customer_id = wc.customer_id
-						and v_arac.report_month = plannedMonth
-						and v_arac.report_agent = agent_id
-						and v_arac.report_week = week
-						where wa.region = region  and wc.customer_owner_agent_id = agent_id
-						group by v_arac.report_month, wcs.school_name limit firstIndex, resultSize;
+from war_customer wc
+left join (select wy.market_potential_segment, wy.market_potential, war_customer_customer_id from war_customer_market_school_year wy 
+join war_customer_war_customer_market_school_year wsy on wsy.warCustomerMarketSchoolYears_war_customer_market_school_year_id = wy.war_customer_market_school_year_id 
+inner join war_report_school_year wrsy on wrsy.war_report_school_year_id = wy.school_year
+group by war_customer_customer_id) md  on md.war_customer_customer_id = wc.customer_id
+inner join war_customer_school wcs on wcs.war_customer_school_id = wc.war_customer_school
+inner join war_agent wa on wa.war_agent_id =  wc.customer_owner_agent_id
+left outer join weekly_agent_report_activity_customer_day v_arac on v_arac.report_region = wa.region and v_arac.report_school_year = school_year 
+and v_arac.report_customer_id = wc.customer_id
+and v_arac.report_agent = agent_id
+and v_arac.report_month = plannedMonth
+where wa.region = region and wc.customer_owner_agent_id = agent_id
+group by v_arac.report_year, v_arac.report_month, customer_name
+limit startAt, size;
 
-					end if;
-			
-				end if;
+elseif(isMonth = 0) 
+then
+select 
+wc.customer_id as customer_index,
+wcs.school_name as customer_name,
+wc.customer_id as customer_id, 
+wc.customer_owner_agent_id as customer_material_advisor,
+md.market_potential_segment as customer_market_potential_segment,
+md.market_potential as customer_market_potential,
+wa.region as customer_region, 
+sum(v_arac.report_actual) as customer_frequency,
+v_arac.report_month as customer_month,
+v_arac.report_year as customer_year,
+v_arac.report_week as customer_week,
+v_arac.report_school_year  as customer_school_year
 
-		if(tag = '20' or tag ='50') then
-				
-				if(isMonth = 1) then
-					select
-					wct.war_customer_tag_index as customer_index,
-					wcs.school_name as customer_name,
-					wct.war_customer_tag_customer as customer_id,
-					wc.customer_owner_agent_id as customer_material_advisor,
-					md.market_potential_segment as customer_market_potential_segment,
-					md.market_potential as customer_market_potential,
-					wa.region as customer_region,
-					sum(v_arac.report_actual) as customer_frequency,
-					v_arac.report_month as customer_month,
-					v_arac.report_year as customer_year,
-					v_arac.report_week as customer_week,
-					v_arac.report_school_year  as customer_school_year
-					from war_customer_tag wct
-					inner join war_customer wc on wc.customer_id = wct.war_customer_tag_customer
-					inner join (select wy.market_potential_segment, wy.market_potential, war_customer_customer_id from war_customer_market_school_year wy
-					inner join war_customer_war_customer_market_school_year wsy on wsy.warCustomerMarketSchoolYears_war_customer_market_school_year_id = wy.war_customer_market_school_year_id
-					inner join war_report_school_year wrsy on wrsy.war_report_school_year_id = wy.school_year
-					group by war_customer_customer_id) md  on md.war_customer_customer_id = wc.customer_id
-					inner join war_customer_school wcs on wcs.war_customer_school_id = wc.war_customer_school
-					inner join war_agent wa on wa.war_agent_id =  wc.customer_owner_agent_id
-					left outer join weekly_agent_report_activity_customer_day v_arac on v_arac.report_region = wa.region and v_arac.report_school_year = school_year
-					and v_arac.report_customer_id = wc.customer_id
-					and v_arac.report_agent = agent_id
-					and v_arac.report_month = plannedMonth
-					where wa.region = region and wc.customer_owner_agent_id = agent_id
-					group by v_arac.report_year, v_arac.report_month, wcs.school_name
-					order by wct.war_customer_tag_index asc limit resultSize;
+from war_customer wc
+left join (select wy.market_potential_segment, wy.market_potential, war_customer_customer_id from war_customer_market_school_year wy 
+join war_customer_war_customer_market_school_year wsy on wsy.warCustomerMarketSchoolYears_war_customer_market_school_year_id = wy.war_customer_market_school_year_id 
+join war_report_school_year wrsy on wrsy.war_report_school_year_id = wy.school_year
+group by war_customer_customer_id) md  on md.war_customer_customer_id = wc.customer_id
+inner join war_customer_school wcs on wcs.war_customer_school_id = wc.war_customer_school
+inner join war_agent wa on wa.war_agent_id =  wc.customer_owner_agent_id
+left outer join weekly_agent_report_activity_customer_day v_arac on v_arac.report_region = wa.region and v_arac.report_school_year = school_year 
+and v_arac.report_customer_id = wc.customer_id
+and v_arac.report_month = plannedMonth
+and v_arac.report_agent = agent_id
+and v_arac.report_week = week
+where wa.region = region  and wc.customer_owner_agent_id = agent_id
+group by v_arac.report_month,  customer_name limit startAt, size;
+end if;
+end if;
 
-				else
-					select
-					wct.war_customer_tag_index as customer_index,
-					wcs.school_name as customer_name,
-					wct.war_customer_tag_customer as customer_id,
-					wc.customer_owner_agent_id as customer_material_advisor,
-					md.market_potential_segment as customer_market_potential_segment,
-					md.market_potential as customer_market_potential,
-					wa.region as customer_region,
-					sum(v_arac.report_actual) as customer_frequency,
-					v_arac.report_month as customer_month,
-					v_arac.report_year as customer_year,
-					v_arac.report_week as customer_week,
-					v_arac.report_school_year as customer_school_year
-					from war_customer_tag wct
-					inner join war_customer wc on wc.customer_id = wct.war_customer_tag_customer
-					inner join (select wy.market_potential_segment, wy.market_potential, war_customer_customer_id from war_customer_market_school_year wy
-					inner join war_customer_war_customer_market_school_year wsy on wsy.warCustomerMarketSchoolYears_war_customer_market_school_year_id = wy.war_customer_market_school_year_id
-					inner join war_report_school_year wrsy on wrsy.war_report_school_year_id = wy.school_year
-					group by war_customer_customer_id) md  on md.war_customer_customer_id = wc.customer_id
-					inner join war_customer_school wcs on wcs.war_customer_school_id = wc.war_customer_school
-					inner join war_agent wa on wa.war_agent_id =  wc.customer_owner_agent_id
-					left outer join weekly_agent_report_activity_customer_day v_arac on v_arac.report_region = wa.region and  v_arac.report_school_year = school_year
-					and v_arac.report_customer_id = wc.customer_id
-					and v_arac.report_agent = agent_id
-					and v_arac.report_month = plannedMonth
-					where wa.region = region  and wc.customer_owner_agent_id = agent_id
-					group by v_arac.report_month,  wcs.school_name
-					order by wct.war_customer_tag_index asc limit resultSize;
-				end if;
+if(tag = '20' or tag ='50')
+then
+if(isMonth = 1)
+then 
+select
+wct.war_customer_tag_index as customer_index,
+wcs.school_name as customer_name,
+wct.war_customer_tag_customer as customer_id, 
+wc.customer_owner_agent_id as customer_material_advisor,
+md.market_potential_segment as customer_market_potential_segment,
+md.market_potential as customer_market_potential,
+wa.region as customer_region, 
+sum(v_arac.report_actual) as customer_frequency,
+v_arac.report_month as customer_month,
+v_arac.report_year as customer_year,
+v_arac.report_week as customer_week,
+v_arac.report_school_year  as customer_school_year
 
-			end if;
+from war_customer_tag wct 
+inner join war_customer wc on wc.customer_id = wct.war_customer_tag_customer
+left join (select wy.market_potential_segment, wy.market_potential, war_customer_customer_id from war_customer_market_school_year wy 
+inner join war_customer_war_customer_market_school_year wsy on wsy.warCustomerMarketSchoolYears_war_customer_market_school_year_id = wy.war_customer_market_school_year_id 
+inner join war_report_school_year wrsy on wrsy.war_report_school_year_id = wy.school_year
+group by war_customer_customer_id) md  on md.war_customer_customer_id = wc.customer_id
+inner join war_customer_school wcs on wcs.war_customer_school_id = wc.war_customer_school
+inner join war_agent wa on wa.war_agent_id =  wc.customer_owner_agent_id
+left outer join weekly_agent_report_activity_customer_day v_arac on v_arac.report_region = wa.region and v_arac.report_school_year = school_year 
+and v_arac.report_customer_id = wc.customer_id
+and v_arac.report_agent = agent_id
+and v_arac.report_month = plannedMonth
+where wa.region = region and wc.customer_owner_agent_id = agent_id
+group by v_arac.report_year, v_arac.report_month, customer_name
+order by wct.war_customer_tag_index asc limit size;
+end if;
+if(isMonth = 0) then
+select
+wct.war_customer_tag_index as customer_index,
+wcs.school_name as customer_name,
+wct.war_customer_tag_customer as customer_id, 
+wc.customer_owner_agent_id as customer_material_advisor,
+md.market_potential_segment as customer_market_potential_segment,
+md.market_potential as customer_market_potential,
+wa.region as customer_region, 
+sum(v_arac.report_actual) as customer_frequency,
+v_arac.report_month as customer_month,
+v_arac.report_year as customer_year,
+v_arac.report_week as customer_week,
+v_arac.report_school_year as customer_school_year
 
-END $$
+from war_customer_tag wct 
+inner join war_customer wc on wc.customer_id = wct.war_customer_tag_customer
+left join (select wy.market_potential_segment, wy.market_potential, war_customer_customer_id from war_customer_market_school_year wy 
+inner join war_customer_war_customer_market_school_year wsy on wsy.warCustomerMarketSchoolYears_war_customer_market_school_year_id = wy.war_customer_market_school_year_id 
+inner join war_report_school_year wrsy on wrsy.war_report_school_year_id = wy.school_year
+group by war_customer_customer_id) md  on md.war_customer_customer_id = wc.customer_id
+inner join war_customer_school wcs on wcs.war_customer_school_id = wc.war_customer_school
+inner join war_agent wa on wa.war_agent_id =  wc.customer_owner_agent_id
+left outer join weekly_agent_report_activity_customer_day v_arac on v_arac.report_region = wa.region and  v_arac.report_school_year = school_year 
+and v_arac.report_customer_id = wc.customer_id
+and v_arac.report_agent = agent_id
+and v_arac.report_month = plannedMonth
+where wa.region = region  and wc.customer_owner_agent_id = agent_id
+group by v_arac.report_month,  customer_name
+order by wct.war_customer_tag_index asc limit size;
+end if;
+end if;
+
+end
