@@ -1,5 +1,5 @@
-CREATE VIEW `weekly_agent_report_activity` AS
-    select
+CREATE  VIEW `weekly_agent_report_activity` AS
+    select 
         `a`.`war_activity_school_year` AS `report_school_year`,
         `a`.`war_planner` AS `report_planner_id`,
         `a`.`war_activity_region_code` AS `report_region`,
@@ -11,7 +11,7 @@ CREATE VIEW `weekly_agent_report_activity` AS
         `a`.`start_dt` AS `report_date`,
         `a`.`war_planner_month` AS `report_month`,
         year(`a`.`start_dt`) AS `report_year`,
-        (floor(((dayofmonth(`a`.`start_dt`) - 1) / 7)) + 1) AS `report_week`,
+        `a`.`war_activity_week` AS `report_week`,
         sum(if((`a`.`war_activity_planned` = 1),
             1,
             0)) AS `report_planned_target`,
@@ -95,5 +95,5 @@ CREATE VIEW `weekly_agent_report_activity` AS
         join `flow_user` `fu` ON ((`fu`.`flow_user_id` = `wa`.`user`)))
         join `flow_user_detail` `fud` ON ((`fud`.`flow_user_detail_id` = `fu`.`flow_user_detail_id`)))
         join `war_customer_school` `ws` ON ((`ws`.`war_customer_school_id` = `wc`.`war_customer_school`)))
-    group by `report_week` , `report_materials_advisor` , `report_month` , `report_year`
+    group by `a`.`war_activity_week` , `fud`.`full_name` , `a`.`war_planner_month` , year(`a`.`start_dt`)
     order by `a`.`start_dt`
