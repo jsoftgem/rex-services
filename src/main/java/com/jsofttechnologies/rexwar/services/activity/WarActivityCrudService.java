@@ -9,6 +9,7 @@ import com.jsofttechnologies.rexwar.model.management.WarCustomerRegion;
 import com.jsofttechnologies.rexwar.services.data.WarRegionQueryService;
 import com.jsofttechnologies.rexwar.services.management.WarAgentQueryService;
 import com.jsofttechnologies.rexwar.services.management.WarCustomerTagQueryService;
+import com.jsofttechnologies.rexwar.util.WarConstants;
 import com.jsofttechnologies.services.util.CrudService;
 import com.jsofttechnologies.services.util.FlowSessionHelper;
 import com.jsofttechnologies.util.CalendarUtil;
@@ -63,6 +64,13 @@ public class WarActivityCrudService extends CrudService<WarActivity, Long> {
         warActivity.setRegionId(region.getId());
 
         warActivity.setRegionCode(region.getRegionCode());
+
+        FlowSessionHelper.Promise authorized = getUserSession();
+
+        if (authorized.isGroup(WarConstants.AGENT_REGIONAL_MANAGER_GROUP)) {
+            warActivity.setWorkedWith(Boolean.TRUE);
+        }
+
         return warActivity;
     }
 

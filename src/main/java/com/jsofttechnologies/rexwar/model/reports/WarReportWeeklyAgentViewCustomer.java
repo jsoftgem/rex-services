@@ -62,6 +62,9 @@ public class WarReportWeeklyAgentViewCustomer implements Serializable {
     @Column(name = "report_date")
     @Temporal(TemporalType.DATE)
     private Date date;
+    @Column(name="report_worked_with")
+    private Integer workedWith;
+
 
     public Integer getWeek() {
         return week;
@@ -237,5 +240,13 @@ public class WarReportWeeklyAgentViewCustomer implements Serializable {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public Integer getWorkedWith() {
+        return workedWith;
+    }
+
+    public void setWorkedWith(Integer workedWith) {
+        this.workedWith = workedWith;
     }
 }

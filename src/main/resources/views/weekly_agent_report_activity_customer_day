@@ -13,6 +13,9 @@ CREATE VIEW `weekly_agent_report_activity_customer_day` AS
         `a`.`war_activity_agent_id` AS `report_agent`,
         `a`.`war_activity_planned` AS `report_planned`,
         `wcr`.`region_name` AS `report_region_name`,
+        sum(if((`a`.`war_activity_worked_with` = 1),
+                    1,
+                    0)) AS `report_worked_with`,
         sum(if((`a`.`war_activity_actual` = 1),
             1,
             0)) AS `report_actual`,
@@ -54,8 +57,8 @@ CREATE VIEW `weekly_agent_report_activity_customer_day` AS
         `a`.`start_dt` AS `report_date`
     from
         ((((`war_activity` `a`
-        join `customer_latest_market_view` `wr` ON ((`wr`.`war_customer_customer_id` = `a`.`war_activity_customer_market_id`)))
-        join `war_customer` `wc` ON ((`wc`.`customer_id` = `wr`.`war_customer_customer_id`)))
+        left join `customer_latest_market_view` `wr` ON ((`wr`.`war_customer_customer_id` = `a`.`war_activity_customer_market_id`)))
+        join `war_customer` `wc` ON ((`wc`.`customer_id` = `a`.`war_activity_customer_market_id`)))
         join `war_customer_school` `ws` ON ((`ws`.`war_customer_school_id` = `wc`.`war_customer_school`)))
         join `war_customer_region` `wcr` ON ((`wcr`.`region_code` = `a`.`war_activity_region_code`)))
     group by `report_month` , `report_week` , `report_agent` , `report_customer` , `report_day`

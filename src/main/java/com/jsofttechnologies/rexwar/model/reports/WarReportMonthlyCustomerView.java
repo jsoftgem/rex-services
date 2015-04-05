@@ -60,6 +60,8 @@ public class WarReportMonthlyCustomerView implements Serializable {
     private Integer ies;
     @Column(name = "report_tag_index")
     private Integer index;
+    @Column(name="report_worked_with")
+    private Integer workedWith;
 
     public Long getCustomerId() {
         return customerId;
@@ -235,5 +237,13 @@ public class WarReportMonthlyCustomerView implements Serializable {
 
     public void setIndex(Integer index) {
         this.index = index;
+    }
+
+    public Integer getWorkedWith() {
+        return workedWith;
+    }
+
+    public void setWorkedWith(Integer workedWith) {
+        this.workedWith = workedWith;
     }
 }

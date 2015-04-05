@@ -5,6 +5,7 @@ import com.jsofttechnologies.ejb.MergeExceptionSummary;
 import com.jsofttechnologies.jpa.admin.FlowSession;
 import com.jsofttechnologies.jpa.admin.FlowUser;
 import com.jsofttechnologies.jpa.admin.FlowUserGroup;
+import com.jsofttechnologies.jpa.admin.FlowUserProfile;
 import com.jsofttechnologies.rexwar.model.management.WarAgent;
 import com.jsofttechnologies.rexwar.services.management.WarAgentCrudService;
 import com.jsofttechnologies.rexwar.services.management.WarAgentQueryService;
@@ -148,6 +149,24 @@ public class FlowSessionHelper {
 
         public FlowSession getFlowSession() {
             return flowSession;
+        }
+
+
+        public boolean isGroup(String groupName) {
+            return flowUserGroup != null && flowUserGroup.getGroupName().equalsIgnoreCase(groupName);
+        }
+
+        public boolean hasProfile(String profileName) {
+            if (flowUser != null) {
+                if (flowUser.getFlowUserProfileSet() != null) {
+                    for (FlowUserProfile flowUserProfile : flowUser.getFlowUserProfileSet()) {
+                        if (flowUserProfile.getProfileName().equalsIgnoreCase(profileName)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
         }
     }
 

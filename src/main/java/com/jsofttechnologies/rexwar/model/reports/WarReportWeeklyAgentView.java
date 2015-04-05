@@ -76,6 +76,8 @@ public class WarReportWeeklyAgentView implements Serializable {
     private Integer ucis;
     @Column(name = "report_implemented_ex_sem")
     private Integer ies;
+    @Column(name = "report_worked_with")
+    private Integer workedWith;
 
     public Long getReportPlannerId() {
         return reportPlannerId;
@@ -299,5 +301,13 @@ public class WarReportWeeklyAgentView implements Serializable {
 
     public void setIes(Integer ies) {
         this.ies = ies;
+    }
+
+    public Integer getWorkedWith() {
+        return workedWith;
+    }
+
+    public void setWorkedWith(Integer workedWith) {
+        this.workedWith = workedWith;
     }
 }

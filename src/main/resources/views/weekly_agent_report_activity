@@ -12,6 +12,9 @@ CREATE  VIEW `weekly_agent_report_activity` AS
         `a`.`war_planner_month` AS `report_month`,
         year(`a`.`start_dt`) AS `report_year`,
         `a`.`war_activity_week` AS `report_week`,
+        sum(if((`a`.`war_activity_worked_with` = 1),
+                    1,
+                    0)) AS `report_worked_with`,
         sum(if((`a`.`war_activity_planned` = 1),
             1,
             0)) AS `report_planned_target`,
@@ -89,8 +92,8 @@ CREATE  VIEW `weekly_agent_report_activity` AS
             0)) AS `report_follow_up_payment`
     from
         ((((((`war_activity` `a`
-        join `customer_latest_market_view` `wr` ON ((`wr`.`war_customer_customer_id` = `a`.`war_activity_customer_market_id`)))
-        join `war_customer` `wc` ON ((`wc`.`customer_id` = `wr`.`war_customer_customer_id`)))
+        left join `customer_latest_market_view` `wr` ON ((`wr`.`war_customer_customer_id` = `a`.`war_activity_customer_market_id`)))
+        join `war_customer` `wc` ON ((`wc`.`customer_id` = `a`.`war_activity_customer_market_id`)))
         join `war_agent` `wa` ON ((`wa`.`war_agent_id` = `a`.`war_activity_agent_id`)))
         join `flow_user` `fu` ON ((`fu`.`flow_user_id` = `wa`.`user`)))
         join `flow_user_detail` `fud` ON ((`fud`.`flow_user_detail_id` = `fu`.`flow_user_detail_id`)))

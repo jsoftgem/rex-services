@@ -232,6 +232,7 @@ public class WarReportMonthlyService extends FlowService {
                     for (WarReportMonthlyCustomerView warReportMonthlyCustomerView : customerGroup.get(new AgentCustomerKey(agentCustomerView.getAgent(), agentCustomerView.getCustomerId(), null, null))) {
                         totalVisited += warReportMonthlyCustomerView.getCustomerFrequency();
                         dataTemplate[monthIndex.get(warReportMonthlyCustomerView.getMonth())] = warReportMonthlyCustomerView.getCustomerFrequency();
+                        dataTemplate[labels.indexOf("Field Work with sales/manager")] += warReportMonthlyCustomerView.getWorkedWith();
                         dataTemplate[labels.indexOf("Exam Copies Distribution")] += warReportMonthlyCustomerView.getEcd();
                         dataTemplate[labels.indexOf("Invitation to Events")] += warReportMonthlyCustomerView.getIte();
                         dataTemplate[labels.indexOf("Confirmation of Events")] += warReportMonthlyCustomerView.getCoe();
