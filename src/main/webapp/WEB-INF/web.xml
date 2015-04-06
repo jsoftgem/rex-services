@@ -76,6 +76,7 @@
         <servlet-name>Resteasy</servlet-name>
     </filter-mapping>
 
+
     <!-- add mime types -->
     <!-- open office-->
     <mime-mapping>

@@ -3,6 +3,8 @@ package com.jsofttechnologies.jpa.admin;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.jsofttechnologies.jpa.util.FlowJpe;
+import com.jsofttechnologies.report.utlil.ReportColumn;
+import com.jsofttechnologies.report.utlil.ReportHeader;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -18,6 +20,7 @@ import java.util.Set;
         @NamedQuery(name = FlowUser.FIND_BY_USERNAME, query = "select u from FlowUser u where u.username = :username"),
         @NamedQuery(name = FlowUser.FIND_BY_EMAIL, query = "select u from FlowUser u where u.email = :email"),
         @NamedQuery(name = FlowUser.FIND_BY_ID, query = "select u from FlowUser  u where u.id=:id")})
+@ReportHeader(name = "Flow User")
 public class FlowUser implements FlowJpe, Principal {
 
     /**
@@ -32,7 +35,7 @@ public class FlowUser implements FlowJpe, Principal {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "flow_user_id", nullable = false)
     private Long id;
-
+    @ReportColumn(name = "Username")
     @Column(name = "flow_username", nullable = false, unique = true)
     private String username;
 
@@ -125,7 +128,7 @@ public class FlowUser implements FlowJpe, Principal {
 
     public void setFlowUserGroup(FlowUserGroup flowUserGroup) {
         this.flowUserGroup = flowUserGroup;
-        if(this.flowUserGroup != null){
+        if (this.flowUserGroup != null) {
             this.group = this.flowUserGroup.getGroupTitle();
         }
     }
