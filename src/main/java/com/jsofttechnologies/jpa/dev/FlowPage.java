@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jsofttechnologies.jpa.util.ColumnLengths;
 import com.jsofttechnologies.jpa.util.FlowComponentType;
 import com.jsofttechnologies.jpa.util.FlowJpe;
+import com.jsofttechnologies.report.utlil.ReportColumn;
+import com.jsofttechnologies.report.utlil.ReportHeader;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -12,6 +14,7 @@ import java.util.Date;
 @Table(name = "flow_page", uniqueConstraints = {@UniqueConstraint(columnNames = {"page_name"})})
 @NamedQueries({@NamedQuery(name = FlowPage.FIND_ALL, query = "select fp from FlowPage fp"), @NamedQuery(name = FlowPage.FIND_BY_NAME,
         query = "select fp from FlowPage fp where fp.name=:name ")})
+@ReportHeader(name = "Flow Page")
 public class FlowPage implements FlowJpe {
     /**
      *
@@ -23,10 +26,13 @@ public class FlowPage implements FlowJpe {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "page_id")
     private Long id;
+    @ReportColumn(name = "Home URL")
     @Column(name = "home_url", nullable = false)
     private String home;
+    @ReportColumn(name = "Name")
     @Column(name = "page_name", nullable = false, unique = true, length = ColumnLengths.NAME)
     private String name;
+    @ReportColumn(name = "Title")
     @Column(name = "page_title", nullable = false, length = ColumnLengths.TITLE)
     private String title;
     @Column(name = "get_uri")

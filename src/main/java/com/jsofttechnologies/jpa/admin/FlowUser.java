@@ -41,7 +41,7 @@ public class FlowUser implements FlowJpe, Principal {
 
     @Column(name = "flow_password", nullable = false, columnDefinition = "TEXT")
     private String password;
-
+    @ReportColumn(name = "Email")
     @Column(name = "flow_email", nullable = false, unique = true)
     private String email;
 

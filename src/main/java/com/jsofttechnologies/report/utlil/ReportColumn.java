@@ -13,5 +13,11 @@ import java.lang.annotation.Target;
 public @interface ReportColumn {
     String name() default "";
 
-    String style() default "";
+    String style() default "font:inherit;color:black;";
+
+    String align() default "center";
+
+    String headerStyle() default "font:inherit;color:black;background:lightblue;";
+
+    int colspan() default 1;
 }
