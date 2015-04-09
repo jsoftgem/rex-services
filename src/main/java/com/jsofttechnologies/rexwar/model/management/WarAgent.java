@@ -6,6 +6,8 @@ package com.jsofttechnologies.rexwar.model.management;/**
 import com.jsofttechnologies.jpa.admin.FlowUser;
 import com.jsofttechnologies.jpa.util.ColumnLengths;
 import com.jsofttechnologies.jpa.util.FlowJpe;
+import com.jsofttechnologies.report.utlil.ReportColumn;
+import com.jsofttechnologies.report.utlil.ReportHeader;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -15,6 +17,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "war_agent")
+@ReportHeader(name = "Agents")
 @NamedQueries({
         @NamedQuery(name = WarAgent.FIND_ALL, query = "select a from WarAgent a"),
         @NamedQuery(name = WarAgent.FIND_AGENT_BY_USERNAME, query = "select a from WarAgent a where a.user.username=:username"),
@@ -52,20 +55,22 @@ public class WarAgent implements FlowJpe {
     private Date endDt;
     @Column(name = "description")
     private String description;
+    @ReportColumn(name = "Name", field = "flowUserDetail.fullName")
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "user", referencedColumnName = "flow_user_id")
     private FlowUser user;
+    @ReportColumn(name = "Region")
     @Column(name = "region", nullable = false)
     private String region;
+    @ReportColumn(name = "Manager")
     @Column(name = "manager", nullable = false, length = ColumnLengths.FLAG)
     private Boolean isManager;
-
+    @ReportColumn(name = "Active")
     @Column(name = "war_agent_active", nullable = false, length = ColumnLengths.FLAG)
     private Boolean active;
-
     @Column(name = "war_agent_online", length = ColumnLengths.FLAG)
     private Boolean online;
-
+    @ReportColumn(name = "Initials")
     @Column(name = "war_agent_initials", nullable = false)
     private String initials;
 

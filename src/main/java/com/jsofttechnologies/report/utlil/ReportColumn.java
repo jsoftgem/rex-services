@@ -19,5 +19,7 @@ public @interface ReportColumn {
 
     String headerStyle() default "font:inherit;color:black;background:lightblue;";
 
-    int colspan() default 1;
+    String field() default "";
+
+    int colSpan() default 1;
 }

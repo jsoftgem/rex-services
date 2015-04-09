@@ -37,26 +37,27 @@ public class HtmlReportGenerator extends ReportGenerator {
     public String renderView(String header, List<Map<String, ReportGenerator.ColumnProperty>> values) {
 
         StringBuilder builder = new StringBuilder();
-        builder.append("<center>");
+        builder.append("<div>");
         builder.append("<h3 style=\"text-align:left;width:668px\">").append(header).append("</h5>");
 
         builder.append("<h6 style=\"text-align:left;width:668px\">")
                 .append("<div>Total: ").append(values.size()).append("</div>")
                 .append("<div>Date: ").append(DateFormat.getInstance().format(new Date())).append("</div></h6>");
 
-        builder.append("<table>");
+        builder.append("<table border=\"1\">");
 
-        builder.append("<tbody>");
 
         if (!values.isEmpty()) {
             builder.append("<thead>");
             for (String field : values.get(0).keySet()) {
-                builder.append("<th").append(" colspan=\"").append(values.get(0).get(field).getReportColumn().colspan())
-                        .append("\" style=\"").append(values.get(0).get(field).getReportColumn().headerStyle()).append("\">");
+                builder.append("<th").append(" colspan=\"").append(values.get(0).get(field).getReportColumn().colSpan())
+                        .append("\" style=\"").append(values.get(0).get(field).getReportColumn().headerStyle()).append("\" ")
+                        .append("align=\"").append(values.get(0).get(field).getReportColumn().align()).append("\">");
                 builder.append(values.get(0).get(field).getReportColumn().name());
                 builder.append("</th>");
             }
             builder.append("</thead>");
+            builder.append("<tbody>");
             int counter = 0;
             for (Map<String, ReportGenerator.ColumnProperty> value : values) {
                 counter++;
@@ -70,12 +71,12 @@ public class HtmlReportGenerator extends ReportGenerator {
                 }
                 builder.append("</tr>");
             }
+            builder.append("</tbody>");
         }
 
 
-        builder.append("</tbody>");
         builder.append("</table>");
-        builder.append("</center>");
+        builder.append("</div>");
         return builder.toString();
     }
 

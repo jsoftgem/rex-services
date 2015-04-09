@@ -11,7 +11,6 @@ import javax.ws.rs.ext.WriterInterceptorContext;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
-import java.util.logging.Logger;
 
 /**
  * Created by Jerico on 4/7/2015.
@@ -21,7 +20,7 @@ import java.util.logging.Logger;
 public class ReportWriterInterceptor implements WriterInterceptor {
     @Override
     public void aroundWriteTo(WriterInterceptorContext context) throws IOException, WebApplicationException {
-        Logger logger = Logger.getLogger(ReportWriterInterceptor.class.getName());
+
         Report report = null;
         for (Annotation annotation : context.getAnnotations()) {
             if (annotation instanceof Report) {

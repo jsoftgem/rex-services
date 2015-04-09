@@ -1,7 +1,10 @@
 package com.jsofttechnologies.report.generator;
 
+import com.jsofttechnologies.jpa.admin.FlowUser;
+import com.jsofttechnologies.jpa.admin.FlowUserDetail;
 import com.jsofttechnologies.report.utlil.ReportColumn;
 import com.jsofttechnologies.report.utlil.ReportHeader;
+import com.jsofttechnologies.rexwar.model.management.WarAgent;
 import org.apache.commons.lang.StringUtils;
 
 import java.lang.annotation.Annotation;
@@ -65,12 +68,21 @@ public abstract class ReportGenerator {
 
                         try {
                             ReportColumn reportColumn = field.getAnnotation(ReportColumn.class);
+                            Object value = null;
                             String fieldName = "get" + StringUtils.capitalize(field.getName());
-                            Method getMethod = cls.getDeclaredMethod(fieldName, null);
-                            getMethod.setAccessible(Boolean.TRUE);
-                            Object value = getMethod.invoke(en, null);
+
+                            if (!reportColumn.field().isEmpty()) {
+                                Method firstMethod = en.getClass().getDeclaredMethod(fieldName);
+                                Object returnObject = firstMethod.invoke(en, null);
+                                value = getValue(reportColumn.field(), returnObject);
+                            } else {
+                                Method getMethod = cls.getDeclaredMethod(fieldName, null);
+                                value = getMethod.invoke(en, null);
+                            }
+
                             Object result = render(reportColumn, value);
                             values.put(field.getName(), new ColumnProperty(reportColumn, result));
+
                         } catch (IllegalAccessException e) {
                             logger.log(Level.WARNING, e.getMessage(), e);
                         } catch (NoSuchMethodException e) {
@@ -115,8 +127,74 @@ public abstract class ReportGenerator {
             return value;
         }
 
-        public ReportHeader reportHeader(){
+        public ReportHeader reportHeader() {
             return reportHeader;
+        }
+    }
+
+    public static Object getValue(String field, Object obj) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Object o = null;
+
+        if (field.contains(".")) {
+            List<String> splitted = Arrays.asList(field.split("\\."));
+            LinkedList<String> linkSplitted = new LinkedList<>(splitted);
+            String first = splitted.get(0);
+            String fieldName = "get" + StringUtils.capitalize(first);
+            if (linkSplitted.size() > 1) {
+                linkSplitted.removeFirst();
+            }
+
+            Method method1 = obj.getClass().getDeclaredMethod(fieldName);
+            Object returnObject = method1.invoke(obj, null);
+
+
+            StringBuilder builder = new StringBuilder();
+
+            for (int i = 0; i < linkSplitted.size(); i++) {
+                builder.append(linkSplitted.get(i));
+                if (i < linkSplitted.size() - 1) {
+                    builder.append(".");
+                }
+            }
+            return getValue(builder.toString(), returnObject);
+        } else {
+            String fieldName = "get" + StringUtils.capitalize(field);
+            o = obj.getClass().getDeclaredMethod(fieldName, null).invoke(obj, null);
+        }
+
+        return o;
+    }
+
+
+    public static void main(String... args) {
+        WarAgent warAgent = new WarAgent();
+        FlowUser flowUser = new FlowUser();
+        flowUser.setUsername("rickzx98");
+
+        FlowUserDetail flowUserDetail = new FlowUserDetail();
+        flowUserDetail.setFullName("Jerico de Guzman");
+
+        flowUser.setFlowUserDetail(flowUserDetail);
+
+        warAgent.setUser(flowUser);
+        warAgent.setRegion("BUHAIN");
+
+        try {
+            String fieldName = "get" + StringUtils.capitalize("user");
+
+            Method firstMethod = warAgent.getClass().getDeclaredMethod(fieldName);
+
+            Object returnObject = firstMethod.invoke(warAgent, null);
+
+            Object value = getValue("flowUserDetail.fullName", returnObject);
+
+            System.out.println(value);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
         }
     }
 }

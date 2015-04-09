@@ -16,7 +16,5 @@ import java.lang.annotation.Target;
 @NameBinding
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Report {
-    Class<?> type() default Object.class;
-
     Class<? extends ReportGenerator> generator() default HtmlReportGenerator.class;
 }

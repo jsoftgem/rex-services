@@ -173,7 +173,7 @@ public abstract class QueryService<T extends FlowJpe> extends FlowService {
     @PermitAll
     @Path("/report_list")
     @Produces(value = "application/json")
-    @Report(type = FlowJpe.class)
+    @Report
     public List<T> reportList() {
         Logger logger = Logger.getLogger(QueryService.class.getName());
 
