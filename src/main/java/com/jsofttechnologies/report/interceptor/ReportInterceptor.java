@@ -17,7 +17,7 @@ import java.lang.reflect.InvocationTargetException;
  */
 @Provider
 @Report
-public class ReportWriterInterceptor implements WriterInterceptor {
+public class ReportInterceptor implements WriterInterceptor {
     @Override
     public void aroundWriteTo(WriterInterceptorContext context) throws IOException, WebApplicationException {
 
@@ -33,17 +33,21 @@ public class ReportWriterInterceptor implements WriterInterceptor {
             return;
         }
 
-
         Object entity = context.getEntity();
 
 
         try {
 
             ReportGenerator reportGenerator = (ReportGenerator) report.generator().getDeclaredMethod("getInstance", null).invoke(null, null);
+
             Object filteredEntity = reportGenerator.generate(entity);
+
             context.setEntity(filteredEntity);
+
             String[] mediaType = reportGenerator.getContentType().split("/");
+
             context.setMediaType(new MediaType(mediaType[0], mediaType[1]));
+
             context.setType(reportGenerator.getType());
 
         } catch (IllegalAccessException e) {
@@ -57,4 +61,5 @@ public class ReportWriterInterceptor implements WriterInterceptor {
 
         context.proceed();
     }
+
 }
