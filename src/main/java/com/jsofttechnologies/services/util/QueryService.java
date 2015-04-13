@@ -4,6 +4,7 @@ import com.jsofttechnologies.jpa.util.FlowJpe;
 import com.jsofttechnologies.model.DataTables;
 import com.jsofttechnologies.model.DataTablesColumn;
 import com.jsofttechnologies.model.ResultDataModel;
+import com.jsofttechnologies.report.generator.CSVReportGenerator;
 import com.jsofttechnologies.report.utlil.Report;
 import com.jsofttechnologies.util.ProjectConstants;
 import com.jsofttechnologies.util.ProjectHelper;
@@ -201,6 +202,40 @@ public abstract class QueryService<T extends FlowJpe> extends FlowService {
         }
         return resultList;
     }
+
+    @GET
+    @PermitAll
+    @Path("/csv_list")
+    @Produces(value = "application/json")
+    @Report(generator = CSVReportGenerator.class)
+    public List<T> csvList() {
+        Logger logger = Logger.getLogger(QueryService.class.getName());
+
+        logger.log(Level.INFO, "doGetResultList: " + namedQuery + " param: " + param);
+        try {
+            query = entityManager.createNamedQuery(namedQuery, classType);
+            if (param != null) {
+                for (String key : param.keySet()) {
+                    query.setParameter(key, param.get(key));
+                }
+
+            }
+            maxResultCount = query.getMaxResults();
+            if (getFirstResult() != null) {
+                query.setFirstResult(getFirstResult());
+            }
+            if (getMax() != null) {
+                query.setMaxResults(getMax());
+            }
+            resultList = query.getResultList();
+            resultCount = resultList.size();
+            logger.log(Level.INFO, "resultList: " + resultList + " resultCount: " + resultCount);
+        } catch (Exception e) {
+            exceptionSummary.handleException(e, getClass(), param);
+        }
+        return resultList;
+    }
+
 
     @GET
     @Path("/")

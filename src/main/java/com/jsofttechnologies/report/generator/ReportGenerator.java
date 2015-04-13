@@ -7,7 +7,6 @@ import com.jsofttechnologies.report.utlil.ReportHeader;
 import com.jsofttechnologies.rexwar.model.management.WarAgent;
 import org.apache.commons.lang.StringUtils;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -26,7 +25,7 @@ public abstract class ReportGenerator {
 
     public abstract Object render(ReportColumn reportColumn, Object item);
 
-    public abstract String renderView(String header, List<Map<String, ColumnProperty>> values);
+    public abstract String renderView(ColumnKey header, List<Map<String, ColumnProperty>> values);
 
     public Object generate(Object entity) {
 
@@ -41,18 +40,18 @@ public abstract class ReportGenerator {
             } else if (entity instanceof Collection) {
                 list = (List) entity;
             }
-            Map<String, List<Map<String, ColumnProperty>>> reportMap = new HashMap<>();
+            Map<ColumnKey, List<Map<String, ColumnProperty>>> reportMap = new HashMap<>();
 
             for (Object en : list) {
                 Class cls = en.getClass();
                 List<Map<String, ColumnProperty>> reportContent = null;
-                Annotation reportHeader = cls.getDeclaredAnnotation(ReportHeader.class);
+                ReportHeader reportHeader = (ReportHeader) cls.getDeclaredAnnotation(ReportHeader.class);
                 if (reportHeader != null) {
-                    if (reportMap.containsKey(((ReportHeader) reportHeader).name())) {
-                        reportContent = reportMap.get(((ReportHeader) reportHeader).name());
+                    if (reportMap.containsKey(reportHeader.name())) {
+                        reportContent = reportMap.get(reportHeader.name());
                     } else {
                         reportContent = new ArrayList<>();
-                        reportMap.put(((ReportHeader) reportHeader).name(), reportContent);
+                        reportMap.put(new ColumnKey(reportHeader.name(), reportHeader), reportContent);
                     }
                 } else {
                     continue;
@@ -98,7 +97,7 @@ public abstract class ReportGenerator {
                 reportContent.add(values);
             }
 
-            for (String header : reportMap.keySet()) {
+            for (ColumnKey header : reportMap.keySet()) {
                 builder.append(renderView(header, reportMap.get(header)));
             }
 
@@ -129,6 +128,43 @@ public abstract class ReportGenerator {
 
         public ReportHeader reportHeader() {
             return reportHeader;
+        }
+    }
+
+    public static final class ColumnKey {
+        private String header;
+        private ReportHeader reportHeader;
+
+        public ColumnKey(String header, ReportHeader reportHeader) {
+            this.header = header;
+            this.reportHeader = reportHeader;
+        }
+
+        public String getHeader() {
+            return header;
+        }
+
+        public ReportHeader getReportHeader() {
+            return reportHeader;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            ColumnKey columnKey = (ColumnKey) o;
+
+            if (header != null ? !header.equals(columnKey.header) : columnKey.header != null) return false;
+            return !(reportHeader != null ? !reportHeader.equals(columnKey.reportHeader) : columnKey.reportHeader != null);
+
+        }
+
+        @Override
+        public int hashCode() {
+            int result = header != null ? header.hashCode() : 0;
+            result = 31 * result + (reportHeader != null ? reportHeader.hashCode() : 0);
+            return result;
         }
     }
 

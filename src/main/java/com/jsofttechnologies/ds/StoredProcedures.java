@@ -24,6 +24,7 @@ public class StoredProcedures {
 
     @PersistenceContext(unitName = ProjectConstants.MAIN_PU)
     private EntityManager entityManager;
+
     @EJB
     private MergeExceptionSummary exceptionSummary;
 

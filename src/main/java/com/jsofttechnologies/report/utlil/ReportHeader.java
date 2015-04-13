@@ -15,4 +15,6 @@ public @interface ReportHeader {
     String name() default "";
 
     String style() default "";
+
+    String csvFormat() default "default";
 }

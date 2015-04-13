@@ -34,11 +34,11 @@ public class HtmlReportGenerator extends ReportGenerator {
     }
 
     @Override
-    public String renderView(String header, List<Map<String, ReportGenerator.ColumnProperty>> values) {
+    public String renderView(ColumnKey header, List<Map<String, ReportGenerator.ColumnProperty>> values) {
 
         StringBuilder builder = new StringBuilder();
         builder.append("<div>");
-        builder.append("<h3 style=\"text-align:left;width:668px\">").append(header).append("</h5>");
+        builder.append("<h3 style=\"text-align:left;width:668px\">").append(header.getHeader()).append("</h5>");
 
         builder.append("<h6 style=\"text-align:left;width:668px\">")
                 .append("<div>Total: ").append(values.size()).append("</div>")
