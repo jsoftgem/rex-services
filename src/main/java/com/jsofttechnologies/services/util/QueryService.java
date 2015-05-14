@@ -192,7 +192,21 @@ public abstract class QueryService<T extends FlowJpe> extends FlowService {
                 while (columnIterator.hasNext()) {
                     DataTablesColumn column = columnIterator.next();
                     if (column.getSearchable()) {
-                        predicates.add(cb.like(cb.lower(root.get(column.getData().toString())), dataTables.getSearchValue().toLowerCase()));
+                        if (column.getData() != null && column.getData().toString().contains(".")) {
+                            String[] splittedData = column.getData().toString().split("\\.");
+                            Join[] joins = new Join[splittedData.length - 1];
+                            for (int i = 0; i < splittedData.length; i++) {
+                                if (i == 0) {
+                                    joins[i] = root.join(splittedData[i]);
+                                } else if (i < joins.length) {
+                                    joins[i] = joins[i - 1].join(splittedData[i]);
+                                } else {
+                                    predicates.add(cb.like(cb.lower(joins[i - 1].get(splittedData[i])), "%" + dataTables.getSearchValue().toLowerCase() + "%"));
+                                }
+                            }
+                        } else {
+                            predicates.add(cb.like(cb.lower(root.get(column.getData().toString())), "%" + dataTables.getSearchValue().toLowerCase() + "%"));
+                        }
                     }
                 }
                 criteriaQuery.select(root).where(cb.or(predicates.toArray(new Predicate[predicates.size()])));

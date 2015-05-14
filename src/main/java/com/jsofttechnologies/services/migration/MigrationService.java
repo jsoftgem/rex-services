@@ -173,7 +173,7 @@ public class MigrationService extends FlowService {
                                                     flowUserDetail.setSecretAnswer(user);
                                                     flowUser.setUsername(user);
                                                     flowUser.setEmail(user + "@" + WarConstants.EMAIL_SUFFIX);
-                                                    if(warAgent.getId()==null){
+                                                    if (warAgent.getId() == null) {
                                                         flowUser.setPassword(user);
                                                     }
 
@@ -313,10 +313,12 @@ public class MigrationService extends FlowService {
                                                     school = warSchoolQueryService.findBySchoolName(schoolName);
                                                 }
                                                 warCustomer.setOwnerAgentId(warAgent.getId());
+
                                                 if (school == null) {
                                                     school = new School();
                                                 }
                                                 school.setName(schoolName);
+
                                                 if (email != null && !email.trim().isEmpty()) {
                                                     school.setEmail(email);
                                                 } else {
@@ -328,19 +330,41 @@ public class MigrationService extends FlowService {
                                                     school.setLandline("0");
                                                 }
 
-                                                school.setAddressLine1(address1);
-                                                school.setAddressLine2(address2);
+                                                if (address1 == null && (school.getAddressLine1() == null && school.getAddressLine1().isEmpty())) {
+                                                    school.setAddressLine1("N/A");
+                                                } else {
+                                                    school.setAddressLine1(address1);
+                                                }
+
+                                                if (address2 == null && (school.getAddressLine2() == null && school.getAddressLine2().isEmpty())) {
+                                                    school.setAddressLine2("N/A");
+                                                } else {
+                                                    school.setAddressLine2(address2);
+                                                }
 
                                                 if (congregation != null && !congregation.equalsIgnoreCase("0")) {
                                                     warCustomer.setCongregation(congregation);
+                                                } else {
+                                                    if (warCustomer.getCongregation() == null) {
+                                                        warCustomer.setCongregation("N/A");
+                                                    }
                                                 }
 
                                                 if (diocese != null && !diocese.equalsIgnoreCase("0")) {
                                                     warCustomer.setDiocese(diocese);
+                                                } else {
+                                                    if (warCustomer.getDiocese() == null) {
+                                                        warCustomer.setDiocese("N/A");
+                                                    }
                                                 }
                                                 if (association != null && !association.equalsIgnoreCase("0")) {
                                                     warCustomer.setAssociation(association);
+                                                } else {
+                                                    if (warCustomer.getAssociation() == null) {
+                                                        warCustomer.setAssociation("N/A");
+                                                    }
                                                 }
+
                                                 if (school.getId() != null) {
                                                     warSchoolCrudService.create(school);
                                                 } else {

@@ -5,7 +5,6 @@ import com.jsofttechnologies.model.DataTables;
 import com.jsofttechnologies.model.DataTablesColumn;
 import com.jsofttechnologies.model.ResultDataModel;
 import com.jsofttechnologies.rexwar.model.management.WarAgent;
-import com.jsofttechnologies.rexwar.model.management.WarCustomer;
 import com.jsofttechnologies.rexwar.model.management.WarCustomerLight;
 import com.jsofttechnologies.rexwar.util.WarConstants;
 import com.jsofttechnologies.services.util.FlowPermissionService;
@@ -86,7 +85,13 @@ public class WarCustomerLightQueryService extends QueryService<WarCustomerLight>
                     while (columnIterator.hasNext()) {
                         DataTablesColumn column = columnIterator.next();
                         if (column.getSearchable()) {
-                            predicates.add(cb.like(cb.lower(root.get(column.getData().toString())), dataTables.getSearchValue().toLowerCase()));
+                            if (column.getData() != null && column.getData().toString().contains(".")) {
+                                String[] splittedData = column.getData().toString().split("\\.");
+                                Join joinedQuery = root.join(splittedData[0]);
+                                predicates.add(cb.like(cb.lower(joinedQuery.get(splittedData[1])), "%" + dataTables.getSearchValue().toLowerCase() + "%"));
+                            } else {
+                                predicates.add(cb.like(cb.lower(root.get(column.getData().toString())), "%" + dataTables.getSearchValue().toLowerCase() + "%"));
+                            }
                         }
                     }
                     criteriaQuery.select(root).where(cb.or(predicates.toArray(new Predicate[predicates.size()])));
