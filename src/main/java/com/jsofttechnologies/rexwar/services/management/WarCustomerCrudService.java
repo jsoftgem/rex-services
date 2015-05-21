@@ -4,7 +4,6 @@ import com.jsofttechnologies.jpa.admin.FlowUser;
 import com.jsofttechnologies.jpa.admin.FlowUserGroup;
 import com.jsofttechnologies.rexwar.model.management.WarAgent;
 import com.jsofttechnologies.rexwar.model.management.WarCustomer;
-import com.jsofttechnologies.rexwar.model.tables.School;
 import com.jsofttechnologies.rexwar.util.WarConstants;
 import com.jsofttechnologies.services.util.CrudService;
 import com.jsofttechnologies.services.util.FlowSessionHelper;
@@ -53,15 +52,15 @@ public class WarCustomerCrudService extends CrudService<WarCustomer, Long> {
 
         if (warCustomer.getSchool() == null) {
             throw throwException("WAR_CUSTOMER_NULL_SCHOOL");
-        } else {
+        } /*else {
             School school = warCustomer.getSchool();
             if (school.getAddressLine1() == null || school.getAddressLine1().isEmpty()) {
                 throw throwException("WAR_SCHOOL_NULL_ADDRESS");
             }
 
-          /*  if (school.getRegion() == null) {
+          *//*  if (school.getRegion() == null) {
                 throw throwException("WAR_SCHOOL_NULL_REGION");
-            }*/
+            }*//*
 
             if (school.getEmail() == null || school.getEmail().isEmpty()) {
                 throw throwException("WAR_SCHOOL_NULL_EMAIL");
@@ -71,7 +70,7 @@ public class WarCustomerCrudService extends CrudService<WarCustomer, Long> {
                 throw throwException("WAR_SCHOOL_NULL_LANDLINE");
             }
 
-        }
+        }*/
 
         if (warCustomer.getOwnerAgentId() != null) {
             WarAgent warAgent = warAgentQueryService.getById(warCustomer.getOwnerAgentId());
@@ -116,15 +115,16 @@ public class WarCustomerCrudService extends CrudService<WarCustomer, Long> {
 
         if (warCustomer.getSchool() == null) {
             throw throwException("WAR_CUSTOMER_NULL_SCHOOL");
-        } else {
+        } /*else {
+
             School school = warCustomer.getSchool();
-            if (school.getAddressLine1() == null || school.getAddressLine1().isEmpty()) {
+          *//*  if (school.getAddressLine1() == null || school.getAddressLine1().isEmpty()) {
                 throw throwException("WAR_SCHOOL_NULL_ADDRESS");
             }
 
-            /*if (school.getRegion() == null) {
+            *//**//*if (school.getRegion() == null) {
                 throw throwException("WAR_SCHOOL_NULL_REGION");
-            }*/
+            }*//**//*
 
             if (school.getEmail() == null || school.getEmail().isEmpty()) {
                 throw throwException("WAR_SCHOOL_NULL_EMAIL");
@@ -132,9 +132,10 @@ public class WarCustomerCrudService extends CrudService<WarCustomer, Long> {
 
             if (school.getLandline() == null || school.getLandline().isEmpty()) {
                 throw throwException("WAR_SCHOOL_NULL_LANDLINE");
-            }
+            }*//*
 
-        }
+        }*/
+
         if (warCustomer.getOwnerAgentId() != null) {
             WarAgent warAgent = warAgentQueryService.getById(warCustomer.getOwnerAgentId());
             warCustomer.setRegionCode(warAgent.getRegion());

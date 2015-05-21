@@ -42,13 +42,13 @@ public class School implements FlowJpe {
     private String description;
     @Column(name = "school_name", nullable = false)
     private String name;
-    @Column(name = "school_address_line1", nullable = false)
+    @Column(name = "school_address_line1")
     private String addressLine1;
     @Column(name = "school_address_line2")
     private String addressLine2;
-    @Column(name = "school_landline", nullable = false, length = 150)
+    @Column(name = "school_landline", length = 150)
     private String landline;
-    @Column(name = "school_email", nullable = false, length = ColumnLengths.TITLE)
+    @Column(name = "school_email", length = ColumnLengths.TITLE)
     private String email;
     @Column(name = "school_logo")
     private Long logoId;
