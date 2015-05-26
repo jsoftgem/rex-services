@@ -462,7 +462,7 @@ public class MigrationService extends FlowService {
                             if (failedCount > 0) {
                                 fileWriter.append("<h2>").append("Failed Customer Data").append("</h2>");
 
-                                fileWriter.append("<table>").append("<thead>")
+                                fileWriter.append("<table border='1'>").append("<thead>")
                                         .append("<th>Description</th>")
                                         .append("</thead>")
                                         .append("<tbody style='background:#b03e3c;color:#fff506'>");
