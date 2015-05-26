@@ -43,7 +43,11 @@ import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.FileWriter;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * Created by Jerico on 3/20/2015.
@@ -254,21 +258,42 @@ public class MigrationService extends FlowService {
                     File[] customers = selectedFolder.listFiles((dir, name) -> {
                         return name.toLowerCase().contains("customers.csv");
                     });
-                    File customerResult = new File(selectedFolder, "customer-result.log");
+                    File customerResult = new File(selectedFolder, folder + "_customers.mig-report.html");
                     if (customers.length > 0) {
 
                         FileWriter fileWriter = new FileWriter(customerResult);
+                        fileWriter.append("<html>");
+                        fileWriter.append("\n<body>");
+                        fileWriter.append("\n<h1>").append("Customer Migration Report").append("</h1>");
+                        fileWriter.append("\n<h3>").append(folder).append("</h3>");
+                        fileWriter.append("\n<h6>").append(new SimpleDateFormat().format(new Date())).append("</h6>");
+                        fileWriter.append("\n<div>");
+                        fileWriter.append("\n<table border='1'>");
+                        fileWriter.append("\n<thead>")
+                                .append("\n<th>Customer Code</th>")
+                                .append("<th>Customer Name</th>")
+                                .append("<th>School</th>")
+                                .append("<th>Customer</th>")
+                                .append("<th>Remarks</th>")
+                                .append("\n</thead>");
                         File customer = customers[0];
+
                         if (customer != null) {
                             CSVParser parser = CSVParser.parse(customer, Charset.defaultCharset(), CSVFormat.EXCEL);
-
                             List<CSVRecord> recordList = parser.getRecords();
                             Integer totalRecords = recordList.size();
-                            int count = 0;
                             userTransaction.begin();
+                            fileWriter.append("\n<tbody>");
+                            List<String> failedList = new ArrayList<>();
+                            int count = 0;
+                            int successCount = 0;
+                            int totalProgress = 0;
+                            int failedCount = 0;
                             for (CSVRecord csvRecord : recordList) {
+                                fileWriter.append("\n<tr>");
                                 try {
                                     String customerCode = csvRecord.get(0);
+                                    fileWriter.append("<td>").append(customerCode).append("</td>");
                                     if (customerCode.isEmpty()) continue;
                                     WarCustomer warCustomer = null;
                                     School school = null;
@@ -281,19 +306,19 @@ public class MigrationService extends FlowService {
                                     }
 
 
-                                    String schoolName = csvRecord.get(1);
+                                    String schoolName = getRecord(csvRecord, 1);
+                                    fileWriter.append("<td>").append(schoolName).append("</td>");
+                                    String agentInitials = getRecord(csvRecord, 2);
 
-                                    String agentInitials = csvRecord.get(2);
+                                    String address1 = getRecord(csvRecord, 3);
 
-                                    String address1 = csvRecord.get(3);
+                                    String address2 = getRecord(csvRecord, 4);
 
-                                    String address2 = csvRecord.get(4);
+                                    String congregation = getRecord(csvRecord, 5);
 
-                                    String congregation = csvRecord.get(5);
+                                    String diocese = getRecord(csvRecord, 6);
 
-                                    String diocese = csvRecord.get(6);
-
-                                    String association = csvRecord.get(7);
+                                    String association = getRecord(csvRecord, 7);
 
                                     String email = null;
 
@@ -364,23 +389,44 @@ public class MigrationService extends FlowService {
                                                         warCustomer.setAssociation("N/A");
                                                     }
                                                 }
+                                                try {
+                                                    if (school.getId() == null) {
+                                                        warSchoolCrudService.create(school);
+                                                        fileWriter.append("<td>").append("Created").append("</td>");
+                                                    } else {
+                                                        warSchoolCrudService.update(school, school.getId());
+                                                        fileWriter.append("<td>").append("Updated").append("</td>");
+                                                    }
 
-                                                if (school.getId() != null) {
-                                                    warSchoolCrudService.create(school);
-                                                } else {
-                                                    warSchoolCrudService.update(school, school.getId());
-                                                }
-                                                warCustomer.setSchool(school);
+                                                    warCustomer.setSchool(school);
 
-                                                if (warCustomer.getId() == null) {
-                                                    warCustomerCrudService.create(warCustomer);
-                                                } else {
-                                                    warCustomerCrudService.update(warCustomer, warCustomer.getId());
+                                                    if (warCustomer.getId() == null) {
+                                                        warCustomerCrudService.create(warCustomer);
+                                                        fileWriter.append("<td>").append("Created").append("</td>");
+                                                    } else {
+                                                        warCustomerCrudService.update(warCustomer, warCustomer.getId());
+                                                        fileWriter.append("<td>").append("Updated").append("</td>");
+                                                    }
+                                                    fileWriter.append("<td style='background:#66cdaa'>").append("Success").append("</td>");
+                                                    successCount++;
+                                                } catch (Exception e) {
+                                                    StringBuilder error = new StringBuilder();
+                                                    fileWriter.append("<td colspan='3' style='background:#b03e3c;color:#fff506'>").append("\nFailed to create:" + warCustomer.getCustomerCode() + "|" + school.getName() + "|" + e.getMessage());
+                                                    for (StackTraceElement element : e.getStackTrace()) {
+                                                        error.append(element.getFileName() + "/" + element.getClassName() + " - " + element.getMethodName() + ": " + element.getLineNumber());
+                                                        fileWriter.append(element.getFileName() + "/" + element.getClassName() + " - " + element.getMethodName() + ": " + element.getLineNumber());
+                                                    }
+                                                    fileWriter.append("</td>");
+                                                    failedCount++;
+                                                    failedList.add(warCustomer.getCustomerCode() + " - " + error.toString());
+                                                    exceptionSummary.handleException(e, e.getClass());
                                                 }
 
                                             }
                                         } else {
-                                            fileWriter.append(agentInitials + " do not exists. - " + csvRecord.get(0) + "\n");
+                                            fileWriter.append("<td colspan='3' style='background:#b03e3c;color:#fff506'>").append(agentInitials + " do not exists. - " + csvRecord.get(0)).append("</td>");
+                                            failedCount++;
+                                            failedList.add(warCustomer.getCustomerCode() + " - " + agentInitials + " do not exists. - " + csvRecord.get(0));
                                         }
                                     }
                                     fileWriter.flush();
@@ -389,17 +435,60 @@ public class MigrationService extends FlowService {
                                         userTransaction.begin();
                                     }
                                     count++;
+                                    totalProgress++;
                                 } catch (Exception e) {
                                     exceptionSummary.handleException(e, getClass(), csvRecord);
                                 }
+                                fileWriter.append("\n</tr>");
                             }
                             parser.close();
+                            fileWriter.append("\n</tbody>");
+                            fileWriter.append("\n</table>");
+                            fileWriter.append("<div>");
+                            fileWriter.append("<h2>Summary</h2>");
 
-                            fileWriter.append("Done " + count + "/" + totalRecords);
+                            fileWriter.append("<table>").append("<thead>")
+                                    .append("<th>Total</th>").append("<th>Processed</th>").append("<th>Success</th>").append("<th>Failed</th>")
+                                    .append("</thead>")
+                                    .append("<tbody>")
+                                    .append("<tr>").append("<td>").append(totalRecords.toString()).append("</td>")
+                                    .append("<td>").append(totalProgress + "").append("</td>")
+                                    .append("<td>").append(successCount + "").append("</td>")
+                                    .append("<td>").append(failedCount + "").append("</td>")
+                                    .append("</tr>").append("</tbody>")
+                                    .append("</table>");
+                            fileWriter.append("</div>");
+
+                            if (failedCount > 0) {
+                                fileWriter.append("<h2>").append("Failed Customer Data").append("</h2>");
+
+                                fileWriter.append("<table>").append("<thead>")
+                                        .append("<th>Description</th>")
+                                        .append("</thead>")
+                                        .append("<tbody style='background:#b03e3c;color:#fff506'>");
+                                for (String failure : failedList) {
+                                    fileWriter.append("<tr>").append("<td>").append(failure).append("</td>")
+                                            .append("</tr>");
+                                }
+                                fileWriter.append("</tbody>")
+                                        .append("</table>");
+                            }
+
+                            fileWriter.append("</div>");
+                            fileWriter.append("</div>");
+                            fileWriter.append("</body>");
+                            fileWriter.append("</html>");
                             fileWriter.close();
                             userTransaction.commit();
                         }
                     }
+
+                    Scanner scanner = new Scanner(customerResult);
+                    StringBuilder builder = new StringBuilder();
+                    while (scanner.hasNext()) {
+                        builder.append(scanner.nextLine());
+                    }
+                    return Response.ok(builder.toString(), MediaType.TEXT_HTML_TYPE).build();
                 } catch (Exception e) {
                     exceptionSummary.handleException(e, getClass(), folder);
                 }
@@ -409,6 +498,20 @@ public class MigrationService extends FlowService {
         }
 
         return Response.ok("<h1>Done! :)", MediaType.TEXT_HTML_TYPE).build();
+    }
+
+
+    private String getRecord(CSVRecord record, int index) {
+        if (record.size() > index) {
+            String value = record.get(index);
+            if (value != null) {
+                value = value.trim();
+                if (!value.isEmpty()) {
+                    return value;
+                }
+            }
+        }
+        return "N/A";
     }
 
 

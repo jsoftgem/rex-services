@@ -23,7 +23,7 @@ import java.util.Set;
 @Table(name = "war_customer")
 @NamedQueries({
         @NamedQuery(name = WarCustomer.FIND_ALL, query = "select wc from WarCustomer wc"),
-        @NamedQuery(name = WarCustomer.FIND_BY_CUSTOMER_CODE, query = "select wc from WarCustomer wc where wc.customerCode = :customerCode"),
+        @NamedQuery(name = WarCustomer.FIND_BY_CUSTOMER_CODE, query = "select wc from WarCustomer wc where lower(wc.customerCode) = lower(:customerCode)"),
         @NamedQuery(name = WarCustomer.FIND_BY_CUSTOMER_REGION, query = "select wc from WarCustomer wc where wc.regionCode = :regionCode")
 })
 public class WarCustomer implements FlowJpe {

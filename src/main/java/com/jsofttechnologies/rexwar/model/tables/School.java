@@ -16,7 +16,7 @@ import java.util.Date;
 @Table(name = "war_customer_school")
 @NamedQueries({
         @NamedQuery(name = School.FIND_ALL, query = "select sc from School sc"),
-        @NamedQuery(name = School.FIND_BY_SCHOOL_NAME, query = "select sc from School sc where lower(sc.name)=:name")
+        @NamedQuery(name = School.FIND_BY_SCHOOL_NAME, query = "select sc from School sc where lower(sc.name)=lower(:name)")
 })
 public class School implements FlowJpe {
 
