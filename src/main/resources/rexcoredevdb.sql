@@ -2800,7 +2800,7 @@ SET character_set_client = @saved_cs_client;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`rickzx98`@`%` PROCEDURE `agent_activity_summary`(in customerId bigint(20), in schoolYear bigint(20))
+CREATE  PROCEDURE `agent_activity_summary`(in customerId bigint(20), in schoolYear bigint(20))
 begin
 select * from (SELECT '1' AS WEEK union select '2' AS WEEK union select '3' as WEEK union select '4' as WEEK union select '5' as WEEK) w
 left join weekly_agent_report_activity war  on war.report_week = w.WEEK
@@ -2823,7 +2823,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`rickzx98`@`%` PROCEDURE `agent_customer_summary`(in customerId bigint(20),
+CREATE  PROCEDURE `agent_customer_summary`(in customerId bigint(20),
 in schoolYearId bigint(20))
 begin
 select m.MONTH, w.WEEK, war.* FROM (
@@ -2872,7 +2872,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`rickzx98`@`%` PROCEDURE `getMarketDetails`(in customerId bigint)
+CREATE  PROCEDURE `getMarketDetails`(in customerId bigint)
 begin
 select concat(wy.market_potential_segment,' - ', wy.market_potential) as market_details  from war_customer_market_school_year wy
 inner join war_customer_war_customer_market_school_year wsy on
@@ -2895,7 +2895,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`rickzx98`@`%` PROCEDURE `monthly_customer_summary`(in schoolyear bigint(20), 
+CREATE  PROCEDURE `monthly_customer_summary`(in schoolyear bigint(20), 
 in agent bigint(20), in regionCode varchar(50), in tag varchar(20), 
 in size int(3))
 BEGIN
@@ -3176,7 +3176,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`rickzx98`@`%` PROCEDURE `school_year_customer`(
+CREATE  PROCEDURE `school_year_customer`(
 in school_year bigint(20),
 in agent_id bigint(20), 
 in isMonth integer(1), 
@@ -3348,7 +3348,7 @@ DELIMITER ;
 /*!50001 SET character_set_results     = utf8 */;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`rickzx98`@`%` SQL SECURITY DEFINER */
+/*!50013  SQL SECURITY DEFINER */
 /*!50001 VIEW `customer_latest_market_view` AS select `wy`.`market_potential_segment` AS `market_potential_segment`,`wy`.`market_potential` AS `market_potential`,`wsy`.`war_customer_customer_id` AS `war_customer_customer_id` from ((`war_customer_market_school_year` `wy` join `war_customer_war_customer_market_school_year` `wsy` on((`wsy`.`warCustomerMarketSchoolYears_war_customer_market_school_year_id` = `wy`.`war_customer_market_school_year_id`))) join `war_report_school_year` `wrsy` on((`wrsy`.`war_report_school_year_id` = `wy`.`school_year`))) group by `wsy`.`war_customer_customer_id` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -3367,7 +3367,7 @@ DELIMITER ;
 /*!50001 SET character_set_results     = utf8 */;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`rickzx98`@`%` SQL SECURITY DEFINER */
+/*!50013  SQL SECURITY DEFINER */
 /*!50001 VIEW `monthly_customer_report_activtiy` AS select `v_warac`.`report_customer` AS `report_customer`,`v_warac`.`report_year` AS `report_year`,`v_warac`.`report_month` AS `report_month`,`v_warac`.`report_customer_id` AS `report_customer_id`,`v_warac`.`report_agent` AS `report_agent`,`v_warac`.`report_school_year` AS `report_school_year`,`v_warac`.`report_region` AS `report_region`,`v_warac`.`report_market_potential_segment` AS `report_market_potential_segment`,`v_warac`.`report_market_potential` AS `report_market_potential`,`ct`.`war_customer_tag_index` AS `report_tag_index`,`fud`.`full_name` AS `report_materials_advisor`,sum(`v_warac`.`report_actual`) AS `report_frequency`,sum(`v_warac`.`report_planned`) AS `report_planned`,sum(`v_warac`.`report_exam_copies_distribution`) AS `report_exam_copies_distribution`,sum(`v_warac`.`report_confirmation_of_events`) AS `report_confirmation_of_events`,sum(`v_warac`.`report_delivery_of_additional_order_trm_compliance`) AS `report_delivery_of_additional_order_trm_compliance`,sum(`v_warac`.`report_delivery_of_incentive_donation`) AS `report_delivery_of_incentive_donation`,sum(`v_warac`.`report_giveaways_distribution`) AS `report_giveaways_distribution`,sum(`v_warac`.`report_implemented_ex_sem`) AS `report_implemented_ex_sem`,sum(`v_warac`.`report_invitation_to_events`) AS `report_invitation_to_events`,sum(`v_warac`.`report_purchase_order`) AS `report_purchase_order`,sum(`v_warac`.`report_updated_customer_info_sheet`) AS `report_updated_customer_info_sheet`,sum(`v_warac`.`report_follow_up_payment`) AS `report_follow_up_payment`,sum(`v_warac`.`report_booklist`) AS `report_book_list` from ((((`weekly_agent_report_activity_customer_day` `v_warac` join `war_customer_tag` `ct` on(((`ct`.`war_customer_tag_customer` = `v_warac`.`report_customer_id`) and (`ct`.`war_customer_tag_region_code` = `v_warac`.`report_region`)))) join `war_agent` `wa` on((`wa`.`war_agent_id` = `v_warac`.`report_agent`))) join `flow_user` `fu` on((`fu`.`flow_user_id` = `wa`.`user`))) join `flow_user_detail` `fud` on((`fud`.`flow_user_detail_id` = `fu`.`flow_user_detail_id`))) group by `v_warac`.`report_school_year`,`v_warac`.`report_month`,`v_warac`.`report_customer`,`v_warac`.`report_agent` order by `v_warac`.`report_customer` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -3386,7 +3386,7 @@ DELIMITER ;
 /*!50001 SET character_set_results     = utf8 */;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`rickzx98`@`%` SQL SECURITY DEFINER */
+/*!50013  SQL SECURITY DEFINER */
 /*!50001 VIEW `weekly_agent_report_activity` AS select `a`.`war_activity_school_year` AS `report_school_year`,`a`.`war_planner` AS `report_planner_id`,`a`.`war_activity_region_code` AS `report_region`,`wc`.`customer_id` AS `report_customer_id`,`wr`.`market_potential_segment` AS `report_market_potential_segment`,`wr`.`market_potential` AS `report_market_potential`,`wa`.`war_agent_id` AS `report_agent_id`,`fud`.`full_name` AS `report_materials_advisor`,`a`.`start_dt` AS `report_date`,`a`.`war_planner_month` AS `report_month`,year(`a`.`start_dt`) AS `report_year`,(floor(((dayofmonth(`a`.`start_dt`) - 1) / 7)) + 1) AS `report_week`,sum(if((`a`.`war_activity_planned` = 1),1,0)) AS `report_planned_target`,sum(if((`a`.`war_activity_planned` = 0),1,0)) AS `report_unplanned_target`,sum((if((`a`.`war_activity_planned` = 1),1,0) and if((`a`.`war_activity_actual` = 1),1,0))) AS `report_planned_actual`,sum((if((`a`.`war_activity_planned` = 0),1,0) and if((`a`.`war_activity_actual` = 1),1,0))) AS `report_unplanned_actual`,count(`a`.`war_activity_id`) AS `report_total_activity`,sum(if((`a`.`war_activity_actual` = 1),1,0)) AS `report_total_actual`,((100 / count(`a`.`war_activity_id`)) * sum((if((`a`.`war_activity_planned` = 1),1,0) and if((`a`.`war_activity_actual` = 1),1,0)))) AS `report_planned_call_productivity`,((100 / count(`a`.`war_activity_id`)) * sum((if((`a`.`war_activity_planned` = 0),1,0) and if((`a`.`war_activity_actual` = 1),1,0)))) AS `report_unplanned_call_productivity`,((100 / count(`a`.`war_activity_id`)) * sum(if((`a`.`war_activity_actual` = 1),1,0))) AS `report_total_call_productivity`,((100 * count(if((`a`.`war_activity_planned` = 1),1,0))) / sum(if((`a`.`war_activity_actual` = 1),1,0))) AS `report_call_productivity`,sum(if((`a`.`war_activity_exam_copies_distribution` = 1),1,0)) AS `report_exam_copies_distribution`,sum(if((`a`.`war_activity_invitation_to_events` = 1),1,0)) AS `report_invitation_to_events`,sum(if((`a`.`war_activity_confirmation_of_events` = 1),1,0)) AS `report_confirmation_of_events`,sum(if((`a`.`war_activity_giveaways_distribution` = 1),1,0)) AS `report_giveaways_distribution`,sum(if((`a`.`war_activity_delivery_of_incentive_donation` = 1),1,0)) AS `report_delivery_of_incentive_donation`,sum(if((`a`.`war_activity_purchase_order` = 1),1,0)) AS `report_purchase_order`,sum(if((`a`.`war_activity_delivery_of_additional_order_trm_compliance` = 1),1,0)) AS `report_delivery_of_additional_order_trm_compliance`,sum(if((`a`.`war_activity_book_list` = 1),1,0)) AS `report_book_list`,sum(if((`a`.`war_activity_updated_customer_info_sheet` = 1),1,0)) AS `report_updated_customer_info_sheet`,sum(if((`a`.`war_activity_implemented_ex_sem` = 1),1,0)) AS `report_implemented_ex_sem`,sum(if((`a`.`war_activity_follow_up_payment` = 1),1,0)) AS `report_follow_up_payment` from ((((((`war_activity` `a` join `customer_latest_market_view` `wr` on((`wr`.`war_customer_customer_id` = `a`.`war_activity_customer_market_id`))) join `war_customer` `wc` on((`wc`.`customer_id` = `wr`.`war_customer_customer_id`))) join `war_agent` `wa` on((`wa`.`war_agent_id` = `a`.`war_activity_agent_id`))) join `flow_user` `fu` on((`fu`.`flow_user_id` = `wa`.`user`))) join `flow_user_detail` `fud` on((`fud`.`flow_user_detail_id` = `fu`.`flow_user_detail_id`))) join `war_customer_school` `ws` on((`ws`.`war_customer_school_id` = `wc`.`war_customer_school`))) group by (floor(((dayofmonth(`a`.`start_dt`) - 1) / 7)) + 1),`fud`.`full_name`,`a`.`war_planner_month`,year(`a`.`start_dt`) order by `a`.`start_dt` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -3405,7 +3405,7 @@ DELIMITER ;
 /*!50001 SET character_set_results     = utf8 */;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`rickzx98`@`%` SQL SECURITY DEFINER */
+/*!50013  SQL SECURITY DEFINER */
 /*!50001 VIEW `weekly_agent_report_activity_customer_day` AS select `a`.`war_activity_week` AS `report_week`,ucase(dayofweek(`a`.`start_dt`)) AS `report_day`,year(`a`.`start_dt`) AS `report_year`,`a`.`war_planner_month` AS `report_month`,`ws`.`school_name` AS `report_customer`,`a`.`war_activity_region_code` AS `report_region`,`wc`.`customer_id` AS `report_customer_id`,`wr`.`market_potential_segment` AS `report_market_potential_segment`,`wr`.`market_potential` AS `report_market_potential`,`a`.`war_activity_school_year` AS `report_school_year`,`a`.`war_activity_agent_id` AS `report_agent`,`a`.`war_activity_planned` AS `report_planned`,`wcr`.`region_name` AS `report_region_name`,sum(if((`a`.`war_activity_actual` = 1),1,0)) AS `report_actual`,sum(if((`a`.`war_activity_book_list` = 1),1,0)) AS `report_booklist`,sum(if((`a`.`war_activity_confirmation_of_events` = 1),1,0)) AS `report_confirmation_of_events`,sum(if((`a`.`war_activity_delivery_of_additional_order_trm_compliance` = 1),1,0)) AS `report_delivery_of_additional_order_trm_compliance`,sum(if((`a`.`war_activity_delivery_of_incentive_donation` = 1),1,0)) AS `report_delivery_of_incentive_donation`,sum(if((`a`.`war_activity_exam_copies_distribution` = 1),1,0)) AS `report_exam_copies_distribution`,sum(if((`a`.`war_activity_giveaways_distribution` = 1),1,0)) AS `report_giveaways_distribution`,sum(if((`a`.`war_activity_implemented_ex_sem` = 1),1,0)) AS `report_implemented_ex_sem`,sum(if((`a`.`war_activity_invitation_to_events` = 1),1,0)) AS `report_invitation_to_events`,sum(if((`a`.`war_activity_purchase_order` = 1),1,0)) AS `report_purchase_order`,`a`.`war_activity_reason_for_non_coverage` AS `report_reason_for_non_coverage`,`a`.`war_activity_customer_specific_activity` AS `report_specific_activity`,sum(if((`a`.`war_activity_updated_customer_info_sheet` = 1),1,0)) AS `report_updated_customer_info_sheet`,sum(if((`a`.`war_activity_follow_up_payment` = 1),1,0)) AS `report_follow_up_payment`,`a`.`start_dt` AS `report_date` from ((((`war_activity` `a` join `customer_latest_market_view` `wr` on((`wr`.`war_customer_customer_id` = `a`.`war_activity_customer_market_id`))) join `war_customer` `wc` on((`wc`.`customer_id` = `wr`.`war_customer_customer_id`))) join `war_customer_school` `ws` on((`ws`.`war_customer_school_id` = `wc`.`war_customer_school`))) join `war_customer_region` `wcr` on((`wcr`.`region_code` = `a`.`war_activity_region_code`))) group by `a`.`war_planner_month`,`a`.`war_activity_week`,`a`.`war_activity_agent_id`,`ws`.`school_name`,ucase(dayofweek(`a`.`start_dt`)) order by `a`.`start_dt` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;

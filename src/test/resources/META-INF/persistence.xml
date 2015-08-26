@@ -4,6 +4,7 @@
              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
 
     <persistence-unit name="warpu" transaction-type="RESOURCE_LOCAL">
+
         <!-- admin -->
         <class>com.jsofttechnologies.jpa.admin.FlowSession</class>
         <class>com.jsofttechnologies.jpa.admin.FlowSummary</class>
@@ -80,8 +81,9 @@
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
-            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://war.rexpublishing.com.ph:3306/rexcoredevdb"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/rexcoredb"/>
             <property name="javax.persistence.jdbc.user" value="root"/>
+            <property name="javax.persistence.jdbc.password" value="webmgnt"/>
         </properties>
     </persistence-unit>
 </persistence>

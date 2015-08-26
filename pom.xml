@@ -31,7 +31,7 @@
         <version.mysql>5.1.34</version.mysql>
         <version.wildfly>8.1.0.Final</version.wildfly>
         <apache.shiro.version>1.2.2</apache.shiro.version>
-
+        <version.jose4j>0.4.4</version.jose4j>
     </properties>
 
     <dependencies>
@@ -160,7 +160,11 @@
             <version>1.1</version>
         </dependency>
 
-
+        <dependency>
+            <groupId>org.bitbucket.b_c</groupId>
+            <artifactId>jose4j</artifactId>
+            <version>${version.jose4j}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -273,8 +277,8 @@
                         <version>1.0.2.Final</version>
                         <configuration>
                             <jboss-home>${env.JBOSS_HOME}</jboss-home>
-                            <port>9990</port>
-                            <hostname>192.168.102.29</hostname>
+                            <port>10990</port>
+                            <hostname>localhost</hostname>
                             <username>warmgnt</username>
                             <password>warapp</password>
                         </configuration>

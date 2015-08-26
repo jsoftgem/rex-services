@@ -1,10 +1,7 @@
-package com.jsofttechnologies.ds;
-
+package com.jsofttechnologies.ds.v2;
 
 import com.jsofttechnologies.ejb.MergeExceptionSummary;
-import com.jsofttechnologies.jpa.util.FlowJpe;
 import com.jsofttechnologies.services.util.MessageService;
-import com.jsofttechnologies.util.ProjectConstants;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -18,24 +15,18 @@ import javax.persistence.criteria.Root;
 import java.util.List;
 
 /**
- * Created by Jerico on 6/13/2014.
- *
- * @param <T>
- * @param <ID>
+ * Created by Jerico on 7/9/2015.
  */
 @Stateless
-public class EntityManagerDAO<T extends FlowJpe, ID> {
+public class FluidDatasource<T, ID> {
+
+    @PersistenceContext(unitName = "mit001pu")
+    private EntityManager entityManager;
+
     @EJB
     private MergeExceptionSummary ejbExceptionHandler;
     @EJB
     private MessageService messageService;
-    /**
-     *
-     */
-    @SuppressWarnings("unused")
-    private static final long serialVersionUID = -1599871562131454183L;
-    @PersistenceContext(unitName = ProjectConstants.MAIN_PU)
-    private EntityManager entityManager;
 
     public T updateObject(T object) {
         return entityManager.merge(object);
@@ -58,14 +49,13 @@ public class EntityManagerDAO<T extends FlowJpe, ID> {
         entityManager.remove(t);
     }
 
-    public T find(Class<T> clazz, ID id) throws Exception {
-        return entityManager.find(clazz, id);
+    public void removeObject(T t) throws Exception {
+        entityManager.remove(t);
     }
 
-    public void clear() {
-        if (entityManager != null) {
-            entityManager.clear();
-        }
+
+    public T find(Class<T> clazz, ID id) throws Exception {
+        return entityManager.find(clazz, id);
     }
 
     public List<T> query(Class<T> classType) {
@@ -130,4 +120,14 @@ public class EntityManagerDAO<T extends FlowJpe, ID> {
         return messageService.getMessage("QUERY_NOT_FOUND", namedQuery);
     }
 
+    public void clear() {
+        if (entityManager != null) {
+            entityManager.clear();
+        }
+    }
+
+
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
 }

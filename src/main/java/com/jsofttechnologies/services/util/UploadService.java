@@ -42,19 +42,14 @@ public class UploadService extends FlowService {
     private static final long serialVersionUID = -7950097311934871274L;
     @Context
     private ServletContext context;
-
     @Context
     private HttpServletRequest request;
-
-
     @EJB
     private MergeExceptionSummary exceptionSummary;
-
     @EJB
     private FlowUploadedFileCrudService flowUploadedFileCrudService;
     @EJB
     private FlowUploadedFileQueryService flowUploadedFileQueryService;
-
     @POST
     @Path("upload_profile")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -114,7 +109,6 @@ public class UploadService extends FlowService {
         }
         return response;
     }
-
     @POST
     @Path("upload_image/{base_folder}")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -240,7 +234,6 @@ public class UploadService extends FlowService {
 
         return response;
     }
-
 
     protected String getBoundary(String contentType) {
         return contentType.split("boundary=")[1];

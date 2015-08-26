@@ -4,6 +4,7 @@ import com.jsofttechnologies.ds.StoredProcedures;
 import com.jsofttechnologies.ejb.MergeExceptionSummary;
 import com.jsofttechnologies.util.PasswordHash;
 import com.jsofttechnologies.util.ProjectConstants;
+import com.jsofttechnologies.v2.util.Constants;
 
 import javax.annotation.security.PermitAll;
 import javax.ejb.EJB;
@@ -150,6 +151,16 @@ public abstract class FlowService implements Serializable {
         if (key == null) return false;
         String theKey = key.toString().trim().toLowerCase() + type.getName().toLowerCase();
         return serviceCache.containsKey(theKey);
+    }
+
+
+    protected Boolean isDevelopmentStage() {
+        return context.getInitParameter(Constants.PROJECT_STAGE).equalsIgnoreCase(Constants.STAGE_DEVELOPMENT);
+    }
+
+
+    protected Boolean isProducitonStage() {
+        return context.getInitParameter(Constants.PROJECT_STAGE).equalsIgnoreCase(Constants.STAGE_PRODUCTION);
     }
 
 
