@@ -2,6 +2,7 @@ package com.jsofttechnologies.interceptor;
 
 import com.google.gson.Gson;
 import com.jsofttechnologies.jpa.admin.FlowUser;
+import com.jsofttechnologies.jpa.admin.FlowUserDetail;
 import com.jsofttechnologies.v2.services.resource.UserResource;
 
 import javax.interceptor.AroundInvoke;
@@ -32,7 +33,7 @@ public class UserResourceProcessor {
                     String token = request.getHeader("Authorization").replace("bearer ", "");
                     if (userInfo != null && token != null) {
                         Gson gson = new Gson();
-                        FlowUser info = gson.fromJson(userInfo.toString(), FlowUser.class);
+                        FlowUserDetail info = gson.fromJson(userInfo.toString(), FlowUserDetail.class);
                         ((UserResource) target).setInfo(info);
                         ((UserResource) target).setToken(token);
                         ((UserResource) target).setAuthenticated(Boolean.TRUE);

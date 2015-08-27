@@ -2,6 +2,7 @@ package com.jsofttechnologies.ds.v2;
 
 import com.jsofttechnologies.ejb.MergeExceptionSummary;
 import com.jsofttechnologies.services.util.MessageService;
+import com.jsofttechnologies.util.ProjectConstants;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -20,7 +21,7 @@ import java.util.List;
 @Stateless
 public class FluidDatasource<T, ID> {
 
-    @PersistenceContext(unitName = "mit001pu")
+    @PersistenceContext(unitName = ProjectConstants.MAIN_PU)
     private EntityManager entityManager;
 
     @EJB

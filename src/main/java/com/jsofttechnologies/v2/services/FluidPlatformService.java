@@ -24,11 +24,13 @@ public abstract class FluidPlatformService {
 
     @Context
     protected HttpServletRequest request;
+    @Context
+    protected ServletContext context;
 
     @Path("/info")
     @GET
     public String version() {
-        return "service class:" + this.getClass().getName() + " version: " + servlet.getInitParameter("service-version");
+        return "service class:" + this.getClass().getName() + " version: " + servlet.getInitParameter("SERVICE_VERSION");
     }
 
 

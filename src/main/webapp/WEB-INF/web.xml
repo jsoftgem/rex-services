@@ -49,6 +49,11 @@
     </context-param>
 
     <context-param>
+        <param-name>SERVICE_VERSION</param-name>
+        <param-value>2</param-value>
+    </context-param>
+
+    <context-param>
         <param-name>resteasy.servlet.mapping.prefix</param-name>
         <param-value>/</param-value>
     </context-param>
@@ -92,7 +97,6 @@
         <param-name>FILE-PORT</param-name>
         <param-value>9080</param-value>
     </context-param>
-
 
 
     <filter>

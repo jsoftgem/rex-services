@@ -6,6 +6,7 @@ package com.jsofttechnologies.v2.services.resource;
 
 import com.jsofttechnologies.ds.v2.FluidDatasource;
 import com.jsofttechnologies.jpa.admin.FlowUser;
+import com.jsofttechnologies.jpa.admin.FlowUserDetail;
 import com.jsofttechnologies.v2.services.FluidPlatformService;
 
 import javax.ejb.EJB;
@@ -259,7 +260,7 @@ public abstract class PageResource<T, ID> extends FluidPlatformService implement
 
 
     @Override
-    public void setInfo(FlowUser user) {
+    public void setInfo(FlowUserDetail user) {
 
     }
 

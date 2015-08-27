@@ -16,7 +16,7 @@ import java.security.Key;
 /**
  * Created by Jerico on 31/07/2015.
  */
-@WebFilter(filterName = "AuthFilter", urlPatterns = {"/services/*"})
+@WebFilter(filterName = "AuthFilter", urlPatterns = {"/services/v2/*"})
 public class AuthFilter implements Filter {
 
 
