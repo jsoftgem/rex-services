@@ -68,6 +68,9 @@ public class WarCustomerTag implements FlowJpe {
     @Transient
     @JsonProperty
     private Boolean toBeUpdated;
+    @Transient
+    @JsonProperty
+    private Boolean toBeRemoved;
 
     @Override
     public void setId(Object id) {
@@ -231,5 +234,13 @@ public class WarCustomerTag implements FlowJpe {
 
     public void setToBeUpdated(Boolean toBeUpdated) {
         this.toBeUpdated = toBeUpdated;
+    }
+
+    public Boolean getToBeRemoved() {
+        return toBeRemoved;
+    }
+
+    public void setToBeRemoved(Boolean toBeRemoved) {
+        this.toBeRemoved = toBeRemoved;
     }
 }
