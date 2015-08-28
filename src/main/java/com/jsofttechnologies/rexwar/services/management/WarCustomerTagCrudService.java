@@ -81,7 +81,7 @@ public class WarCustomerTagCrudService extends CrudService<WarCustomerTag, Long>
                         } else {
                             update(warCustomerTag, warCustomerTag.getId());
                         }
-                    } else {
+                    } else if (warCustomerTag.getToBeRemoved() != null && warCustomerTag.getToBeRemoved()) {
                         toBeRemoved.add(warCustomerTag);
                     }
                 }

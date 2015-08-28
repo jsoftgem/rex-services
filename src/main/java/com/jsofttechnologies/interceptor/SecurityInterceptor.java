@@ -33,7 +33,7 @@ import java.util.Map;
 @ServerInterceptor
 public class SecurityInterceptor implements PreProcessInterceptor {
     @EJB
-    private SessionHelper sessionHelper;
+       private SessionHelper sessionHelper;
 
     @EJB
     private FlowUserManager flowUserManager;

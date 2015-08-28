@@ -207,57 +207,42 @@ public abstract class CrudService<T extends FlowJpe, ID extends Number> extends 
 
     }
 
-
     public String createErrorMessage() {
         return messageService.getMessage(ProjectConstants.MSG_SAVE_FAILED);
     }
-
     public String createErrorMessage(T t) {
         return createErrorMessage();
     }
-
     public String createSuccessMessage() {
         return messageService.getMessage(ProjectConstants.MSG_SAVE_SUCCESS);
     }
-
     public String createSuccessMessage(T t) {
         return createSuccessMessage();
     }
-
     public String updateErrorMessage() {
         return messageService.getMessage(ProjectConstants.MSG_UPDATE_FAILED);
     }
-
     public String updateErrorMessage(T t) {
         return updateErrorMessage();
     }
-
     public String updateSuccessMessage() {
         return messageService.getMessage(ProjectConstants.MSG_UPDATE_SUCCESS);
     }
-
     public String updateSuccessMessage(T t) {
         return updateSuccessMessage();
     }
-
-
     public String deleteErrorMessage() {
         return messageService.getMessage(ProjectConstants.MSG_DELETE_FAIlED);
     }
-
     public String deleteSuccessMessage() {
         return messageService.getMessage(ProjectConstants.MSG_DELETE_SUCCESS);
     }
-
     public Exception throwException(String messageKey) {
         return new Exception(messageService.getMessage(messageKey));
     }
-
     public Exception throwException(String messageKey, String... messages) {
         return new Exception(MessageFormat.format(messageService.getMessage(messageKey), messages));
     }
-
-
     public String getMessage(String key) {
         return messageService.getMessage(key);
     }

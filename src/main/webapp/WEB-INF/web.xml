@@ -49,9 +49,55 @@
     </context-param>
 
     <context-param>
+        <param-name>SERVICE_VERSION</param-name>
+        <param-value>2</param-value>
+    </context-param>
+
+    <context-param>
         <param-name>resteasy.servlet.mapping.prefix</param-name>
         <param-value>/</param-value>
     </context-param>
+
+
+    <context-param>
+        <param-name>PROJECT_STAGE</param-name>
+        <param-value>development</param-value>
+    </context-param>
+
+
+    <context-param>
+        <param-name>FILE_ROOT_DEV</param-name>
+        <param-value>E:/fileserver</param-value>
+    </context-param>
+
+
+    <context-param>
+        <param-name>FILE_ROOT_VAR</param-name>
+        <param-value>user.home</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>API_KEY</param-name>
+        <!--fluid_platform_super_application_by_jerico_deguzman-->
+        <param-value>Zmx1aWRfcGxhdGZvcm1fc3VwZXJfYXBwbGljYXRpb25fYnlfamVyaWNvX2RlZ3V6bWFu</param-value>
+    </context-param>
+
+
+    <context-param>
+        <param-name>FILE-SERVICE</param-name>
+        <param-value>services/util/</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>FILE-HOST</param-name>
+        <param-value>localhost</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>FILE-PORT</param-name>
+        <param-value>9080</param-value>
+    </context-param>
+
 
     <filter>
         <filter-name>CORS</filter-name>
@@ -75,6 +121,7 @@
         <filter-name>CORS</filter-name>
         <servlet-name>Resteasy</servlet-name>
     </filter-mapping>
+
 
     <!-- add mime types -->
     <!-- open office-->

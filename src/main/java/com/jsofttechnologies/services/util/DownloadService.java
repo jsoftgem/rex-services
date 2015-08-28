@@ -5,6 +5,7 @@ import com.jsofttechnologies.services.admin.FlowUploadedFileQueryService;
 import com.jsofttechnologies.util.FileUtil;
 import com.jsofttechnologies.util.ProjectConstants;
 import com.jsofttechnologies.util.ProjectHelper;
+import com.jsofttechnologies.v2.services.util.FileService;
 
 import javax.annotation.security.PermitAll;
 import javax.ejb.EJB;
@@ -28,6 +29,8 @@ public class DownloadService extends FlowService {
 
     @EJB
     private FlowUploadedFileQueryService flowUploadedFileQueryService;
+    @EJB
+    private FileService fileService;
 
     @GET
     @Path("user_profile_image/{id}")
@@ -35,7 +38,7 @@ public class DownloadService extends FlowService {
 
         Response response = null;
 
-        File root = FileUtil.createFolder(ProjectConstants.FILE_COMMON_USER);
+        File root = fileService.getRootDir();
 
         File userFolder = FileUtil.createFolder(root, "_" + userId);
         File userProfileImageFolder = FileUtil.createFolder(userFolder,
@@ -62,16 +65,8 @@ public class DownloadService extends FlowService {
 
         Response response = null;
 
-        File fileService = null;
-        if (ProjectConstants.ENV == ProjectConstants.ENV_PROD) {
-            fileService = FileUtil.createFolder(FileUtil
-                    .createFolder(System.getProperty(ProjectConstants.FILE_SERVER_VAR)), ProjectConstants.FILE_SERVER_PATH);
-        } else {
-            fileService = FileUtil
-                    .createFolder(ProjectConstants.FILE_SERVER_PATH);
-        }
 
-        File root = FileUtil.createFolder(fileService, baseFolder);
+        File root = FileUtil.createFolder(fileService.getRootDir(), baseFolder);
 
         File folder = FileUtil.createFolder(root, "img");
 
@@ -96,16 +91,7 @@ public class DownloadService extends FlowService {
 
         Response response = null;
 
-        File fileService = null;
-        if (ProjectConstants.ENV == ProjectConstants.ENV_PROD) {
-            fileService = FileUtil.createFolder(FileUtil
-                    .createFolder(System.getProperty(ProjectConstants.FILE_SERVER_VAR)), ProjectConstants.FILE_SERVER_PATH);
-        } else {
-            fileService = FileUtil
-                    .createFolder(ProjectConstants.FILE_SERVER_PATH);
-        }
-
-        File root = FileUtil.createFolder(fileService, baseFolder);
+        File root = FileUtil.createFolder(fileService.getRootDir(), baseFolder);
 
         File folder = FileUtil.createFolder(root, "video");
 
@@ -134,16 +120,7 @@ public class DownloadService extends FlowService {
             return Response.ok("", MediaType.APPLICATION_JSON_TYPE).build();
         }
 
-        File fileService = null;
-        if (ProjectConstants.ENV == ProjectConstants.ENV_PROD) {
-            fileService = FileUtil.createFolder(FileUtil
-                    .createFolder(System.getProperty(ProjectConstants.FILE_SERVER_VAR)), ProjectConstants.FILE_SERVER_PATH);
-        } else {
-            fileService = FileUtil
-                    .createFolder(ProjectConstants.FILE_SERVER_PATH);
-        }
-
-        File root = FileUtil.createFolders(fileService, flowUploadedFile.getFolder());
+        File root = FileUtil.createFolders(fileService.getRootDir(), flowUploadedFile.getFolder());
 
         File folder = FileUtil.createFolder(root, flowUploadedFile.getType());
 
@@ -169,17 +146,7 @@ public class DownloadService extends FlowService {
         FlowUploadedFile flowUploadedFile = flowUploadedFileQueryService.getById(id);
         Response response;
 
-
-        File fileService = null;
-
-        if (ProjectConstants.ENV == ProjectConstants.ENV_PROD) {
-            fileService = FileUtil.createFolder(FileUtil
-                    .createFolder(System.getProperty(ProjectConstants.FILE_SERVER_VAR)), ProjectConstants.FILE_SERVER_PATH);
-        } else {
-            fileService = FileUtil
-                    .createFolder(ProjectConstants.FILE_SERVER_PATH);
-        }
-        File root = FileUtil.createFolders(fileService, flowUploadedFile.getFolder());
+        File root = FileUtil.createFolders(fileService.getRootDir(), flowUploadedFile.getFolder());
 
         File folder = FileUtil.createFolder(root, flowUploadedFile.getType());
 
