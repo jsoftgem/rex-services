@@ -159,7 +159,7 @@ public abstract class FlowService implements Serializable {
     }
 
 
-    protected Boolean isProducitonStage() {
+    protected Boolean isProductionStage() {
         return context.getInitParameter(Constants.PROJECT_STAGE).equalsIgnoreCase(Constants.STAGE_PRODUCTION);
     }
 

@@ -20,7 +20,7 @@ public class FileService extends FlowService {
     public File getRootDir() {
         if (isDevelopmentStage()) {
             return getDevelopmentRoot();
-        } else if (isProducitonStage()) {
+        } else if (isProductionStage()) {
             return getProductionRoot();
         }
         return null;
@@ -45,14 +45,13 @@ public class FileService extends FlowService {
 
     public File getProductionRoot() {
         File file = null;
-        if (isProducitonStage()) {
+        if (isProductionStage()) {
             String prodVar = context.getInitParameter(Constants.FILE_ROOT_VAR);
             file = FileUtil.createFolder(System.getProperty(prodVar));
         }
 
         return file;
     }
-
 
 
 }
