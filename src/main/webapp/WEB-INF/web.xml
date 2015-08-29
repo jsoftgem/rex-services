@@ -61,7 +61,7 @@
 
     <context-param>
         <param-name>PROJECT_STAGE</param-name>
-        <param-value>production</param-value>
+        <param-value>PRODUCTION</param-value>
     </context-param>
 
 
