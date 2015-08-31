@@ -29,7 +29,7 @@ public class SessionResponseFilter implements ContainerResponseFilter {
     @Override
     public void filter(ContainerRequestContext requestContext,
                        ContainerResponseContext responseContext) throws IOException {
-        Logger logger = Logger.getLogger(SessionResponseFilter.class.getName());
+       /* Logger logger = Logger.getLogger(SessionResponseFilter.class.getName());
         logger.info("sessions-response-filter");
 
         MultivaluedMap headerMap = requestContext.getHeaders();
@@ -37,7 +37,7 @@ public class SessionResponseFilter implements ContainerResponseFilter {
         for (Object key : headerMap.keySet()) {
             logger.log(Level.INFO, "header: {0}={1}", new Object[]{key,
                     headerMap.get(key)});
-        }
+        }*/
 
     }
 

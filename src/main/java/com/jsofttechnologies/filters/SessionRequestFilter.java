@@ -32,7 +32,7 @@ public class SessionRequestFilter implements ContainerRequestFilter {
     @Override
     public void filter(ContainerRequestContext requestContext)
             throws IOException {
-        Logger logger = Logger.getLogger(SessionRequestFilter.class.getName());
+       /* Logger logger = Logger.getLogger(SessionRequestFilter.class.getName());
 
         logger.log(Level.INFO, "session-request-filter: url {0}",
                 requestContext.getUriInfo());
@@ -73,7 +73,7 @@ public class SessionRequestFilter implements ContainerRequestFilter {
                 logger.log(Level.SEVERE, e.getMessage(), e);
             }
         }
-
+*/
     }
 
 }

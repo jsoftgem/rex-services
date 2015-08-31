@@ -9,6 +9,7 @@ import com.jsofttechnologies.services.admin.FlowUploadedFileQueryService;
 import com.jsofttechnologies.util.FileUtil;
 import com.jsofttechnologies.util.ProjectConstants;
 import com.jsofttechnologies.util.ProjectHelper;
+import com.jsofttechnologies.v2.services.util.FileService;
 import org.apache.commons.io.IOUtils;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
@@ -35,6 +36,8 @@ public class UploadService extends FlowService {
 
     @EJB
     private SessionHelper sessionHelper;
+    @EJB
+    private FileService fileService;
 
     /**
      *
@@ -50,6 +53,7 @@ public class UploadService extends FlowService {
     private FlowUploadedFileCrudService flowUploadedFileCrudService;
     @EJB
     private FlowUploadedFileQueryService flowUploadedFileQueryService;
+
     @POST
     @Path("upload_profile")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -80,7 +84,7 @@ public class UploadService extends FlowService {
 
                 // constructs upload file path
                 File dir = FileUtil
-                        .createFolder(ProjectConstants.FILE_COMMON_USER);
+                        .createFolder(fileService.getRootDir(), "war_user");
 
                 File userFolder = FileUtil.createFolder(dir, "_" + userId);
 
@@ -109,6 +113,7 @@ public class UploadService extends FlowService {
         }
         return response;
     }
+
     @POST
     @Path("upload_image/{base_folder}")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -133,17 +138,8 @@ public class UploadService extends FlowService {
 
                 byte[] bytes = IOUtils.toByteArray(inputStream);
 
-                File fileService = null;
 
-                if (ProjectConstants.ENV == ProjectConstants.ENV_PROD) {
-                    fileService = FileUtil.createFolder(FileUtil
-                            .createFolder(System.getProperty(ProjectConstants.FILE_SERVER_VAR)), ProjectConstants.FILE_SERVER_PATH);
-                } else {
-                    fileService = FileUtil
-                            .createFolder(ProjectConstants.FILE_SERVER_PATH);
-                }
-
-                File dir = FileUtil.createFolder(fileService, baseFolder);
+                File dir = FileUtil.createFolder(fileService.getRootDir(), baseFolder);
 
                 File folder = FileUtil.createFolder(dir, "img");
 
@@ -199,17 +195,7 @@ public class UploadService extends FlowService {
             }
 
 
-            File fileService = null;
-
-            if (ProjectConstants.ENV == ProjectConstants.ENV_PROD) {
-                fileService = FileUtil.createFolder(FileUtil
-                        .createFolder(System.getProperty(ProjectConstants.FILE_SERVER_VAR)), ProjectConstants.FILE_SERVER_PATH);
-            } else {
-                fileService = FileUtil
-                        .createFolder(ProjectConstants.FILE_SERVER_PATH);
-            }
-
-            File dir = FileUtil.createFolders(fileService, baseFolder);
+            File dir = FileUtil.createFolders(fileService.getRootDir(), baseFolder);
 
             File folder = FileUtil.createFolder(dir, flowUploadedFile.getType());
 

@@ -20,6 +20,7 @@ import java.util.Date;
 @ReportHeader(name = "Agents")
 @NamedQueries({
         @NamedQuery(name = WarAgent.FIND_ALL, query = "select a from WarAgent a"),
+        @NamedQuery(name = WarAgent.FIND_BY_USER_ID, query = "select a from WarAgent a where a.user.id=:userId"),
         @NamedQuery(name = WarAgent.FIND_AGENT_BY_USERNAME, query = "select a from WarAgent a where a.user.username=:username"),
         @NamedQuery(name = WarAgent.FIND_AGENT_BY_MANAGER, query = "select a from WarAgent a where a.isManager = false and a.region =:region"),
         @NamedQuery(name = WarAgent.FIND_MANAGER_BY_REGION, query = "select a from WarAgent a where a.isManager = true and a.region =:region"),
@@ -37,6 +38,7 @@ public class WarAgent implements FlowJpe {
     public static final String FIND_BY_REGION = "WarAgent.FIND_BY_REGION";
     public static final String FIND_BY_INITIALS = "WarAgent.FIND_BY_INITIALS";
     public static final String FIND_ALL_NO_MANAGER = "WarAgent.FIND_ALL_NO_MANAGER";
+    public static final String FIND_BY_USER_ID = "WarAgent.FIND_BY_USER_ID";
     @Id
     @Column(name = "war_agent_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
