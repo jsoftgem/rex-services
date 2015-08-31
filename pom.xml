@@ -278,9 +278,9 @@
                         <configuration>
                             <jboss-home>${env.JBOSS_HOME}</jboss-home>
                             <port>9990</port>
-                            <hostname>192.168.1.7</hostname>
+                            <hostname>war.rexpublishing.com.ph</hostname>
                             <username>warmgnt</username>
-                            <password>webapp</password>
+                            <password>warapp</password>
                         </configuration>
                         <executions>
                             <execution>
