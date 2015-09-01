@@ -21,7 +21,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import java.util.*;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 /**
  * Created by Jerico on 6/13/2014.
@@ -142,9 +142,9 @@ public abstract class QueryService<T extends FlowJpe> extends FlowService {
     @Path("/list")
     @Produces(value = "application/json")
     public List<T> doGetResultList() {
-        Logger logger = Logger.getLogger(QueryService.class.getName());
+        //logger //logger = //logger.get//logger(QueryService.class.getName());
 
-        logger.log(Level.INFO, "doGetResultList: " + namedQuery + " param: " + param);
+        //logger.log(Level.INFO, "doGetResultList: " + namedQuery + " param: " + param);
         try {
             query = entityManager.createNamedQuery(namedQuery, classType);
             if (param != null) {
@@ -162,7 +162,7 @@ public abstract class QueryService<T extends FlowJpe> extends FlowService {
             }
             resultList = query.getResultList();
             resultCount = resultList.size();
-            logger.log(Level.INFO, "resultList: " + resultList + " resultCount: " + resultCount);
+            //logger.log(Level.INFO, "resultList: " + resultList + " resultCount: " + resultCount);
         } catch (Exception e) {
             exceptionSummary.handleException(e, getClass(), param);
         }
@@ -176,9 +176,9 @@ public abstract class QueryService<T extends FlowJpe> extends FlowService {
     @Produces(value = "application/json")
     @Report
     public List<T> reportList() {
-        Logger logger = Logger.getLogger(QueryService.class.getName());
+        //logger //logger = //logger.get//logger(QueryService.class.getName());
 
-        logger.log(Level.INFO, "doGetResultList: " + namedQuery + " param: " + param);
+        //logger.log(Level.INFO, "doGetResultList: " + namedQuery + " param: " + param);
         try {
             query = entityManager.createNamedQuery(namedQuery, classType);
             if (param != null) {
@@ -196,7 +196,7 @@ public abstract class QueryService<T extends FlowJpe> extends FlowService {
             }
             resultList = query.getResultList();
             resultCount = resultList.size();
-            logger.log(Level.INFO, "resultList: " + resultList + " resultCount: " + resultCount);
+            //logger.log(Level.INFO, "resultList: " + resultList + " resultCount: " + resultCount);
         } catch (Exception e) {
             exceptionSummary.handleException(e, getClass(), param);
         }
@@ -209,9 +209,9 @@ public abstract class QueryService<T extends FlowJpe> extends FlowService {
     @Produces(value = "application/json")
     @Report(generator = CSVReportGenerator.class)
     public List<T> csvList() {
-        Logger logger = Logger.getLogger(QueryService.class.getName());
+        //logger //logger = //logger.get//logger(QueryService.class.getName());
 
-        logger.log(Level.INFO, "doGetResultList: " + namedQuery + " param: " + param);
+        //logger.log(Level.INFO, "doGetResultList: " + namedQuery + " param: " + param);
         try {
             query = entityManager.createNamedQuery(namedQuery, classType);
             if (param != null) {
@@ -229,7 +229,7 @@ public abstract class QueryService<T extends FlowJpe> extends FlowService {
             }
             resultList = query.getResultList();
             resultCount = resultList.size();
-            logger.log(Level.INFO, "resultList: " + resultList + " resultCount: " + resultCount);
+            //logger.log(Level.INFO, "resultList: " + resultList + " resultCount: " + resultCount);
         } catch (Exception e) {
             exceptionSummary.handleException(e, getClass(), param);
         }
@@ -327,9 +327,9 @@ public abstract class QueryService<T extends FlowJpe> extends FlowService {
 
     public T getSingleResult() {
         T t = null;
-        Logger logger = Logger.getLogger(QueryService.class.getName());
+        //logger //logger = //logger.get//logger(QueryService.class.getName());
 
-        logger.log(Level.INFO, "getSingleResult: " + namedQuery + " param: " + param);
+        //logger.log(Level.INFO, "getSingleResult: " + namedQuery + " param: " + param);
         try {
             query = entityManager.createNamedQuery(namedQuery, classType);
 
