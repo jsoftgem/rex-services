@@ -237,7 +237,7 @@ public abstract class QueryService<T extends FlowJpe> extends FlowService {
     }
 
 
-    @GET
+    @POST
     @Path("/")
     @Produces("application/json")
     public ResultDataModel<T> queryList() {
@@ -247,7 +247,7 @@ public abstract class QueryService<T extends FlowJpe> extends FlowService {
 
             String queryString = httpServletRequest.getQueryString();
 
-            DataTables dataTables = ProjectHelper.getDataTableFromQuery(queryString);
+            DataTables dataTables = ProjectHelper.getDataTableFromQuery(request);
 
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 
