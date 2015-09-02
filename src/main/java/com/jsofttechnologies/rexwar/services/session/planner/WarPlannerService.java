@@ -94,11 +94,11 @@ public class WarPlannerService extends FlowService {
         Response response = null;
 
         try {
-            if (tag.equalsIgnoreCase("all")) {
-
-            } else if (tag.equalsIgnoreCase("20")) {
+            if (tag.equalsIgnoreCase("20")) {
+                start = 0;
                 size = 20;
             } else if (tag.equalsIgnoreCase("50")) {
+                start = 0;
                 size = 50;
             }
             int week = 0;
@@ -112,23 +112,33 @@ public class WarPlannerService extends FlowService {
 
             List<WarCustomerMarketView> warCustomerMarketViewList = storedProcedures.callSchoolYearCustomer(schoolYear, agentId, isMonth, month, week, start, size, region, tag);
 
-            int length = warCustomerMarketViewList.size();
+            boolean hasNext = false;
+            boolean hasPrevious = false;
+            int nextStart = 0;
 
-            List<WarCustomerMarketView> nextBatch = storedProcedures.callSchoolYearCustomer(schoolYear, agentId, isMonth, month, week, length, size, region, tag);
+            if (tag.equalsIgnoreCase("all")) {
 
-            int nextBatchSize = 0;
+                nextStart = start + size;
 
-            if (nextBatch != null && !nextBatch.isEmpty()) {
-                nextBatchSize = nextBatch.size();
+                List<WarCustomerMarketView> nextBatch = storedProcedures.callSchoolYearCustomer(schoolYear, agentId, isMonth, month, week, nextStart, size, region, tag);
+
+                int nextBatchSize = nextBatch != null ? nextBatch.size() : 0;
+
+                hasNext = nextBatchSize > 0;
+
+                hasPrevious = start >= size;
+                if (!hasNext) {
+                    start -= size;
+                }
+
+                if (!hasPrevious) {
+                    start = 0;
+                }
             }
-
-            boolean hasNext = nextBatchSize > 0;
-
-            boolean hasPrevious = length > size;
 
 
             ProjectHelper projectHelper =
-                    TableUtil.createPaginationJson(size, length, hasNext, hasPrevious, start, (start + size), 0)
+                    TableUtil.createPaginationJson(size, 0, hasNext, hasPrevious, start, nextStart, page)
                             .addField("customers", new JSONArray(warCustomerMarketViewList.toArray()))
                             .addField("tag", tag)
                             .addField("month", month)
@@ -136,7 +146,6 @@ public class WarPlannerService extends FlowService {
                             .addField("week", week)
                             .addField("schoolYear", schoolYear)
                             .addField("agentId", agentId)
-                            .addField("page", page)
                             .addField("region", region);
 
             response = Response.ok(projectHelper.buildJsonString(), MediaType.APPLICATION_JSON_TYPE).build();
