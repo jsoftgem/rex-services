@@ -13,6 +13,7 @@ import com.jsofttechnologies.v2.services.FluidPlatformService;
 import com.jsofttechnologies.v2.services.admin.UserService;
 import com.jsofttechnologies.v2.services.resource.PageResource;
 import com.jsofttechnologies.v2.util.Constants;
+import com.jsofttechnologies.v2.util.UserInfo;
 import com.jsofttechnologies.v2.util.WarToken;
 import org.jose4j.jwe.ContentEncryptionAlgorithmIdentifiers;
 import org.jose4j.jwe.JsonWebEncryption;
@@ -80,25 +81,33 @@ public class LoginService extends FluidPlatformService {
                     ObjectMapper mapper = new ObjectMapper();
                     Key key = new AesKey(context.getInitParameter("API_KEY").substring(0, 16).getBytes());
                     JsonWebEncryption jsonWebEncryption = new JsonWebEncryption();
+                    UserInfo userInfo = new UserInfo();
                     WarToken warToken = new WarToken();
                     warToken.setCreated(new Date());
                     warToken.setUserId(user.getId());
                     warToken.setUsername(user.getUsername());
-                    warToken.setAvatarId(user.getFlowUserDetail().getAvatar());
-                    warToken.setFlowUserProfiles(user.getFlowUserProfileSet());
                     warToken.setGroup(user.getFlowUserGroup().getGroupName());
                     warToken.setFlowUserDetailId(user.getFlowUserDetail().getId());
 
                     List<FlowGroup> flowGroups = userModuleService.getSessionModules(warToken);
-                    warToken.setFlowGroups(flowGroups);
+                    userInfo.setCreated(warToken.getCreated());
+                    userInfo.setUserId(warToken.getUserId());
+                    userInfo.setUsername(warToken.getUsername());
+                    userInfo.setAvatarId(user.getFlowUserDetail().getAvatar());
+                    userInfo.setGroup(warToken.getGroup());
+                    userInfo.setFlowUserDetailId(warToken.getFlowUserDetailId());
+                    userInfo.setFlowUserProfiles(user.getFlowUserProfileSet());
+                    userInfo.setFlowGroups(flowGroups);
+
                     String json = mapper.writeValueAsString(warToken);
+                    String userInfoJson = mapper.writeValueAsString(userInfo);
                     jsonWebEncryption.setPayload(json);
                     jsonWebEncryption.setAlgorithmHeaderValue(KeyManagementAlgorithmIdentifiers.A128KW);
                     jsonWebEncryption.setEncryptionMethodHeaderParameter(ContentEncryptionAlgorithmIdentifiers.AES_128_CBC_HMAC_SHA_256);
                     jsonWebEncryption.setKey(key);
                     String tokenized = jsonWebEncryption.getCompactSerialization();
                     sessionService.createSession(user.getId(), tokenized, request.getRemoteAddr());
-                    response = Response.ok().status(Response.Status.ACCEPTED).entity("{\"token\":\"" + tokenized + "\", \"info\":" + json + "}").type(MediaType.APPLICATION_JSON_TYPE).build();
+                    response = Response.ok().status(Response.Status.ACCEPTED).entity("{\"token\":\"" + tokenized + "\", \"info\":" + userInfoJson + "}").type(MediaType.APPLICATION_JSON_TYPE).build();
                 }
             } catch (Exception e) {
                 ejbExceptionHandler.handleException(e, getClass());
