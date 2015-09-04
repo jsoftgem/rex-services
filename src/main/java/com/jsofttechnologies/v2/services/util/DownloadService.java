@@ -22,11 +22,11 @@ import java.io.FileInputStream;
 /**
  * Created by Jerico on 05/08/2015.
  */
-@Stateless(name = "v2/download")
+/*@Stateless(name = "v2/download")
 @Path("services/v2/util")
-@UserInfoResource
-public class DownloadService extends FluidPlatformService implements UserResource {
-
+@UserInfoResource*/
+public class DownloadService /*extends FluidPlatformService implements UserResource */ {
+/*
     @EJB
     private FileUploadedService fileUploadedService;
     private WarToken warToken;
@@ -97,5 +97,5 @@ public class DownloadService extends FluidPlatformService implements UserResourc
     @Override
     public HttpServletRequest getRequest() {
         return request;
-    }
+    }*/
 }
