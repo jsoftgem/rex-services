@@ -65,7 +65,7 @@ public class TableFactories extends FlowService {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
 
-        int to = calendar.get(Calendar.YEAR) + 18;
+        int to = calendar.get(Calendar.YEAR) + 10;
         int from = to - 68;
         int size = to - from;
         Integer[] years = new Integer[size];

@@ -3,6 +3,7 @@ package com.jsofttechnologies.v2.services.util;
 import com.jsofttechnologies.rexwar.model.tables.Contacts;
 import com.jsofttechnologies.services.util.FlowService;
 import com.jsofttechnologies.util.FileUtil;
+import com.jsofttechnologies.util.ProjectConstants;
 import com.jsofttechnologies.v2.util.Constants;
 
 import javax.ejb.Stateless;
@@ -47,12 +48,11 @@ public class FileService extends FlowService {
         File file = null;
         if (isProducitonStage()) {
             String prodVar = context.getInitParameter(Constants.FILE_ROOT_VAR);
-            file = FileUtil.createFolder(System.getProperty(prodVar));
+            file = FileUtil.createFolder(FileUtil.createFolder(System.getProperty(prodVar)), ProjectConstants.FILE_SERVER_PATH);
         }
 
         return file;
     }
-
 
 
 }

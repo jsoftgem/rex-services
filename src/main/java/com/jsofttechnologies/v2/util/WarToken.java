@@ -49,7 +49,6 @@ public class WarToken implements Serializable {
         this.userId = userId;
     }
 
-
     public String getGroup() {
         return group;
     }
