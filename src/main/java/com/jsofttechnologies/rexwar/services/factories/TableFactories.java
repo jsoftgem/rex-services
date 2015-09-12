@@ -109,5 +109,12 @@ public class TableFactories extends FlowService {
         return MarketControl.values();
     }
 
+    @Path("/samples")
+    @GET
+    @SkipCheck("authorization")
+    public String samples() {
+        return "[{\"name\":\"Sample1\",\"label\":\"Sample Label1\"},{\"name\":\"Sample2\",\"label\":\"Sample Label2\"}]";
+    }
+
 
 }

@@ -55,8 +55,6 @@ public class FlowUserManager {
         }
 
     }
-
-
     public void updateUser(FlowUser flowUser) {
         if (userMap.containsKey(flowUser.getId())) {
             FlowUser oldUser = userMap.get(flowUser.getId());
@@ -69,19 +67,14 @@ public class FlowUserManager {
             userIdMap.put(flowUser.getUsername(), flowUser.getId());
         }
     }
-
-
     public void refreshUserMap() {
         entityManager.clear();
         userMap.clear();
         userIdMap.clear();
     }
-
     public Set<FlowUserProfile> getMergeUserProfile(String username) {
         return getUserProfileSet(getUserId(username));
     }
-
-
     public FlowUser getUser(Long id) {
         if (userMap == null) userMap = new HashMap<>();
         synchronized (userMap) {
@@ -97,7 +90,6 @@ public class FlowUserManager {
         }
         return userMap.get(id);
     }
-
     public Long getUserId(String username) {
         if (userIdMap == null) userIdMap = new HashMap<>();
         synchronized (userIdMap) {
@@ -113,7 +105,6 @@ public class FlowUserManager {
         }
         return userIdMap.get(username);
     }
-
     public String getGroupName(String username) {
         FlowUser user = null;
         try {
@@ -126,7 +117,6 @@ public class FlowUserManager {
         else
             return null;
     }
-
     public FlowUserGroup getGroup(String username) {
         FlowUser user = null;
         try {
@@ -139,7 +129,6 @@ public class FlowUserManager {
         else
             return null;
     }
-
     public Set<FlowUserProfile> getUserProfileSet(Long id) {
         if (userProfileSetMap == null) userProfileSetMap = new HashMap<>();
 
@@ -150,7 +139,6 @@ public class FlowUserManager {
 
         return userProfileSetMap.get(id);
     }
-
     public Boolean isGroupAdmin(String username) {
         Long userId = getUserId(username);
         return getGroup(username).getOwnerUserId().equals(userId);
