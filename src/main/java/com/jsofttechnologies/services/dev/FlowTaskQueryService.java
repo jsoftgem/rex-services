@@ -1,10 +1,14 @@
 package com.jsofttechnologies.services.dev;
 
+import com.jsofttechnologies.interceptor.SkipCheck;
 import com.jsofttechnologies.jpa.dev.FlowTask;
 import com.jsofttechnologies.services.util.QueryService;
 
 import javax.ejb.Stateless;
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import java.util.List;
 
 @Stateless
 @Path("services/flow_task_query")
@@ -26,5 +30,12 @@ public class FlowTaskQueryService extends QueryService<FlowTask> {
         return getSingleResult();
     }
 
+    @SkipCheck("authorization")
+    @Path("sample_tasks")
+    @Produces("application/json")
+    @GET
+    public List<FlowTask> getSampleTasks() {
+        return currentEntityManager.createNamedQuery(FlowTask.FIND_ALL, FlowTask.class).getResultList();
+    }
 
 }
