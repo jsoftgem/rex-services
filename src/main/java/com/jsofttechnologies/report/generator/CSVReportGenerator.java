@@ -35,7 +35,14 @@ public class CSVReportGenerator extends ReportGenerator {
     public Object renderView(ColumnKey header, List<Map<String, ColumnProperty>> values) {
         fileCounter++;
         try {
-            File tempFile = new File("report-generator_" + fileCounter);
+            File tempFile;
+            String rootVar = System.getProperty("user.home");
+
+            if (rootVar != null) {
+                tempFile = new File(System.getProperty("user.home"), "report-generator_" + fileCounter);
+            } else {
+                tempFile = new File("report-generator_" + fileCounter);
+            }
 
             tempFile.createTempFile("csv", "temp");
 
