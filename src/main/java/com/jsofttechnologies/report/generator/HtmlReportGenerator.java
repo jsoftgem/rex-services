@@ -34,7 +34,7 @@ public class HtmlReportGenerator extends ReportGenerator {
     }
 
     @Override
-    public String renderView(ColumnKey header, List<Map<String, ReportGenerator.ColumnProperty>> values) {
+    public Object renderView(ColumnKey header, List<Map<String, ReportGenerator.ColumnProperty>> values) {
 
         StringBuilder builder = new StringBuilder();
         builder.append("<div>");
