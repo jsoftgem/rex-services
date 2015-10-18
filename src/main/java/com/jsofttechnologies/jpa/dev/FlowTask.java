@@ -13,6 +13,7 @@ import java.util.Set;
 @Table(name = "flow_task", uniqueConstraints = {@UniqueConstraint(columnNames = "flow_name")})
 @NamedQueries({@NamedQuery(name = FlowTask.FIND_ALL, query = "select ft from FlowTask ft"),
         @NamedQuery(name = FlowTask.FIND_BY_ID, query = "select ft from FlowTask ft where ft.id=:id"),
+        @NamedQuery(name = FlowTask.COUNT, query = "select count(ft.name) from FlowTask ft"),
         @NamedQuery(name = FlowTask.FIND_BY_NAME, query = "select ft from FlowTask  ft where ft.name=:name")})
 public class FlowTask implements FlowJpe {
 
@@ -24,7 +25,7 @@ public class FlowTask implements FlowJpe {
     public static final String FIND_ALL = "FlowTask.FIND_ALL";
     public static final String FIND_BY_ID = "FlowTask.FIND_BY_ID";
     public static final String FIND_BY_NAME = "FlowTask.FIND_BY_NAME";
-
+    public static final String COUNT = "FlowTask.COUNT";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "flow_id", nullable = false)

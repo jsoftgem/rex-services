@@ -142,9 +142,6 @@ public abstract class QueryService<T extends FlowJpe> extends FlowService {
     @Path("/list")
     @Produces(value = "application/json")
     public List<T> doGetResultList() {
-        //logger //logger = //logger.get//logger(QueryService.class.getName());
-
-        //logger.log(Level.INFO, "doGetResultList: " + namedQuery + " param: " + param);
         try {
             query = entityManager.createNamedQuery(namedQuery, classType);
             if (param != null) {
@@ -162,7 +159,6 @@ public abstract class QueryService<T extends FlowJpe> extends FlowService {
             }
             resultList = query.getResultList();
             resultCount = resultList.size();
-            //logger.log(Level.INFO, "resultList: " + resultList + " resultCount: " + resultCount);
         } catch (Exception e) {
             exceptionSummary.handleException(e, getClass(), param);
         }
@@ -176,9 +172,6 @@ public abstract class QueryService<T extends FlowJpe> extends FlowService {
     @Produces(value = "application/json")
     @Report
     public List<T> reportList() {
-        //logger //logger = //logger.get//logger(QueryService.class.getName());
-
-        //logger.log(Level.INFO, "doGetResultList: " + namedQuery + " param: " + param);
         try {
             query = entityManager.createNamedQuery(namedQuery, classType);
             if (param != null) {
@@ -196,7 +189,6 @@ public abstract class QueryService<T extends FlowJpe> extends FlowService {
             }
             resultList = query.getResultList();
             resultCount = resultList.size();
-            //logger.log(Level.INFO, "resultList: " + resultList + " resultCount: " + resultCount);
         } catch (Exception e) {
             exceptionSummary.handleException(e, getClass(), param);
         }
@@ -209,16 +201,12 @@ public abstract class QueryService<T extends FlowJpe> extends FlowService {
     @Produces(value = "application/json")
     @Report(generator = CSVReportGenerator.class)
     public List<T> csvList() {
-        //logger //logger = //logger.get//logger(QueryService.class.getName());
-
-        //logger.log(Level.INFO, "doGetResultList: " + namedQuery + " param: " + param);
         try {
             query = entityManager.createNamedQuery(namedQuery, classType);
             if (param != null) {
                 for (String key : param.keySet()) {
                     query.setParameter(key, param.get(key));
                 }
-
             }
             maxResultCount = query.getMaxResults();
             if (getFirstResult() != null) {
@@ -229,7 +217,6 @@ public abstract class QueryService<T extends FlowJpe> extends FlowService {
             }
             resultList = query.getResultList();
             resultCount = resultList.size();
-            //logger.log(Level.INFO, "resultList: " + resultList + " resultCount: " + resultCount);
         } catch (Exception e) {
             exceptionSummary.handleException(e, getClass(), param);
         }

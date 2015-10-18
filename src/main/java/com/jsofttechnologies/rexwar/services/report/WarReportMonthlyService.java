@@ -214,7 +214,7 @@ public class WarReportMonthlyService extends FlowService {
                     JSONArray customerJsonArray = agentJSONObject.getJSONArray("customers");
 
                     JSONObject customerJSONObject = new JSONObject();
-                    Integer[] dataTemplate = new Integer[25];
+                    Integer[] dataTemplate = new Integer[24];
                     for (int i = 0; i < dataTemplate.length; i++) {
                         dataTemplate[i] = 0;
                     }
