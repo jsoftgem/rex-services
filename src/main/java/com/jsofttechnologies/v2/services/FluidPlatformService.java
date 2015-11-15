@@ -10,6 +10,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -51,5 +52,9 @@ public abstract class FluidPlatformService {
         if (key == null) return false;
         String theKey = key.toString().trim().toLowerCase() + type.getName().toLowerCase();
         return serviceCache.containsKey(theKey);
+    }
+
+    protected <T, V> LinkedHashMap<T, V> getEntity(Object o, Class<T> keyType, Class<V> valueType) {
+        return (LinkedHashMap<T, V>) o;
     }
 }

@@ -11,10 +11,15 @@ import com.jsofttechnologies.v2.services.resource.PageResource;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 /**
  * Created by Jerico on 7/25/2015.
@@ -101,6 +106,20 @@ public class UserService extends PageResource<FlowUser, Long> {
 
         }
 
+    }
+
+
+    public FlowUser getUserByEmailOrUsername(String param) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<FlowUser> criteriaQuery = cb.createQuery(FlowUser.class);
+        Root<FlowUser> root = criteriaQuery.from(FlowUser.class);
+        criteriaQuery.select(root).where(cb.or(cb.equal(root.get("username"), param), cb.equal(root.get("email"), param)));
+        TypedQuery<FlowUser> userJPATypedQuery = getEntityManager().createQuery(criteriaQuery);
+        List<FlowUser> resultList = userJPATypedQuery.getResultList();
+        if (resultList != null && !resultList.isEmpty()) {
+            return resultList.get(0);
+        }
+        return null;
     }
 
 
