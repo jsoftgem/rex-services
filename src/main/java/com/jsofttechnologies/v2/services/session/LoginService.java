@@ -50,6 +50,7 @@ import java.util.List;
  */
 @Path("session/v2/login")
 @Stateless(name = "v2/login")
+@PermitAll
 public class LoginService extends FluidPlatformService {
 
 
@@ -62,6 +63,7 @@ public class LoginService extends FluidPlatformService {
 
     @POST
     @SkipCheck("authorization")
+    @PermitAll
     public Response login(String loginKey) {
         Response response = null;
 
@@ -135,6 +137,7 @@ public class LoginService extends FluidPlatformService {
     @POST()
     @SkipCheck("authorization")
     @Consumes("application/json")
+    @PermitAll
     public Response login(Credentials credentials) {
 
         Response response = null;
