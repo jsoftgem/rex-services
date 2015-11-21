@@ -61,9 +61,9 @@ public class LoginService extends FluidPlatformService {
     @EJB(name = "v2/session")
     private SessionService sessionService;
 
-    @POST
-    @SkipCheck("authorization")
+
     @PermitAll
+    @POST
     public Response login(String loginKey) {
         Response response = null;
 
@@ -134,8 +134,7 @@ public class LoginService extends FluidPlatformService {
 
 
     @Path("basic")
-    @POST()
-    @SkipCheck("authorization")
+    @POST
     @Consumes("application/json")
     @PermitAll
     public Response login(Credentials credentials) {
