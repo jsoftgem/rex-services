@@ -28,7 +28,6 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 @Provider
 @ServerInterceptor
 public class SecurityInterceptor implements PreProcessInterceptor {
@@ -82,7 +81,9 @@ public class SecurityInterceptor implements PreProcessInterceptor {
 
         //Fetch flowPage Header
         final String flowPage = headers.getHeaderString(ProjectConstants.HEADER_FLOWPAGE);
+
         final String httpMethod = request.getHttpMethod();
+
         //Fetch authorization header
         final List<String> authorization = headers.getRequestHeader(ProjectConstants.HEADER_AUTHORIZATION);
 
@@ -132,12 +133,6 @@ public class SecurityInterceptor implements PreProcessInterceptor {
             if (flowUser != null) return true;
            /* TODO: return PasswordHash.validatePassword(password, flowUser.getPassword());*/
             return false;
-
-      /*  } catch (NoSuchAlgorithmException e) {
-            exceptionSummary.handleException(e, getClass());
-        } catch (InvalidKeySpecException e) {
-            exceptionSummary.handleException(e, getClass());
-        */
         } catch (Exception e) {
             exceptionSummary.handleException(e, getClass());
         }

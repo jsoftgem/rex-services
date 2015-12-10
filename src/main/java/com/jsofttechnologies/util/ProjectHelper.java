@@ -4,6 +4,7 @@ import com.jsofttechnologies.model.DataTables;
 import com.jsofttechnologies.model.DataTablesColumn;
 import org.json.JSONObject;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.*;
@@ -84,7 +85,82 @@ public class ProjectHelper {
         }
         return query_pairs;
     }
+    public static DataTables getDataTableFromQuery(HttpServletRequest request) throws UnsupportedEncodingException {
+        DataTables dataTables = new DataTables();
+         Enumeration<String> enumKey = request.getParameterNames();
+        while(enumKey.hasMoreElements()){
+            String key = enumKey.nextElement();
+            String value = request.getParameter(key);
 
+            if (isColumn(key)) {
+
+                Integer index = getColumnIndex(key);
+
+                DataTablesColumn column = null;
+                if (dataTables.getColumns() != null) {
+                    column = new DataTablesColumn();
+                    column.setIndex(index);
+
+                    if (dataTables.getColumns().contains(column)) {
+                        column = dataTables.getColumns().get(dataTables.getColumns().indexOf(column));
+                    } else {
+                        dataTables.getColumns().add(column);
+                    }
+
+                } else {
+                    List<DataTablesColumn> columns = new ArrayList<>();
+                    column = new DataTablesColumn();
+                    columns.add(column);
+                    column.setIndex(index);
+                    dataTables.setColumns(columns);
+                }
+
+
+                String field = getColumnField(key);
+
+                switch (field) {
+                    case "data":
+                        column.setData(value);
+                        break;
+                    case "name":
+                        column.setName(value);
+                        break;
+                    case "searchable":
+                        column.setSearchable(Boolean.valueOf(value));
+                        break;
+                    case "orderable":
+                        column.setOrderable(Boolean.valueOf(value));
+                        break;
+                    case "value":
+                        column.setSearchValue(value);
+                        break;
+                    case "regex":
+                        column.setSearchRegex(Boolean.valueOf(value));
+                        break;
+
+
+                }
+
+            } else {
+                if (key.equalsIgnoreCase("draw")) {
+                    dataTables.setDraw(Integer.valueOf(value));
+                } else if (key.equalsIgnoreCase("order[0][column]")) {
+                    dataTables.setOrder(Integer.valueOf(value));
+                } else if (key.equalsIgnoreCase("order[0][dir]")) {
+                    dataTables.setDir(value);
+                } else if (key.equalsIgnoreCase("start")) {
+                    dataTables.setStart(Integer.valueOf(value));
+                } else if (key.equalsIgnoreCase("length")) {
+                    dataTables.setLength(Integer.valueOf(value));
+                } else if (key.equalsIgnoreCase("search[value]")) {
+                    dataTables.setSearchValue(value);
+                } else if (key.equalsIgnoreCase("search[regex]")) {
+                    dataTables.setSearchRegex(Boolean.valueOf(value));
+                }
+            }
+        }
+        return dataTables;
+    }
 
     public static DataTables getDataTableFromQuery(String query) throws UnsupportedEncodingException {
         DataTables dataTables = new DataTables();

@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created by Jerico on 7/24/2015.
@@ -33,5 +36,25 @@ public abstract class FluidPlatformService {
         return "service class:" + this.getClass().getName() + " version: " + servlet.getInitParameter("SERVICE_VERSION");
     }
 
+    protected final Map<String, Object> serviceCache = new HashMap<>();
 
+    protected <T> T serviceMap(Object key, Object o, Class<T> type, boolean isNew) {
+        if (key == null) return null;
+        String theKey = key.toString().trim().toLowerCase() + type.getName().toLowerCase();
+        if (!serviceCache.containsKey(theKey) || isNew) {
+            serviceCache.put(theKey, o);
+        }
+        return (T) serviceCache.get(theKey);
+    }
+
+
+    protected <T> boolean isCached(Object key, Class<T> type) {
+        if (key == null) return false;
+        String theKey = key.toString().trim().toLowerCase() + type.getName().toLowerCase();
+        return serviceCache.containsKey(theKey);
+    }
+
+    protected <T, V> LinkedHashMap<T, V> getEntity(Object o, Class<T> keyType, Class<V> valueType) {
+        return (LinkedHashMap<T, V>) o;
+    }
 }

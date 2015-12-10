@@ -21,5 +21,7 @@ public @interface ReportColumn {
 
     String field() default "";
 
+    Class<? extends ReportConverter> converter() default DefaultReportConverter.class;
+
     int colSpan() default 1;
 }

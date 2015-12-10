@@ -15,10 +15,8 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
+import javax.ws.rs.*;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
@@ -104,17 +102,14 @@ public class WarCustomerQueryService extends QueryService<WarCustomer> {
     }
 
     //TODO: find_customers_by_user_level
-    @GET
+    @POST
     @Path("/")
     @Produces("application/json")
     public ResultDataModel<WarCustomer> queryList(@HeaderParam("Authorization") String authorization) {
         ResultDataModel<WarCustomer> resultDataModel = new ResultDataModel<>();
         try {
 
-
-            String queryString = request.getQueryString();
-
-            DataTables dataTables = ProjectHelper.getDataTableFromQuery(queryString);
+            DataTables dataTables = ProjectHelper.getDataTableFromQuery(request);
 
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 

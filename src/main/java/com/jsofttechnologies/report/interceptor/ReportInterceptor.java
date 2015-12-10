@@ -5,9 +5,7 @@ import com.jsofttechnologies.report.utlil.Report;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
-import javax.ws.rs.ext.WriterInterceptor;
-import javax.ws.rs.ext.WriterInterceptorContext;
+import javax.ws.rs.ext.*;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -17,7 +15,7 @@ import java.lang.reflect.InvocationTargetException;
  */
 @Provider
 @Report
-public class ReportInterceptor implements WriterInterceptor {
+public class ReportInterceptor implements WriterInterceptor, ReaderInterceptor {
     @Override
     public void aroundWriteTo(WriterInterceptorContext context) throws IOException, WebApplicationException {
 
@@ -56,10 +54,45 @@ public class ReportInterceptor implements WriterInterceptor {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
             e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
         }
 
 
         context.proceed();
     }
 
+    @Override
+    public Object aroundReadFrom(ReaderInterceptorContext readerInterceptorContext) throws IOException, WebApplicationException {
+
+        Report report = null;
+        for (Annotation annotation : readerInterceptorContext.getAnnotations()) {
+            if (annotation instanceof Report) {
+                report = (Report) annotation;
+                break;
+            }
+        }
+        if (report == null) {
+            readerInterceptorContext.proceed();
+        }
+
+        try {
+            ReportGenerator reportGenerator = (ReportGenerator) report.generator().getDeclaredMethod("getInstance", null).invoke(null, null);
+
+            String[] mediaType = reportGenerator.getContentType().split("/");
+
+            readerInterceptorContext.setMediaType(new MediaType(mediaType[0], mediaType[1]));
+
+            readerInterceptorContext.setType(reportGenerator.getType());
+
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+
+        return readerInterceptorContext.proceed();
+    }
 }

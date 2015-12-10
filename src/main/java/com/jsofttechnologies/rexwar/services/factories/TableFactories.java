@@ -7,6 +7,8 @@ import com.jsofttechnologies.services.util.FlowService;
 import javax.ejb.Singleton;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -17,6 +19,7 @@ import java.util.List;
  */
 @Path("factories/war/table_factories")
 @Singleton
+@Produces(MediaType.APPLICATION_JSON)
 public class TableFactories extends FlowService {
 
     @Path("/relationship_types")
@@ -62,8 +65,8 @@ public class TableFactories extends FlowService {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
 
-        int to = calendar.get(Calendar.YEAR) + 18;
-        int from = to - 68;
+        int to = calendar.get(Calendar.YEAR) + 10;
+        int from = 2000;
         int size = to - from;
         Integer[] years = new Integer[size];
 
@@ -104,6 +107,13 @@ public class TableFactories extends FlowService {
     @SkipCheck("authorization")
     public MarketControl[] marketControls() {
         return MarketControl.values();
+    }
+
+    @Path("/samples")
+    @GET
+    @SkipCheck("authorization")
+    public String samples() {
+        return "[{\"name\":\"Sample1\",\"label\":\"Sample Label1\"},{\"name\":\"Sample2\",\"label\":\"Sample Label2\"}]";
     }
 
 

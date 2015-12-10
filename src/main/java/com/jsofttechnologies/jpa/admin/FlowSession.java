@@ -56,7 +56,7 @@ public class FlowSession implements FlowJpe {
     private Date endDt;
     @Column(name = "description")
     private String description;
-    @Column(name = "user_session_key", nullable = false)
+    @Column(name = "user_session_key", columnDefinition = "LONGTEXT", nullable = false)
     private String userSessionKey;
 
 

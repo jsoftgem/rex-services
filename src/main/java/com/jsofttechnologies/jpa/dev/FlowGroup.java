@@ -9,7 +9,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "flow_group", uniqueConstraints = {@UniqueConstraint(columnNames = {"group_name"})})
-@NamedQueries({@NamedQuery(name = FlowGroup.FIND_ALL, query = "select fg from FlowGroup fg")})
+@NamedQueries({@NamedQuery(name = FlowGroup.FIND_ALL, query = "select fg from FlowGroup fg"),
+        @NamedQuery(name = FlowGroup.FIND_BY_GROUP_NAME, query = "select fg from FlowGroup fg where fg.name=:name")})
 public class FlowGroup implements FlowJpe {
 
     /**
@@ -24,9 +25,9 @@ public class FlowGroup implements FlowJpe {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "group_id", nullable = false)
     private Long id;
-    @Column(name = "group_name", nullable = false, unique = true,length = ColumnLengths.NAME)
+    @Column(name = "group_name", nullable = false, unique = true, length = ColumnLengths.NAME)
     private String name;
-    @Column(name = "group_title", nullable = false,length = ColumnLengths.TITLE)
+    @Column(name = "group_title", nullable = false, length = ColumnLengths.TITLE)
     private String title;
     @Column(name = "group_icon_uri")
     private String iconUri;
