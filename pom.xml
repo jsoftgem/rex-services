@@ -277,10 +277,8 @@
                         <version>1.0.2.Final</version>
                         <configuration>
                             <jboss-home>${env.JBOSS_HOME}</jboss-home>
-                            <!-- <port>9990</port>
-                             <hostname>192.168.102.29</hostname>-->
-                            <port>10990</port>
-                            <hostname>192.168.1.7</hostname>
+                            <port>9990</port>
+                            <hostname>192.168.102.29</hostname>
                             <username>warmgnt</username>
                             <password>warapp</password>
                         </configuration>
@@ -296,7 +294,79 @@
                 </plugins>
             </build>
         </profile>
-
+        <profile>
+            <id>dev</id>
+            <build>
+                <finalName>rex-services</finalName>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.1</version>
+                        <configuration>
+                            <source>${maven.compiler.source}</source>
+                            <target>${maven.compiler.target}</target>
+                            <compilerArguments>
+                                <endorseddirs>${endorsed.dir}</endorseddirs>
+                            </compilerArguments>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <version>2.3</version>
+                        <configuration>
+                            <failOnMissingWebXml>false</failOnMissingWebXml>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <version>2.6</version>
+                        <executions>
+                            <execution>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${endorsed.dir}</outputDirectory>
+                                    <silent>true</silent>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>javax</groupId>
+                                            <artifactId>javaee-endorsed-api</artifactId>
+                                            <version>7.0</version>
+                                            <type>jar</type>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.wildfly.plugins</groupId>
+                        <artifactId>wildfly-maven-plugin</artifactId>
+                        <version>1.0.2.Final</version>
+                        <configuration>
+                            <jboss-home>${env.JBOSS_HOME}</jboss-home>
+                            <port>10990</port>
+                            <hostname>192.168.1.4</hostname>
+                            <username>warmgnt</username>
+                            <password>webapp</password>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>deploy</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
 </project>
