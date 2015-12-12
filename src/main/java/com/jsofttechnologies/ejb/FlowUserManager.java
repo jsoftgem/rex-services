@@ -8,6 +8,7 @@ import com.jsofttechnologies.util.ProjectConstants;
 
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
+import javax.ejb.Startup;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.HashMap;
@@ -20,6 +21,7 @@ import java.util.logging.Logger;
 /**
  * Created by Jerico on 10/28/2014.
  */
+@Startup
 @Singleton
 public class FlowUserManager {
 
@@ -53,72 +55,56 @@ public class FlowUserManager {
         }
 
     }
-
-
     public void updateUser(FlowUser flowUser) {
-
-
         if (userMap.containsKey(flowUser.getId())) {
-
             FlowUser oldUser = userMap.get(flowUser.getId());
-
             if (!oldUser.equals(flowUser)) {
                 userIdMap.put(flowUser.getUsername(), flowUser.getId());
             }
-
             userMap.put(flowUser.getId(), flowUser);
-
         } else {
             userMap.put(flowUser.getId(), flowUser);
             userIdMap.put(flowUser.getUsername(), flowUser.getId());
         }
     }
-
-
     public void refreshUserMap() {
         entityManager.clear();
         userMap.clear();
         userIdMap.clear();
     }
-
     public Set<FlowUserProfile> getMergeUserProfile(String username) {
         return getUserProfileSet(getUserId(username));
     }
-
-
     public FlowUser getUser(Long id) {
-/*        if (userMap == null) userMap = new HashMap<>();
-        if (!userMap.containsKey(id)) {
-            try {
-                FlowUser user = entityManager.find(FlowUser.class, id);
-                user.getFlowUserProfileSet();
-                userMap.put(id, user);
-            } catch (Exception e) {
-                exceptionSummary.handleException(e, getClass());
+        if (userMap == null) userMap = new HashMap<>();
+        synchronized (userMap) {
+            if (!userMap.containsKey(id)) {
+                try {
+                    FlowUser user = flowUserQueryService.getById(id);
+                    user.getFlowUserProfileSet();
+                    userMap.put(id, user);
+                } catch (Exception e) {
+                    exceptionSummary.handleException(e, getClass());
+                }
             }
-
         }
-        return userMap.get(id);*/
-
-        return flowUserQueryService.getFlowUserById(id);
+        return userMap.get(id);
     }
-
     public Long getUserId(String username) {
-       /* if (userIdMap == null) userIdMap = new HashMap<>();
+        if (userIdMap == null) userIdMap = new HashMap<>();
+        synchronized (userIdMap) {
+            if (!userIdMap.containsKey(username)) {
+                try {
+                    FlowUser user = flowUserQueryService.getFlowUserByUsername(username);
+                    userIdMap.put(username, user.getId());
 
-        if (!userIdMap.containsKey(username)) {
-            try {
-                FlowUser user = entityManager.createNamedQuery(FlowUser.FIND_BY_USERNAME, FlowUser.class).setParameter("username", username).getSingleResult();
-                userIdMap.put(username, user.getId());
-
-            } catch (Exception e) {
-                exceptionSummary.handleException(e, getClass());
+                } catch (Exception e) {
+                    exceptionSummary.handleException(e, getClass());
+                }
             }
         }
-        return userIdMap.get(username);*/
-        return flowUserQueryService.getFlowUserByUsername(username).getId();
+        return userIdMap.get(username);
     }
-
     public String getGroupName(String username) {
         FlowUser user = null;
         try {
@@ -131,7 +117,6 @@ public class FlowUserManager {
         else
             return null;
     }
-
     public FlowUserGroup getGroup(String username) {
         FlowUser user = null;
         try {
@@ -144,7 +129,6 @@ public class FlowUserManager {
         else
             return null;
     }
-
     public Set<FlowUserProfile> getUserProfileSet(Long id) {
         if (userProfileSetMap == null) userProfileSetMap = new HashMap<>();
 
@@ -155,7 +139,6 @@ public class FlowUserManager {
 
         return userProfileSetMap.get(id);
     }
-
     public Boolean isGroupAdmin(String username) {
         Long userId = getUserId(username);
         return getGroup(username).getOwnerUserId().equals(userId);

@@ -1,5 +1,7 @@
 package com.jsofttechnologies.rexwar.model.reports;
 
+import com.jsofttechnologies.report.utlil.ReportColumn;
+import com.jsofttechnologies.report.utlil.ReportHeader;
 import com.jsofttechnologies.rexwar.util.contants.Month;
 
 import javax.persistence.*;
@@ -13,6 +15,7 @@ import java.util.Date;
 @Entity
 @IdClass(WarReportWeeklyAgentViewID.class)
 @XmlRootElement
+@ReportHeader(name = "Weekly Activity Report")
 public class WarReportWeeklyAgentView implements Serializable {
     @Id
     @Column(name = "report_planner_id", nullable = false)
@@ -20,19 +23,23 @@ public class WarReportWeeklyAgentView implements Serializable {
     @Id
     @Column(name = "report_agent_id", nullable = false)
     private Long agentId;
+    @ReportColumn(name = "Materials Advisor")
     @Column(name = "report_materials_advisor", nullable = false)
     private String materialsAdvisor;
     @Column(name = "report_date", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date reportDate;
+    @ReportColumn(name = "Month")
     @Id
     @Column(name = "report_month", nullable = false)
     @Enumerated(EnumType.STRING)
     private Month reportMonth;
+    @ReportColumn(name = "Year")
     @Column(name = "report_year", nullable = false)
     private Integer year;
     @Column(name = "report_region", nullable = false)
     private String region;
+    @ReportColumn(name = "Week")
     @Id
     @Column(name = "report_week", nullable = false)
     private Integer week;
@@ -40,10 +47,13 @@ public class WarReportWeeklyAgentView implements Serializable {
     private Integer plannedTarget;
     @Column(name = "report_unplanned_target")
     private Integer unplannedTarget;
+    @ReportColumn(name = "Planned")
     @Column(name = "report_planned_actual")
     private Integer plannedActual;
+    @ReportColumn(name = "Unplanned")
     @Column(name = "report_unplanned_actual")
     private Integer unplannedActual;
+    @ReportColumn(name = "Target")
     @Column(name = "report_total_activity")
     private Integer totalActivity;
     @Column(name = "report_total_actual")
@@ -52,28 +62,40 @@ public class WarReportWeeklyAgentView implements Serializable {
     private Double plannedCallProductivity;
     @Column(name = "report_unplanned_call_productivity")
     private Double unplannedCallProductivity;
+    @ReportColumn(name = "Call Productivity", converter = TotalProductivityReportConverter.class)
     @Column(name = "report_total_call_productivity")
     private Double totalCallProductivity;
+    @ReportColumn(name = "Exam copies distribution")
     @Column(name = "report_exam_copies_distribution")
     private Integer ecd;
+    @ReportColumn(name = "Invitation to events")
     @Column(name = "report_invitation_to_events")
     private Integer ite;
+    @ReportColumn(name = "Confirmation of events")
     @Column(name = "report_confirmation_of_events")
     private Integer coe;
+    @ReportColumn(name = "Follow up payment")
     @Column(name = "report_follow_up_payment")
     private Integer fp;
+    @ReportColumn(name = "Giveaways distribution")
     @Column(name = "report_giveaways_distribution")
     private Integer gd;
+    @ReportColumn(name = "Delivery of incentive/donation")
     @Column(name = "report_delivery_of_incentive_donation")
     private Integer doi;
+    @ReportColumn(name = "Purchase order")
     @Column(name = "report_purchase_order")
     private Integer po;
+    @ReportColumn(name = "Delivery of additional order")
     @Column(name = "report_delivery_of_additional_order_trm_compliance")
     private Integer daotrc;
+    @ReportColumn(name = "Booklist")
     @Column(name = "report_book_list")
     private Integer bookList;
+    @ReportColumn(name = "Customer info sheet")
     @Column(name = "report_updated_customer_info_sheet")
     private Integer ucis;
+    @ReportColumn(name = "Implemented Ex sem")
     @Column(name = "report_implemented_ex_sem")
     private Integer ies;
     @Column(name = "report_worked_with")

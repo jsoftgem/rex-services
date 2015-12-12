@@ -114,6 +114,7 @@ public class WarActivityCrudService extends CrudService<WarActivity, Long> {
 
         int currentWeek = current.get(Calendar.WEEK_OF_YEAR);
         int currentYear = current.get(Calendar.YEAR);
+        int currentDayOfWeek = current.get(Calendar.DAY_OF_WEEK);
         try {
             WarPlanner warPlanner = warPlannerQueryService.getById(plannerId);
 
@@ -135,7 +136,7 @@ public class WarActivityCrudService extends CrudService<WarActivity, Long> {
                     } else {
                         if (currentWeek > week) {
                             activity.setPlanned(Boolean.FALSE);
-                        } else if (currentWeek == week) {
+                        } else if (currentWeek == week && currentDayOfWeek != Calendar.SUNDAY) {
                             activity.setPlanned(Boolean.FALSE);
                         } else {
                             activity.setPlanned(Boolean.TRUE);

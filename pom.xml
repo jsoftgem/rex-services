@@ -5,7 +5,7 @@
 
     <groupId>com.jsofttechnologies</groupId>
     <artifactId>rex-services</artifactId>
-    <version>RELEASE-1.2</version>
+    <version>RELEASE-1</version>
     <packaging>war</packaging>
 
     <name>rex-services</name>
@@ -278,7 +278,7 @@
                         <configuration>
                             <jboss-home>${env.JBOSS_HOME}</jboss-home>
                             <port>9990</port>
-                            <hostname>192.168.102.29</hostname>
+                            <hostname>war.rexpublishing.com.ph</hostname>
                             <username>warmgnt</username>
                             <password>warapp</password>
                         </configuration>

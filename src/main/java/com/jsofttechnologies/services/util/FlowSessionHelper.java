@@ -77,6 +77,7 @@ public class FlowSessionHelper {
         flowSessionCrudService.create(flowSession);
     }
 
+
     public Response logoutSession(String authorization) {
         Promise promise = isAuthorized(authorization.replace(ProjectConstants.AUTHENTICATION_SCHEME + " ", ""));
 

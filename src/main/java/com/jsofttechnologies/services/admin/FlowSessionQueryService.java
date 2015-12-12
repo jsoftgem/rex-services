@@ -29,7 +29,7 @@ public class FlowSessionQueryService extends QueryService<FlowSession> {
 
 
     public FlowSession findBySessionKey(String sessionKey) {
-        if (sessionKey.contains(ProjectConstants.AUTHENTICATION_SCHEME)) {
+        if (sessionKey.toLowerCase().contains(ProjectConstants.AUTHENTICATION_SCHEME)) {
             sessionKey = sessionKey.replace(ProjectConstants.AUTHENTICATION_SCHEME + " ", "").trim();
         }
         setNamedQuery(FlowSession.FIND_BY_SESSION_KEY);

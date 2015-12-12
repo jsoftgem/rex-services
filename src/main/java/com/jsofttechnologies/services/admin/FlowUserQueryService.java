@@ -76,7 +76,7 @@ public class FlowUserQueryService extends QueryService<FlowUser> {
         return null;
     }
 
-    @GET
+    @POST
     @Path("/find_by_user_level")
     @Produces("application/json")
     public ResultDataModel<FlowUser> queryList(@HeaderParam("Authorization") String authorization) {
@@ -87,9 +87,7 @@ public class FlowUserQueryService extends QueryService<FlowUser> {
 
             if (promise.getOk()) {
 
-                String queryString = request.getQueryString();
-
-                DataTables dataTables = ProjectHelper.getDataTableFromQuery(queryString);
+                DataTables dataTables = ProjectHelper.getDataTableFromQuery(request);
 
                 CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 

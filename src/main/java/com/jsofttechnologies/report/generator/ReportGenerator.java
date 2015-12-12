@@ -3,6 +3,7 @@ package com.jsofttechnologies.report.generator;
 import com.jsofttechnologies.jpa.admin.FlowUser;
 import com.jsofttechnologies.jpa.admin.FlowUserDetail;
 import com.jsofttechnologies.report.utlil.ReportColumn;
+import com.jsofttechnologies.report.utlil.ReportConverter;
 import com.jsofttechnologies.report.utlil.ReportHeader;
 import com.jsofttechnologies.rexwar.model.management.WarAgent;
 import org.apache.commons.lang.StringUtils;
@@ -25,9 +26,9 @@ public abstract class ReportGenerator {
 
     public abstract Object render(ReportColumn reportColumn, Object item);
 
-    public abstract String renderView(ColumnKey header, List<Map<String, ColumnProperty>> values);
+    public abstract Object renderView(ColumnKey header, List<Map<String, ColumnProperty>> values);
 
-    public Object generate(Object entity) {
+    public Object generate(Object entity) throws InstantiationException, InvocationTargetException {
 
         Logger logger = Logger.getLogger(ReportGenerator.class.getName());
         StringBuilder builder = new StringBuilder();
@@ -45,10 +46,12 @@ public abstract class ReportGenerator {
             for (Object en : list) {
                 Class cls = en.getClass();
                 List<Map<String, ColumnProperty>> reportContent = null;
+
                 ReportHeader reportHeader = (ReportHeader) cls.getDeclaredAnnotation(ReportHeader.class);
+
                 if (reportHeader != null) {
-                    if (reportMap.containsKey(reportHeader.name())) {
-                        reportContent = reportMap.get(reportHeader.name());
+                    if (reportMap.containsKey(new ColumnKey(reportHeader.name(), reportHeader))) {
+                        reportContent = reportMap.get(new ColumnKey(reportHeader.name(), reportHeader));
                     } else {
                         reportContent = new ArrayList<>();
                         reportMap.put(new ColumnKey(reportHeader.name(), reportHeader), reportContent);
@@ -64,19 +67,20 @@ public abstract class ReportGenerator {
 
                 for (Field field : fields) {
                     if (field.isAnnotationPresent(ReportColumn.class)) {
-
                         try {
                             ReportColumn reportColumn = field.getAnnotation(ReportColumn.class);
+                            ReportConverter reportConverter = reportColumn.converter().newInstance();
                             Object value = null;
                             String fieldName = "get" + StringUtils.capitalize(field.getName());
 
                             if (!reportColumn.field().isEmpty()) {
                                 Method firstMethod = en.getClass().getDeclaredMethod(fieldName);
                                 Object returnObject = firstMethod.invoke(en, null);
-                                value = getValue(reportColumn.field(), returnObject);
+                                value = reportConverter.getValue(en, field, getValue(reportColumn.field(), returnObject));
                             } else {
                                 Method getMethod = cls.getDeclaredMethod(fieldName, null);
-                                value = getMethod.invoke(en, null);
+                                value = reportConverter.getValue(en, field, getMethod.invoke(en, null));
+
                             }
 
                             Object result = render(reportColumn, value);
@@ -85,8 +89,6 @@ public abstract class ReportGenerator {
                         } catch (IllegalAccessException e) {
                             logger.log(Level.WARNING, e.getMessage(), e);
                         } catch (NoSuchMethodException e) {
-                            e.printStackTrace();
-                        } catch (InvocationTargetException e) {
                             e.printStackTrace();
                         }
                     } else {

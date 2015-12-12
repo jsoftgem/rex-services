@@ -58,7 +58,7 @@ public class WarCustomerLightQueryService extends QueryService<WarCustomerLight>
         return warCustomerLights;
     }
 
-    @GET
+    @POST
     @Path("/find_by_user_level")
     @Produces("application/json")
     public ResultDataModel<WarCustomerLight> queryList(@HeaderParam("Authorization") String authorization) {
@@ -69,9 +69,7 @@ public class WarCustomerLightQueryService extends QueryService<WarCustomerLight>
 
             if (promise.getOk()) {
 
-                String queryString = request.getQueryString();
-
-                DataTables dataTables = ProjectHelper.getDataTableFromQuery(queryString);
+                DataTables dataTables = ProjectHelper.getDataTableFromQuery(request);
 
                 CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 

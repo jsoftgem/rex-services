@@ -58,7 +58,7 @@ public class ProjectConstants {
     public static final String MSG_UPDATE_SUCCESS = "UPDATE_SUCCESS";
     public static final String MSG_DELETE_SUCCESS = "DELETE_SUCCESS";
     public static final String MSG_ACCESS_DENIED_ACTION = "ACCESS_DENIED_ACTION";
-    public static final String AUTHENTICATION_SCHEME = "Basic";
+    public static final String AUTHENTICATION_SCHEME = "bearer";
     public static final String FLOW_UPLODATED_TYPE_EMBLEM = "emblem";
     public static final String FLOW_DOWNLOAD_DEFAULT_EMBLEM = "/services/download/group";
     public static final String FLOW_DOWNLOAD_DEFAULT_IMG = "";

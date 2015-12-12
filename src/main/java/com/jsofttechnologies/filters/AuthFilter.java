@@ -16,7 +16,7 @@ import java.security.Key;
 /**
  * Created by Jerico on 31/07/2015.
  */
-/*@WebFilter(filterName = "AuthFilter", urlPatterns = {"/services/v2*//*"})*/
+@WebFilter(filterName = "AuthFilter", urlPatterns = {"/services/v2/*"}, asyncSupported = true)
 public class AuthFilter implements Filter {
 
 
@@ -30,7 +30,10 @@ public class AuthFilter implements Filter {
 
         HttpServletRequest request = (HttpServletRequest) servletRequest;
 
-
+        if (request.getMethod().equalsIgnoreCase("options")) {
+            filterChain.doFilter(servletRequest, servletResponse);
+            return;
+        }
         String query = ((HttpServletRequest) servletRequest).getQueryString();
         String requestToken = null;
         if (query != null && query.contains("token=")) {

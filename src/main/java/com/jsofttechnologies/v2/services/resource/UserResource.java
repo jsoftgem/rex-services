@@ -2,6 +2,7 @@ package com.jsofttechnologies.v2.services.resource;
 
 import com.jsofttechnologies.jpa.admin.FlowUser;
 import com.jsofttechnologies.jpa.admin.FlowUserDetail;
+import com.jsofttechnologies.v2.util.WarToken;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -11,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 public interface UserResource {
 
 
-    public void setInfo(FlowUserDetail info);
+    public void setWarToken(WarToken warToken);
 
     public void setAuthenticated(Boolean authenticated);
 

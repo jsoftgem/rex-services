@@ -8,6 +8,7 @@ import com.jsofttechnologies.ds.v2.FluidDatasource;
 import com.jsofttechnologies.jpa.admin.FlowUser;
 import com.jsofttechnologies.jpa.admin.FlowUserDetail;
 import com.jsofttechnologies.v2.services.FluidPlatformService;
+import com.jsofttechnologies.v2.util.WarToken;
 
 import javax.ejb.EJB;
 import javax.persistence.EntityManager;
@@ -258,9 +259,8 @@ public abstract class PageResource<T, ID> extends FluidPlatformService implement
         return request;
     }
 
-
     @Override
-    public void setInfo(FlowUserDetail user) {
+    public void setWarToken(WarToken warToken) {
 
     }
 
