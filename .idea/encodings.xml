@@ -3,5 +3,6 @@
   <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false">
     <file url="file://$PROJECT_DIR$" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/resources/migration/aug_29_2015_vis" charset="windows-1252" />
+    <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>

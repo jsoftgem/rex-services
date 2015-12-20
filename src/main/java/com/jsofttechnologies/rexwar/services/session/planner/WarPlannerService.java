@@ -38,7 +38,6 @@ public class WarPlannerService extends FlowService {
     @EJB
     private WarAgentQueryService warAgentQueryService;
 
-
     @PUT
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)

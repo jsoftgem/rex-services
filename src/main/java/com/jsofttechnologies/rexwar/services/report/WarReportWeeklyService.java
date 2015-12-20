@@ -293,8 +293,6 @@ public class WarReportWeeklyService extends FlowService {
         return warReportWeeklyAgentViewList;
     }
 
-
-
     @Path("agents_html")
     @GET
     @SkipCheck("action")
