@@ -351,7 +351,7 @@
                         <configuration>
                             <jboss-home>${env.JBOSS_HOME}</jboss-home>
                             <port>10990</port>
-                            <hostname>192.168.1.4</hostname>
+                            <hostname>192.168.1.7</hostname>
                             <username>warmgnt</username>
                             <password>webapp</password>
                         </configuration>

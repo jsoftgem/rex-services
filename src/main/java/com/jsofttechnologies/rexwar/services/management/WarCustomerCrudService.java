@@ -52,46 +52,18 @@ public class WarCustomerCrudService extends CrudService<WarCustomer, Long> {
 
         if (warCustomer.getSchool() == null) {
             throw throwException("WAR_CUSTOMER_NULL_SCHOOL");
-        } /*else {
-            School school = warCustomer.getSchool();
-            if (school.getAddressLine1() == null || school.getAddressLine1().isEmpty()) {
-                throw throwException("WAR_SCHOOL_NULL_ADDRESS");
-            }
-
-          *//*  if (school.getRegion() == null) {
-                throw throwException("WAR_SCHOOL_NULL_REGION");
-            }*//*
-
-            if (school.getEmail() == null || school.getEmail().isEmpty()) {
-                throw throwException("WAR_SCHOOL_NULL_EMAIL");
-            }
-
-            if (school.getLandline() == null || school.getLandline().isEmpty()) {
-                throw throwException("WAR_SCHOOL_NULL_LANDLINE");
-            }
-
-        }*/
-
+        }
         if (warCustomer.getOwnerAgentId() != null) {
             WarAgent warAgent = warAgentQueryService.getById(warCustomer.getOwnerAgentId());
             warCustomer.setRegionCode(warAgent.getRegion());
         }
-
-       /* if (warCustomer.getBuyingProcess() == null) {
-            throw throwException("WAR_CUSTOMER_NULL_BUYING_PROCESS");
-        }
-*/
 
         if (promise.getOk()) {
 
             FlowUser flowUser = promise.getFlowUser();
 
             warCustomer.setCreatedByAgentId(flowUser.getId());
-
-
         }
-
-
         return warCustomer;
     }
 
@@ -115,36 +87,11 @@ public class WarCustomerCrudService extends CrudService<WarCustomer, Long> {
 
         if (warCustomer.getSchool() == null) {
             throw throwException("WAR_CUSTOMER_NULL_SCHOOL");
-        } /*else {
-
-            School school = warCustomer.getSchool();
-          *//*  if (school.getAddressLine1() == null || school.getAddressLine1().isEmpty()) {
-                throw throwException("WAR_SCHOOL_NULL_ADDRESS");
-            }
-
-            *//**//*if (school.getRegion() == null) {
-                throw throwException("WAR_SCHOOL_NULL_REGION");
-            }*//**//*
-
-            if (school.getEmail() == null || school.getEmail().isEmpty()) {
-                throw throwException("WAR_SCHOOL_NULL_EMAIL");
-            }
-
-            if (school.getLandline() == null || school.getLandline().isEmpty()) {
-                throw throwException("WAR_SCHOOL_NULL_LANDLINE");
-            }*//*
-
-        }*/
-
+        }
         if (warCustomer.getOwnerAgentId() != null) {
             WarAgent warAgent = warAgentQueryService.getById(warCustomer.getOwnerAgentId());
             warCustomer.setRegionCode(warAgent.getRegion());
         }
-/*
-        if (warCustomer.getBuyingProcess() == null) {
-            throw throwException("WAR_CUSTOMER_NULL_BUYING_PROCESS");
-        }*/
-
 
         if (promise.getOk()) {
 

@@ -89,7 +89,7 @@ public class WarCustomer implements FlowJpe {
     private Set<CustomerLevel> customerLevels;
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Publisher> publisher;
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<SupportGiven> supportGivens;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<HistoricalSale> historicalSales;
