@@ -17,10 +17,7 @@ import com.jsofttechnologies.util.ProjectHelper;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.text.MessageFormat;
@@ -158,6 +155,13 @@ public class WarActivityCrudService extends CrudService<WarActivity, Long> {
         return response;
     }
 
+    @Path("delete_activity/{id:[0-9][0-9]*}")
+    @DELETE
+    public void deleteActivity(@PathParam("id") Long activityId) throws Exception {
+        setId(activityId);
+        getInstance().setDeleted(Boolean.TRUE);
+        save();
+    }
 
     @Override
     public String updateSuccessMessage(WarActivity activity) {

@@ -16,11 +16,11 @@ import java.util.Date;
 @Table(name = "war_activity")
 @NamedQueries({
         @NamedQuery(name = WarActivity.FIND_ALL, query = "select a from WarActivity a"),
-        @NamedQuery(name = WarActivity.FIND_BY_SCHOOL_YEAR, query = "select a from WarActivity a where a.schoolYear =:schoolYear"),
-        @NamedQuery(name = WarActivity.FIND_BY_EVENT_SCHOOL_YEAR, query = "select a from WarActivity a where a.schoolYear =:schoolYear and a.startDt between :start and :end"),
-        @NamedQuery(name = WarActivity.FIND_BY_EVENT_SCHOOL_YEAR_DATE, query = "select a from WarActivity a where a.schoolYear =:schoolYear and a.startDt =:date"),
-        @NamedQuery(name = WarActivity.FIND_BY_EVENT_SCHOOL_YEAR_AGENT, query = "select a from WarActivity a where a.agentId = :agent and a.schoolYear =:schoolYear and a.startDt between :start and :end"),
-        @NamedQuery(name = WarActivity.FIND_BY_EVENT_SCHOOL_YEAR_AGENT_DATE, query = "select a from WarActivity a where a.agentId = :agent and a.schoolYear =:schoolYear and a.startDt =:date")
+        @NamedQuery(name = WarActivity.FIND_BY_SCHOOL_YEAR, query = "select a from WarActivity a where a.schoolYear =:schoolYear and a.deleted = false"),
+        @NamedQuery(name = WarActivity.FIND_BY_EVENT_SCHOOL_YEAR, query = "select a from WarActivity a where a.schoolYear =:schoolYear and a.deleted = false and a.startDt between :start and :end"),
+        @NamedQuery(name = WarActivity.FIND_BY_EVENT_SCHOOL_YEAR_DATE, query = "select a from WarActivity a where a.schoolYear =:schoolYear and a.deleted = false and a.startDt =:date"),
+        @NamedQuery(name = WarActivity.FIND_BY_EVENT_SCHOOL_YEAR_AGENT, query = "select a from WarActivity a where a.agentId = :agent and a.schoolYear =:schoolYear and a.deleted = false and a.startDt between :start and :end"),
+        @NamedQuery(name = WarActivity.FIND_BY_EVENT_SCHOOL_YEAR_AGENT_DATE, query = "select a from WarActivity a where a.agentId = :agent and a.schoolYear =:schoolYear and a.deleted = false and a.startDt =:date")
 })
 public class WarActivity implements FlowJpe {
 
@@ -108,6 +108,8 @@ public class WarActivity implements FlowJpe {
     private String regionCode;
     @Column(name = "war_activity_worked_with")
     private Boolean workedWith;
+    @Column(name = "war_activity_deleted")
+    private Boolean deleted;
 
     @Override
     public void setId(Object id) {
@@ -385,10 +387,21 @@ public class WarActivity implements FlowJpe {
         this.workedWith = workedWith;
     }
 
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
+
     @PrePersist
     public void prePersist() {
         createdDt = new Date();
         editable = Boolean.FALSE;
+        if (deleted == null) {
+            deleted = Boolean.FALSE;
+        }
     }
 
     @PreUpdate
