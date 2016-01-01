@@ -14,7 +14,7 @@ import com.jsofttechnologies.services.util.CrudService;
 import com.jsofttechnologies.services.util.FlowSessionHelper;
 import com.jsofttechnologies.util.CalendarUtil;
 import com.jsofttechnologies.util.ProjectHelper;
-import com.mysql.jdbc.StringUtils;
+import org.apache.commons.lang.StringUtils;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -79,7 +79,7 @@ public class WarActivityCrudService extends CrudService<WarActivity, Long> {
                 (warActivity.getBookList() != null && warActivity.getBookList()) ||
                 (warActivity.getUcis() != null && warActivity.getUcis()) ||
                 (warActivity.getIes() != null && warActivity.getIes()) ||
-                !StringUtils.isNullOrEmpty(warActivity.getCustomerSpecificActivity())) {
+                StringUtils.isNotEmpty(warActivity.getCustomerSpecificActivity())) {
             warActivity.setActual(Boolean.TRUE);
         }
         return warActivity;

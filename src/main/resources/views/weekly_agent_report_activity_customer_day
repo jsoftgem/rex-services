@@ -11,7 +11,9 @@ CREATE VIEW `weekly_agent_report_activity_customer_day` AS
         `wr`.`market_potential` AS `report_market_potential`,
         `a`.`war_activity_school_year` AS `report_school_year`,
         `a`.`war_activity_agent_id` AS `report_agent`,
-        `a`.`war_activity_planned` AS `report_planned`,
+        `a`.`war_activity_planned` AS `report_planned`,war_activity_id
+        `a`.`war_activity_reason_for_non_coverage` AS `report_reason`,
+        `a`.`war_activity_id` AS `report_activity_id`,
         `wcr`.`region_name` AS `report_region_name`,
         sum(if((`a`.`war_activity_worked_with` = 1),
                     1,
