@@ -110,6 +110,8 @@ public class WarActivity implements FlowJpe {
     private Boolean workedWith;
     @Column(name = "war_activity_deleted")
     private Boolean deleted;
+    @Column(name = "war_activity_manager")
+    private Long managerId;
 
     @Override
     public void setId(Object id) {
@@ -393,6 +395,14 @@ public class WarActivity implements FlowJpe {
 
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public Long getManagerId() {
+        return managerId;
+    }
+
+    public void setManagerId(Long managerId) {
+        this.managerId = managerId;
     }
 
     @PrePersist

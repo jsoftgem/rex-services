@@ -14,6 +14,7 @@ import com.jsofttechnologies.services.util.CrudService;
 import com.jsofttechnologies.services.util.FlowSessionHelper;
 import com.jsofttechnologies.util.CalendarUtil;
 import com.jsofttechnologies.util.ProjectHelper;
+import com.mysql.jdbc.StringUtils;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -53,27 +54,20 @@ public class WarActivityCrudService extends CrudService<WarActivity, Long> {
 
     @Override
     protected WarActivity preCreateValidation(WarActivity warActivity) throws Exception {
-
         WarAgent warAgent = warAgentQueryService.getById(warActivity.getAgentId());
-
         WarCustomerRegion region = regionQueryService.findByCode(warAgent.getRegion());
-
         warActivity.setRegionId(region.getId());
-
         warActivity.setRegionCode(region.getRegionCode());
-
         FlowSessionHelper.Promise authorized = getUserSession();
-
         if (authorized.isGroup(WarConstants.AGENT_REGIONAL_MANAGER_GROUP)) {
             warActivity.setWorkedWith(Boolean.TRUE);
+            warActivity.setManagerId(warAgent.getId());
         }
-
         return warActivity;
     }
 
     @Override
     protected WarActivity preUpdateValidation(WarActivity warActivity) throws Exception {
-
         if ((warActivity.getEcd() != null && warActivity.getEcd()) ||
                 (warActivity.getIte() != null && warActivity.getIte()) ||
                 (warActivity.getCoe() != null && warActivity.getCoe()) ||
@@ -84,15 +78,10 @@ public class WarActivityCrudService extends CrudService<WarActivity, Long> {
                 (warActivity.getDaotrc() != null && warActivity.getDaotrc()) ||
                 (warActivity.getBookList() != null && warActivity.getBookList()) ||
                 (warActivity.getUcis() != null && warActivity.getUcis()) ||
-                (warActivity.getIes() != null && warActivity.getIes())) {
-            if (warActivity.getPlanned()) {
-                warActivity.setActual(Boolean.TRUE);
-            } else {
-                boolean valid = warCustomerTagQueryService.isTop20(warActivity.getCustomerMarketId(), warActivity.getAgentId());
-                warActivity.setActual(valid);
-            }
+                (warActivity.getIes() != null && warActivity.getIes()) ||
+                !StringUtils.isNullOrEmpty(warActivity.getCustomerSpecificActivity())) {
+            warActivity.setActual(Boolean.TRUE);
         }
-
         return warActivity;
     }
 
