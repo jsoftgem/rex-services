@@ -24,7 +24,8 @@ VIEW `monthly_customer_report_activtiy` AS
         sum(`v_warac`.`report_purchase_order`) AS `report_purchase_order`,
         sum(`v_warac`.`report_updated_customer_info_sheet`) AS `report_updated_customer_info_sheet`,
         sum(`v_warac`.`report_follow_up_payment`) AS `report_follow_up_payment`,
-        sum(`v_warac`.`report_booklist`) AS `report_book_list`
+        sum(`v_warac`.`report_booklist`) AS `report_book_list`,
+        sum(`v_warac`.`report_customer_specific_activity`) AS `report_customer_specific_activity`
     from
         ((((`weekly_agent_report_activity_customer_day` `v_warac`
         left join `war_customer_tag` `ct` ON (((`ct`.`war_customer_tag_customer` = `v_warac`.`report_customer_id`)

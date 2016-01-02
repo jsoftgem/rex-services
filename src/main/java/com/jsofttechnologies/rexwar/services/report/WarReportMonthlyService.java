@@ -25,10 +25,7 @@ import javax.persistence.PersistenceContext;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Jerico on 2/23/2015.
@@ -162,29 +159,20 @@ public class WarReportMonthlyService extends FlowService {
             labels.add("Booklist");
             labels.add("Updated Customer Info Sheet");
             labels.add("Implemented Ex-Sem");
-
+            labels.add("Customer Specific Activity");
             projectHelper.addField("labels", new JSONArray(labels.toArray(new String[labels.size()])));
 
 
-            Map<String, List<WarReportMonthlyCustomerView>> regionGroup = new HashMap<>();
-            // Map<Long, List<WarReportMonthlyCustomerView>> agentGroup = new HashMap<>();
+            Map<String, Set<WarReportMonthlyCustomerView>> regionGroup = new HashMap<>();
             Map<AgentCustomerKey, List<WarReportMonthlyCustomerView>> customerGroup = new HashMap<>();
 
             for (WarReportMonthlyCustomerView reportMonthlyCustomerView : warReportMonthlyCustomerViewList) {
                 if (!regionGroup.containsKey(reportMonthlyCustomerView.getRegion())) {
-                    regionGroup.put(reportMonthlyCustomerView.getRegion(), new ArrayList<>());
+                    regionGroup.put(reportMonthlyCustomerView.getRegion(), new HashSet<>());
                 }
-
-               /* if (!agentGroup.containsKey(reportMonthlyCustomerView.getAgent())) {
-                    agentGroup.put(reportMonthlyCustomerView.getAgent(), new ArrayList<>());
-                }*/
-
                 if (!customerGroup.containsKey(new AgentCustomerKey(reportMonthlyCustomerView.getAgent(), reportMonthlyCustomerView.getCustomerId(), null, null))) {
                     customerGroup.put(new AgentCustomerKey(reportMonthlyCustomerView.getAgent(), reportMonthlyCustomerView.getCustomerId(), reportMonthlyCustomerView.getCustomerName(), reportMonthlyCustomerView.getIndex()), new ArrayList<>());
                 }
-
-
-                //    agentGroup.get(reportMonthlyCustomerView.getAgent()).add(reportMonthlyCustomerView);
                 regionGroup.get(reportMonthlyCustomerView.getRegion()).add(reportMonthlyCustomerView);
                 customerGroup.get(new AgentCustomerKey(reportMonthlyCustomerView.getAgent(), reportMonthlyCustomerView.getCustomerId(), null, null)).add(reportMonthlyCustomerView);
             }
@@ -193,11 +181,18 @@ public class WarReportMonthlyService extends FlowService {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("region", region);
                 JSONArray agentJsonArray = new JSONArray();
-
                 Map<Long, JSONObject> agentJSONMap = new HashMap<>();
+                List<WarReportMonthlyCustomerView> agentCustomerViews = new ArrayList<>(regionGroup.get(region));
+                if (!tag.equals("all")) {
+                    Collections.sort(agentCustomerViews, new Comparator<WarReportMonthlyCustomerView>() {
+                        @Override
+                        public int compare(WarReportMonthlyCustomerView o1, WarReportMonthlyCustomerView o2) {
+                            return o1.getIndex().compareTo(o2.getIndex());
+                        }
+                    });
+                }
 
-                for (WarReportMonthlyCustomerView agentCustomerView : regionGroup.get(region)) {
-
+                for (WarReportMonthlyCustomerView agentCustomerView : agentCustomerViews) {
                     JSONObject agentJSONObject = null;
                     if (agentJSONMap.containsKey(agentCustomerView.getAgent())) {
                         agentJSONObject = agentJSONMap.get(agentCustomerView.getAgent());
@@ -214,7 +209,7 @@ public class WarReportMonthlyService extends FlowService {
                     JSONArray customerJsonArray = agentJSONObject.getJSONArray("customers");
 
                     JSONObject customerJSONObject = new JSONObject();
-                    Integer[] dataTemplate = new Integer[24];
+                    Integer[] dataTemplate = new Integer[25];
                     for (int i = 0; i < dataTemplate.length; i++) {
                         dataTemplate[i] = 0;
                     }
@@ -244,6 +239,7 @@ public class WarReportMonthlyService extends FlowService {
                         dataTemplate[labels.indexOf("Booklist")] += warReportMonthlyCustomerView.getBookList();
                         dataTemplate[labels.indexOf("Updated Customer Info Sheet")] += warReportMonthlyCustomerView.getUcis();
                         dataTemplate[labels.indexOf("Implemented Ex-Sem")] += warReportMonthlyCustomerView.getIes();
+                        dataTemplate[labels.indexOf("Customer Specific Activity")] += warReportMonthlyCustomerView.getCustomerSpecificActivity();
 
                     }
                     dataTemplate[0] = totalVisited;

@@ -60,6 +60,8 @@ public class WarReportMonthlyCustomerView implements Serializable {
     private Integer ies;
     @Column(name = "report_tag_index")
     private Integer index;
+    @Column(name = "report_customer_specific_activity")
+    private Integer customerSpecificActivity;
 
     public Long getCustomerId() {
         return customerId;
@@ -235,5 +237,32 @@ public class WarReportMonthlyCustomerView implements Serializable {
 
     public void setIndex(Integer index) {
         this.index = index;
+    }
+
+    public Integer getCustomerSpecificActivity() {
+        return customerSpecificActivity;
+    }
+
+    public void setCustomerSpecificActivity(Integer customerSpecificActivity) {
+        this.customerSpecificActivity = customerSpecificActivity;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof WarReportMonthlyCustomerView)) return false;
+
+        WarReportMonthlyCustomerView that = (WarReportMonthlyCustomerView) o;
+
+        if (!getCustomerId().equals(that.getCustomerId())) return false;
+        return getAgent().equals(that.getAgent());
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getCustomerId().hashCode();
+        result = 31 * result + getAgent().hashCode();
+        return result;
     }
 }
