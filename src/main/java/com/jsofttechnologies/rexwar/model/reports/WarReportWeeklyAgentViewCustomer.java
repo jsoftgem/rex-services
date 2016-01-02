@@ -68,6 +68,10 @@ public class WarReportWeeklyAgentViewCustomer implements Serializable {
     private String reasonForNonCoverage;
     @Column(name = "report_activity_id")
     private Long reportActivityId;
+    @Column(name = "report_customer_specific_activity")
+    private Integer customerSpecific;
+    @Column(name = "report_customer_specific")
+    private String customerSpecificDesc;
 
 
     public Integer getWeek() {
@@ -268,5 +272,21 @@ public class WarReportWeeklyAgentViewCustomer implements Serializable {
 
     public void setReportActivityId(Long reportActivityId) {
         this.reportActivityId = reportActivityId;
+    }
+
+    public Integer getCustomerSpecific() {
+        return customerSpecific;
+    }
+
+    public void setCustomerSpecific(Integer customerSpecific) {
+        this.customerSpecific = customerSpecific;
+    }
+
+    public String getCustomerSpecificDesc() {
+        return customerSpecificDesc;
+    }
+
+    public void setCustomerSpecificDesc(String customerSpecificDesc) {
+        this.customerSpecificDesc = customerSpecificDesc;
     }
 }

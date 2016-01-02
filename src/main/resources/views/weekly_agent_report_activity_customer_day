@@ -13,6 +13,7 @@ CREATE VIEW `weekly_agent_report_activity_customer_day` AS
         `a`.`war_activity_agent_id` AS `report_agent`,
         `a`.`war_activity_planned` AS `report_planned`,war_activity_id
         `a`.`war_activity_reason_for_non_coverage` AS `report_reason`,
+        `a`.`war_activity_customer_specific_activity` AS `report_customer_specific`,
         `a`.`war_activity_id` AS `report_activity_id`,
         `wcr`.`region_name` AS `report_region_name`,
         sum(if((`a`.`war_activity_worked_with` = 1),
@@ -56,6 +57,9 @@ CREATE VIEW `weekly_agent_report_activity_customer_day` AS
         sum(if((`a`.`war_activity_follow_up_payment` = 1),
             1,
             0)) AS `report_follow_up_payment`,
+        sum(if((`a`.`war_activity_customer_specific_activity` is not null),
+                        1,
+                        0)) AS `report_customer_specific_activity`,
         `a`.`start_dt` AS `report_date`
     from
         ((((`war_activity` `a`

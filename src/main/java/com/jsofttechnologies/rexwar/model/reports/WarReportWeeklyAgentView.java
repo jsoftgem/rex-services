@@ -100,6 +100,9 @@ public class WarReportWeeklyAgentView implements Serializable {
     private Integer ies;
     @Column(name = "report_worked_with")
     private Integer workedWith;
+    @ReportColumn(name = "Customer Specific Activity")
+    @Column(name = "report_customer_specific_activity")
+    private Integer customerSpecific;
 
     public Long getReportPlannerId() {
         return reportPlannerId;
@@ -331,5 +334,13 @@ public class WarReportWeeklyAgentView implements Serializable {
 
     public void setWorkedWith(Integer workedWith) {
         this.workedWith = workedWith;
+    }
+
+    public Integer getCustomerSpecific() {
+        return customerSpecific;
+    }
+
+    public void setCustomerSpecific(Integer customerSpecific) {
+        this.customerSpecific = customerSpecific;
     }
 }
