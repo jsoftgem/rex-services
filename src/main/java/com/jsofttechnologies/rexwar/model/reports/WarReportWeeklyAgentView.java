@@ -103,6 +103,18 @@ public class WarReportWeeklyAgentView implements Serializable {
     @ReportColumn(name = "Customer Specific Activity")
     @Column(name = "report_customer_specific_activity")
     private Integer customerSpecific;
+    @ReportColumn(name = "Bootcamp")
+    @Column(name = "report_bootcamp")
+    private Integer bootcamp;
+    @ReportColumn(name = "AECON")
+    @Column(name = "report_aecon")
+    private Integer aecon;
+    @ReportColumn(name = "CEAP")
+    @Column(name = "report_ceap")
+    private Integer ceap;
+    @ReportColumn(name = "Collection and PR")
+    @Column(name = "report_collection_and_pr")
+    private Integer collectionAndPr;
 
     public Long getReportPlannerId() {
         return reportPlannerId;
@@ -342,5 +354,37 @@ public class WarReportWeeklyAgentView implements Serializable {
 
     public void setCustomerSpecific(Integer customerSpecific) {
         this.customerSpecific = customerSpecific;
+    }
+
+    public Integer getBootcamp() {
+        return bootcamp;
+    }
+
+    public void setBootcamp(Integer bootcamp) {
+        this.bootcamp = bootcamp;
+    }
+
+    public Integer getAecon() {
+        return aecon;
+    }
+
+    public void setAecon(Integer aecon) {
+        this.aecon = aecon;
+    }
+
+    public Integer getCeap() {
+        return ceap;
+    }
+
+    public void setCeap(Integer ceap) {
+        this.ceap = ceap;
+    }
+
+    public Integer getCollectionAndPr() {
+        return collectionAndPr;
+    }
+
+    public void setCollectionAndPr(Integer collectionAndPr) {
+        this.collectionAndPr = collectionAndPr;
     }
 }

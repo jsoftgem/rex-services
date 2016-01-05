@@ -62,6 +62,14 @@ public class WarReportMonthlyCustomerView implements Serializable {
     private Integer index;
     @Column(name = "report_customer_specific_activity")
     private Integer customerSpecificActivity;
+    @Column(name = "report_bootcamp")
+    private Integer bootcamp;
+    @Column(name = "report_aecon")
+    private Integer aecon;
+    @Column(name = "report_ceap")
+    private Integer ceap;
+    @Column(name = "report_collection_and_pr")
+    private Integer collectionAndPr;
 
     public Long getCustomerId() {
         return customerId;
@@ -245,6 +253,38 @@ public class WarReportMonthlyCustomerView implements Serializable {
 
     public void setCustomerSpecificActivity(Integer customerSpecificActivity) {
         this.customerSpecificActivity = customerSpecificActivity;
+    }
+
+    public Integer getBootcamp() {
+        return bootcamp;
+    }
+
+    public void setBootcamp(Integer bootcamp) {
+        this.bootcamp = bootcamp;
+    }
+
+    public Integer getAecon() {
+        return aecon;
+    }
+
+    public void setAecon(Integer aecon) {
+        this.aecon = aecon;
+    }
+
+    public Integer getCeap() {
+        return ceap;
+    }
+
+    public void setCeap(Integer ceap) {
+        this.ceap = ceap;
+    }
+
+    public Integer getCollectionAndPr() {
+        return collectionAndPr;
+    }
+
+    public void setCollectionAndPr(Integer collectionAndPr) {
+        this.collectionAndPr = collectionAndPr;
     }
 
     @Override

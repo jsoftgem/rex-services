@@ -136,8 +136,8 @@ public class WarReportMonthlyService extends FlowService {
 
             int calIndex = reportSchoolYear.getPeriodMonth().getCalendar();
 
-            for (int i = 0; i < 12; i++) {
-                if (calIndex > 11) calIndex = 0;
+            for (int i = 0; i < 16; i++) {
+                if (calIndex > 15) calIndex = 0;
                 mons.add(Month.getMonth(calIndex));
                 calIndex++;
             }
@@ -160,6 +160,10 @@ public class WarReportMonthlyService extends FlowService {
             labels.add("Updated Customer Info Sheet");
             labels.add("Implemented Ex-Sem");
             labels.add("Customer Specific Activity");
+            labels.add("Bootcamp");
+            labels.add("AECON");
+            labels.add("CEAP");
+            labels.add("Collection and PR");
             projectHelper.addField("labels", new JSONArray(labels.toArray(new String[labels.size()])));
 
 
@@ -209,7 +213,7 @@ public class WarReportMonthlyService extends FlowService {
                     JSONArray customerJsonArray = agentJSONObject.getJSONArray("customers");
 
                     JSONObject customerJSONObject = new JSONObject();
-                    Integer[] dataTemplate = new Integer[25];
+                    Integer[] dataTemplate = new Integer[29];
                     for (int i = 0; i < dataTemplate.length; i++) {
                         dataTemplate[i] = 0;
                     }
@@ -240,7 +244,10 @@ public class WarReportMonthlyService extends FlowService {
                         dataTemplate[labels.indexOf("Updated Customer Info Sheet")] += warReportMonthlyCustomerView.getUcis();
                         dataTemplate[labels.indexOf("Implemented Ex-Sem")] += warReportMonthlyCustomerView.getIes();
                         dataTemplate[labels.indexOf("Customer Specific Activity")] += warReportMonthlyCustomerView.getCustomerSpecificActivity();
-
+                        dataTemplate[labels.indexOf("Bootcamp")] += warReportMonthlyCustomerView.getBootcamp();
+                        dataTemplate[labels.indexOf("AECON")] += warReportMonthlyCustomerView.getAecon();
+                        dataTemplate[labels.indexOf("CEAP")] += warReportMonthlyCustomerView.getCeap();
+                        dataTemplate[labels.indexOf("Collection and PR")] += warReportMonthlyCustomerView.getCollectionAndPr();
                     }
                     dataTemplate[0] = totalVisited;
                     customerJSONObject.put("data", new JSONArray(dataTemplate));

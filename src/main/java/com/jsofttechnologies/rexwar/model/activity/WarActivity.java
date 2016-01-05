@@ -112,6 +112,14 @@ public class WarActivity implements FlowJpe {
     private Boolean deleted;
     @Column(name = "war_activity_manager")
     private Long managerId;
+    @Column(name = "war_activity_bootcamp", length = ColumnLengths.FLAG)
+    private Boolean bootcamp;
+    @Column(name = "war_activity_aecon", length = ColumnLengths.FLAG)
+    private Boolean aecon;
+    @Column(name = "war_activity_ceap", length = ColumnLengths.FLAG)
+    private Boolean ceap;
+    @Column(name = "war_activity_collection_and_pr", length = ColumnLengths.FLAG)
+    private Boolean collectionAndPR;
 
     @Override
     public void setId(Object id) {
@@ -403,6 +411,38 @@ public class WarActivity implements FlowJpe {
 
     public void setManagerId(Long managerId) {
         this.managerId = managerId;
+    }
+
+    public Boolean getBootcamp() {
+        return bootcamp;
+    }
+
+    public void setBootcamp(Boolean bootcamp) {
+        this.bootcamp = bootcamp;
+    }
+
+    public Boolean getAecon() {
+        return aecon;
+    }
+
+    public void setAecon(Boolean aecon) {
+        this.aecon = aecon;
+    }
+
+    public Boolean getCeap() {
+        return ceap;
+    }
+
+    public void setCeap(Boolean ceap) {
+        this.ceap = ceap;
+    }
+
+    public Boolean getCollectionAndPR() {
+        return collectionAndPR;
+    }
+
+    public void setCollectionAndPR(Boolean collectionAndPR) {
+        this.collectionAndPR = collectionAndPR;
     }
 
     @PrePersist
