@@ -90,7 +90,11 @@ CREATE  VIEW `weekly_agent_report_activity` AS
         sum(if((`a`.`war_activity_follow_up_payment` = 1),
             1,
             0)) AS `report_follow_up_payment` ,
-        sum(if((`a`.`war_activity_customer_specific_activity` is not null), 1,0)) AS `report_customer_specific_activity`
+        sum(if((`a`.`war_activity_customer_specific_activity` is not null), 1,0)) AS `report_customer_specific_activity`,
+        sum(if((`a`.`war_activity_bootcamp` = 1), 1, 0)) AS `report_bootcamp`,
+        sum(if((`a`.`war_activity_aecon` = 1), 1, 0)) AS `report_aecon`,
+        sum(if((`a`.`war_activity_ceap` = 1), 1, 0)) AS `report_ceap`,
+        sum(if((`a`.`war_activity_collection_and_pr` = 1), 1, 0)) AS `report_collection_and_pr`
     from
         ((((((`war_activity` `a`
         left join `customer_latest_market_view` `wr` ON ((`wr`.`war_customer_customer_id` = `a`.`war_activity_customer_market_id`)))

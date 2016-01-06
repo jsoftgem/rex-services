@@ -65,7 +65,6 @@ CREATE VIEW `weekly_agent_report_activity_customer_day` AS
         sum(if((`a`.`war_activity_type` = `OFFICE`),1, 0)) AS `report_office_activity`,
         sum(if((`a`.`war_activity_type` = `SEMINAR`),1, 0)) AS `report_seminar_activity`,
         sum(if((`a`.`war_activity_type` = `LEAVE`),1, 0)) AS `report_leave`,
-
         `a`.`start_dt` AS `report_date`,
         `a`.`war_activity_reason_for_non_coverage` AS `report_reason_for_non_coverage`,
         `a`.`war_activity_customer_specific_activity` AS `report_specific_activity`
