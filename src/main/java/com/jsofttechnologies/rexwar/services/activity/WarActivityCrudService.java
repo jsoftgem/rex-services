@@ -58,11 +58,7 @@ public class WarActivityCrudService extends CrudService<WarActivity, Long> {
         WarCustomerRegion region = regionQueryService.findByCode(warAgent.getRegion());
         warActivity.setRegionId(region.getId());
         warActivity.setRegionCode(region.getRegionCode());
-        FlowSessionHelper.Promise authorized = getUserSession();
-        if (authorized.isGroup(WarConstants.AGENT_REGIONAL_MANAGER_GROUP)) {
-            warActivity.setWorkedWith(Boolean.TRUE);
-            warActivity.setManagerId(warAgent.getId());
-        }
+        setWorkWith(warActivity, warAgent);
         return warActivity;
     }
 
@@ -81,8 +77,21 @@ public class WarActivityCrudService extends CrudService<WarActivity, Long> {
                 (warActivity.getIes() != null && warActivity.getIes()) ||
                 StringUtils.isNotEmpty(warActivity.getCustomerSpecificActivity())) {
             warActivity.setActual(Boolean.TRUE);
+            setWorkWith(warActivity, null);
         }
         return warActivity;
+    }
+
+    private void setWorkWith(WarActivity warActivity, WarAgent warAgent) {
+        warAgent = warAgent != null ? warAgent : warAgentQueryService.getById(warActivity.getAgentId());
+        FlowSessionHelper.Promise authorized = getUserSession();
+        if (authorized.isGroup(WarConstants.AGENT_REGIONAL_MANAGER_GROUP)) {
+            warActivity.setWorkedWith(Boolean.TRUE);
+            warActivity.setManagerId(warAgent.getId());
+        } else if (authorized.isGroup(WarConstants.AGENT_GROUP) && (warActivity.getWorkedWith() != null && warActivity.getWorkedWith().equals(Boolean.TRUE))) {
+            WarAgent agentManager = warAgentQueryService.findManagerByRegion(warAgent.getRegion());
+            warActivity.setManagerId(agentManager.getId());
+        }
     }
 
 
