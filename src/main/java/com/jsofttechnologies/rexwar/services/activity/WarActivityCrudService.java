@@ -120,7 +120,7 @@ public class WarActivityCrudService extends CrudService<WarActivity, Long> {
                     if (currentYear > year) {
                         activity.setPlanned(Boolean.FALSE);
                     } else {
-                        if (currentWeek < week) {
+                        if (currentWeek > week) {
                             activity.setPlanned(Boolean.FALSE);
                         } else if (currentWeek == week && currentDayOfWeek != Calendar.SUNDAY) {
                             activity.setPlanned(Boolean.FALSE);

@@ -5,7 +5,7 @@ package com.jsofttechnologies.rexwar.util.contants;
  */
 public enum ActivityType {
 
-    OFFICE, SEMINAR, LEAVE, SCHOOL;
+    OFFICE, SEMINAR, LEAVE, SCHOOL, HOLIDAY;
 
     ActivityType() {
 
