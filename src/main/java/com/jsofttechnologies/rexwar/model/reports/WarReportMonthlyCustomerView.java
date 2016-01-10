@@ -70,7 +70,8 @@ public class WarReportMonthlyCustomerView implements Serializable {
     private Integer ceap;
     @Column(name = "report_collection_and_pr")
     private Integer collectionAndPr;
-
+    @Column(name = "report_worked_with")
+    private Integer workedWith;
     public Long getCustomerId() {
         return customerId;
     }
@@ -285,6 +286,14 @@ public class WarReportMonthlyCustomerView implements Serializable {
 
     public void setCollectionAndPr(Integer collectionAndPr) {
         this.collectionAndPr = collectionAndPr;
+    }
+
+    public Integer getWorkedWith() {
+        return workedWith;
+    }
+
+    public void setWorkedWith(Integer workedWith) {
+        this.workedWith = workedWith;
     }
 
     @Override

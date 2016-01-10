@@ -12,6 +12,7 @@ CREATE  VIEW `weekly_agent_report_activity` AS
         `a`.`war_planner_month` AS `report_month`,
         year(`a`.`start_dt`) AS `report_year`,
         `a`.`war_activity_week` AS `report_week`,
+        `a`.`war_activity_manager` AS `report_manager`,
         sum(if((`a`.`war_activity_worked_with` = 1),
                     1,
                     0)) AS `report_worked_with`,

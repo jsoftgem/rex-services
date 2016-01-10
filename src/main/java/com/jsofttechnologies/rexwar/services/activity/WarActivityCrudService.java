@@ -58,7 +58,7 @@ public class WarActivityCrudService extends CrudService<WarActivity, Long> {
         WarCustomerRegion region = regionQueryService.findByCode(warAgent.getRegion());
         warActivity.setRegionId(region.getId());
         warActivity.setRegionCode(region.getRegionCode());
-        setWorkWith(warActivity, warAgent);
+        setWorkWith(warActivity);
         return warActivity;
     }
 
@@ -75,20 +75,23 @@ public class WarActivityCrudService extends CrudService<WarActivity, Long> {
                 (warActivity.getBookList() != null && warActivity.getBookList()) ||
                 (warActivity.getUcis() != null && warActivity.getUcis()) ||
                 (warActivity.getIes() != null && warActivity.getIes()) ||
-                StringUtils.isNotEmpty(warActivity.getCustomerSpecificActivity())) {
+                StringUtils.isNotEmpty(warActivity.getCustomerSpecificActivity()) ||
+                (warActivity.getWorkedWith() != null && warActivity.getWorkedWith())) {
             warActivity.setActual(Boolean.TRUE);
-            setWorkWith(warActivity, null);
+            setWorkWith(warActivity);
         }
         return warActivity;
     }
 
-    private void setWorkWith(WarActivity warActivity, WarAgent warAgent) {
-        warAgent = warAgent != null ? warAgent : warAgentQueryService.getById(warActivity.getAgentId());
+    private void setWorkWith(WarActivity warActivity) {
+
         FlowSessionHelper.Promise authorized = getUserSession();
         if (authorized.isGroup(WarConstants.AGENT_REGIONAL_MANAGER_GROUP)) {
             warActivity.setWorkedWith(Boolean.TRUE);
+            WarAgent warAgent = warAgentQueryService.findAgentByUsername(authorized.getFlowUser().getUsername());
             warActivity.setManagerId(warAgent.getId());
         } else if (authorized.isGroup(WarConstants.AGENT_GROUP) && (warActivity.getWorkedWith() != null && warActivity.getWorkedWith().equals(Boolean.TRUE))) {
+            WarAgent warAgent = warAgentQueryService.getById(warActivity.getAgentId());
             WarAgent agentManager = warAgentQueryService.findManagerByRegion(warAgent.getRegion());
             warActivity.setManagerId(agentManager.getId());
         }

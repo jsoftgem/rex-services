@@ -24,7 +24,7 @@ import java.util.Date;
         @NamedQuery(name = WarAgent.FIND_AGENT_BY_USERNAME, query = "select a from WarAgent a where a.user.username=:username"),
         @NamedQuery(name = WarAgent.FIND_AGENT_BY_MANAGER, query = "select a from WarAgent a where a.isManager = false and a.region =:region"),
         @NamedQuery(name = WarAgent.FIND_MANAGER_BY_REGION, query = "select a from WarAgent a where a.isManager = true and a.region =:region"),
-        @NamedQuery(name = WarAgent.FIND_BY_REGION, query = "select a from WarAgent a where a.region =:region"),
+        @NamedQuery(name = WarAgent.FIND_BY_REGION, query = "select a from WarAgent a where a.region =:region and a.isManager = false"),
         @NamedQuery(name = WarAgent.FIND_BY_INITIALS, query = "select a from WarAgent a where lower(a.initials) =:initials"),
         @NamedQuery(name = WarAgent.FIND_ALL_NO_MANAGER, query = "select a from WarAgent a where a.isManager = false")
 

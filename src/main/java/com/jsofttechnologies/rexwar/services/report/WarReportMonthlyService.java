@@ -50,7 +50,8 @@ public class WarReportMonthlyService extends FlowService {
     @GET
     @SkipCheck("action")
     @Path("customer_summary/{school_year}")
-    public Response findWarReportPerSchoolYear(@PathParam("school_year") Long schoolYear, @QueryParam("agent") Long agent, @QueryParam("regionCode") String regionCode, @QueryParam("tag") @DefaultValue("all") String tag) {
+    public Response findWarReportPerSchoolYear(@PathParam("school_year") Long schoolYear, @QueryParam("agent") Long agent, @QueryParam("regionCode") String regionCode, @QueryParam("tag") @DefaultValue("all") String tag,
+                                               @QueryParam("workedWith") @DefaultValue("false") Boolean isWorkedWith, @QueryParam("managerId") Long managerId) {
         Response response = null;
         List<WarReportMonthlyCustomerView> warReportMonthlyCustomerViewList = new ArrayList<>();
 
@@ -92,6 +93,16 @@ public class WarReportMonthlyService extends FlowService {
                     count++;
                 }
                 query += "w.report_agent = " + agent;
+            }
+
+            if (isWorkedWith) {
+                if (count > 0) {
+                    query += " and ";
+                } else {
+                    query += " where ";
+                    count++;
+                }
+                query += "w.report_manager = " + managerId;
             }
 
             switch (tag) {
@@ -136,8 +147,8 @@ public class WarReportMonthlyService extends FlowService {
 
             int calIndex = reportSchoolYear.getPeriodMonth().getCalendar();
 
-            for (int i = 0; i < 16; i++) {
-                if (calIndex > 15) calIndex = 0;
+            for (int i = 0; i < 12; i++) {
+                if (calIndex > 11) calIndex = 0;
                 mons.add(Month.getMonth(calIndex));
                 calIndex++;
             }
@@ -148,6 +159,7 @@ public class WarReportMonthlyService extends FlowService {
                 monthIndex.put(month, labels.indexOf(month.getShortLabel()));
             }
             //SCHOOL ACTIVITY
+            labels.add("Worked with manager");
             labels.add("Exam Copies Distribution");
             labels.add("Invitation to Events");
             labels.add("Confirmation of Events");
@@ -213,7 +225,7 @@ public class WarReportMonthlyService extends FlowService {
                     JSONArray customerJsonArray = agentJSONObject.getJSONArray("customers");
 
                     JSONObject customerJSONObject = new JSONObject();
-                    Integer[] dataTemplate = new Integer[29];
+                    Integer[] dataTemplate = new Integer[30];
                     for (int i = 0; i < dataTemplate.length; i++) {
                         dataTemplate[i] = 0;
                     }
@@ -232,6 +244,7 @@ public class WarReportMonthlyService extends FlowService {
                         totalVisited += warReportMonthlyCustomerView.getCustomerFrequency();
                         dataTemplate[monthIndex.get(warReportMonthlyCustomerView.getMonth())] = warReportMonthlyCustomerView.getCustomerFrequency();
                        /* dataTemplate[labels.indexOf("Field Work with sales/manager")] += warReportMonthlyCustomerView.getWorkedWith();*/
+                        dataTemplate[labels.indexOf("Worked with manager")] += warReportMonthlyCustomerView.getWorkedWith();
                         dataTemplate[labels.indexOf("Exam Copies Distribution")] += warReportMonthlyCustomerView.getEcd();
                         dataTemplate[labels.indexOf("Invitation to Events")] += warReportMonthlyCustomerView.getIte();
                         dataTemplate[labels.indexOf("Confirmation of Events")] += warReportMonthlyCustomerView.getCoe();
@@ -269,7 +282,6 @@ public class WarReportMonthlyService extends FlowService {
 
         return response;
     }
-
 
     private class AgentCustomerKey {
         private Long agent;
@@ -348,7 +360,8 @@ public class WarReportMonthlyService extends FlowService {
             @QueryParam("isCustomer") @DefaultValue("false") Boolean isCustomer,
             @QueryParam("schoolYear") Long schoolYear, @QueryParam("month") Month month, @QueryParam("agentId") Long agentId,
             @QueryParam("region") String region, @QueryParam("size") @DefaultValue("25") Integer size, @QueryParam("customerId") Long customerId,
-            @QueryParam("start") @DefaultValue("0") Integer start, @QueryParam("tag") @DefaultValue("20") String tag) {
+            @QueryParam("start") @DefaultValue("0") Integer start, @QueryParam("tag") @DefaultValue("20") String tag,
+            @QueryParam("workedWith") @DefaultValue("false") Boolean isWorkedWith, @QueryParam("managerId") Long managerId) {
         Response response = null;
 
 
@@ -415,8 +428,20 @@ public class WarReportMonthlyService extends FlowService {
                     }
                     query += "w.report_customer_id =" + customerId;
                 }
+
+                if (isWorkedWith) {
+                    if (count > 0) {
+                        query += " and ";
+                    } else {
+                        query += " where ";
+                        count++;
+                    }
+                    query += "w.report_manager =" + managerId;
+                }
+
             } else {
-                query += " where w.report_school_year =" + schoolYear + " and w.report_month = '" + month.toString() + "' and w.report_agent_id = " + agentId + " and lower(w.report_region) ='" + region.toLowerCase() + "' and w.report_customer_id = " + customerId;
+                query += " where w.report_school_year =" + schoolYear + " and w.report_month = '" + month.toString() + "' and w.report_agent_id = "
+                        + agentId + " and lower(w.report_region) ='" + region.toLowerCase() + "' and w.report_customer_id = " + customerId + " and w.report_manager = " + managerId;
             }
 
 
@@ -435,16 +460,7 @@ public class WarReportMonthlyService extends FlowService {
 
             warReportMonthlyCustomerViewList = entityManager.createNativeQuery(query, WarReportMonthlyCustomerView.class)
                     .getResultList();
-
-
             int length = start + warReportMonthlyCustomerViewList.size();
-
-
-         /*   List<WarReportMonthlyCustomerView> nextBatch = entityManager.createNativeQuery(query, WarReportMonthlyCustomerView.class)
-                    .setFirstResult(length)
-                    .setMaxResults(size)
-                    .getResultList();
-*/
             boolean hasNext = false;
 
             boolean hasPrevious = start > size;

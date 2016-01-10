@@ -1,5 +1,6 @@
 package com.jsofttechnologies.rexwar.model.reports;
 
+import com.jsofttechnologies.report.utlil.Report;
 import com.jsofttechnologies.report.utlil.ReportColumn;
 import com.jsofttechnologies.report.utlil.ReportHeader;
 import com.jsofttechnologies.rexwar.util.contants.Month;
@@ -98,6 +99,7 @@ public class WarReportWeeklyAgentView implements Serializable {
     @ReportColumn(name = "Implemented Ex sem")
     @Column(name = "report_implemented_ex_sem")
     private Integer ies;
+    @ReportColumn(name = "Worked with")
     @Column(name = "report_worked_with")
     private Integer workedWith;
     @ReportColumn(name = "Customer Specific Activity")
@@ -115,6 +117,8 @@ public class WarReportWeeklyAgentView implements Serializable {
     @ReportColumn(name = "Collection and PR")
     @Column(name = "report_collection_and_pr")
     private Integer collectionAndPr;
+    @Column(name = "report_manager")
+    private Long managerId;
 
     public Long getReportPlannerId() {
         return reportPlannerId;
@@ -386,5 +390,13 @@ public class WarReportWeeklyAgentView implements Serializable {
 
     public void setCollectionAndPr(Integer collectionAndPr) {
         this.collectionAndPr = collectionAndPr;
+    }
+
+    public Long getManagerId() {
+        return managerId;
+    }
+
+    public void setManagerId(Long managerId) {
+        this.managerId = managerId;
     }
 }
