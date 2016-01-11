@@ -20,7 +20,7 @@ public class ProjectConstants {
     public static final String SERVICE_DOWNLOAD_BY_PATH = SERVICE_DOWNLOAD
             + "/getPath";
     public static final String APP_NAME = "FLOW Application Service";
-    public static final String APP_VERSION = "0.1.2";
+    public static final String APP_VERSION = "0.1.4";
     public static final String SERVICE_VERSION = "2.0";
     public static final String MAIN_PU = "warpu";
     public static final String MAIN_PU_HOST = "192.168.102.29";
