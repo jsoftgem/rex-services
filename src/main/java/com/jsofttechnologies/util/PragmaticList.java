@@ -1,20 +1,17 @@
 package com.jsofttechnologies.util;
 
 
-import com.jsofttechnologies.model.DataTablesColumn;
-
+import javax.persistence.Column;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-/**
- * Created by Jerico on 20/01/2016.
- */
 public class PragmaticList<T> {
 
     private String unitName;
@@ -24,7 +21,9 @@ public class PragmaticList<T> {
     private String[] fields;
     private String[] sorts;
     private String query;
+    private Long totalCount;
 
+    protected Class<T> jpaClass;
     protected EntityManager entityManager;
 
     public PragmaticList() {
@@ -32,13 +31,13 @@ public class PragmaticList<T> {
     }
 
     public PragmaticList(String unitName, String jpaName) {
+        this();
         this.unitName = unitName;
         this.jpaName = jpaName;
     }
 
     public PragmaticList(String unitName, String jpaName, Integer firstResult, Integer maxResults, String[] fields, String[] sorts, String query) {
-        this.unitName = unitName;
-        this.jpaName = jpaName;
+        this(unitName, jpaName);
         this.firstResult = firstResult;
         this.maxResults = maxResults;
         this.fields = fields;
@@ -46,46 +45,40 @@ public class PragmaticList<T> {
         this.query = query;
     }
 
-
     public List<T> getResultList() {
         List<T> resultList = null;
-
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
-        Class jpaClass = null;
 
-        try {
-            jpaClass = Class.forName(jpaName);
-            countQuery.select(criteriaBuilder.count(countQuery.from(jpaClass)));
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+        if (jpaClass == null) {
+            try {
+                jpaClass = (Class<T>) Class.forName(jpaName);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         }
-
-        Long totalCount = entityManager.createQuery(countQuery).getSingleResult();
 
         if (jpaClass != null) {
             Integer firstResult = (this.firstResult += maxResults) - 1;
             CriteriaQuery criteriaQuery = criteriaBuilder.createQuery(jpaClass);
             Root<T> from = criteriaQuery.from(jpaClass);
             CriteriaQuery select = criteriaQuery.select(from);
+            setCriteriaFields(criteriaBuilder, select, from);
+            setCriteriaQuery(criteriaBuilder, select, from);
+            setCriteriaSorts(criteriaBuilder, select, from);
             TypedQuery<T> typedQuery = entityManager.createQuery(select);
-
             typedQuery.setFirstResult(firstResult);
-
             if (maxResults != null) {
                 typedQuery.setMaxResults(maxResults);
             }
-
         }
-
         return resultList;
     }
 
     private String getValue(String map) {
         if (!map.contains("=")) {
             try {
-                throw new MalformedQueryMappingException(map);
-            } catch (MalformedQueryMappingException e) {
+                throw new MalformedFieldMappingException(map);
+            } catch (MalformedFieldMappingException e) {
                 e.printStackTrace();
             }
         }
@@ -95,23 +88,42 @@ public class PragmaticList<T> {
     private String getField(String map) {
         if (!map.contains("=")) {
             try {
-                throw new MalformedQueryMappingException(map);
-            } catch (MalformedQueryMappingException e) {
+                throw new MalformedFieldMappingException(map);
+            } catch (MalformedFieldMappingException e) {
                 e.printStackTrace();
             }
         }
         return map.split("=")[0];
     }
 
+    protected void setCriteriaQuery(CriteriaBuilder criteriaBuilder, CriteriaQuery select, Root from) {
+        Field[] classFields = jpaClass.getDeclaredFields();
+        List<String> queryFields = new ArrayList<String>();
+        List<String> difference = new ArrayList<String>();
+        List<Predicate> predicates = new ArrayList<Predicate>();
 
-    private void setCriteriaQuery(Class<T> jpaClass, CriteriaBuilder criteriaBuilder, CriteriaQuery select, Root from) {
-        Field[] fields = jpaClass.getDeclaredFields();
+        for (Field field : classFields) {
+            if (field.isAnnotationPresent(Column.class) && field.getType().equals(String.class)) {
+                queryFields.add(field.getName());
+            }
+        }
 
+        if (this.fields != null) {
+            difference = Difference.getDifferenceList(queryFields, getKeys());
+        }
+
+        for (String queryField : queryFields) {
+            if (difference.contains(queryField)) {
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(from.get(queryField)), "%" + query + "%"));
+            }
+        }
+
+        select.where(criteriaBuilder.or(predicates.toArray(new Predicate[predicates.size()])));
     }
 
-    private void setCriteriaFields(CriteriaBuilder criteriaBuilder, CriteriaQuery select, Root from) {
+    protected void setCriteriaFields(CriteriaBuilder criteriaBuilder, CriteriaQuery select, Root from) {
         if (fields != null) {
-            List<Predicate> predicates = new ArrayList<>();
+            List<Predicate> predicates = new ArrayList<Predicate>();
             for (String query : fields) {
                 String value = getValue(query);
                 String field = getField(query);
@@ -130,9 +142,9 @@ public class PragmaticList<T> {
         }
     }
 
-    private void setCriteriaSorts(CriteriaBuilder criteriaBuilder, CriteriaQuery select, Root from) {
+    protected void setCriteriaSorts(CriteriaBuilder criteriaBuilder, CriteriaQuery select, Root from) {
         if (sorts != null) {
-            List<Order> orderList = new ArrayList<>();
+            List<Order> orderList = new ArrayList<Order>();
             for (String sort : sorts) {
                 if (sort.charAt(0) == '-') {
                     orderList.add(criteriaBuilder.desc(from.get(sort)));
@@ -145,13 +157,13 @@ public class PragmaticList<T> {
     }
 
 
-    public class MalformedQueryMappingException extends Throwable {
-        public MalformedQueryMappingException(String where) {
+    public static class MalformedFieldMappingException extends Exception {
+        public MalformedFieldMappingException(String where) {
             super(where + " must have field=value format.");
         }
     }
 
-    public PragmaticList open() {
+    public PragmaticList<T> open() {
         entityManager = Persistence.createEntityManagerFactory(unitName).createEntityManager();
         return this;
     }
@@ -159,13 +171,16 @@ public class PragmaticList<T> {
     public void close() {
         entityManager.close();
         entityManager = null;
+        this.totalCount = null;
+        this.firstResult = Integer.valueOf(0);
+        this.maxResults = null;
     }
 
     public String getUnitName() {
         return unitName;
     }
 
-    public PragmaticList setUnitName(String unitName) {
+    public PragmaticList<T> setUnitName(String unitName) {
         this.unitName = unitName;
         return this;
     }
@@ -174,7 +189,7 @@ public class PragmaticList<T> {
         return jpaName;
     }
 
-    public PragmaticList setJpaName(String jpaName) {
+    public PragmaticList<T> setJpaName(String jpaName) {
         this.jpaName = jpaName;
         return this;
     }
@@ -183,7 +198,7 @@ public class PragmaticList<T> {
         return firstResult;
     }
 
-    public PragmaticList setFirstResult(Integer firstResult) {
+    public PragmaticList<T> setFirstResult(Integer firstResult) {
         this.firstResult = firstResult;
         return this;
     }
@@ -192,7 +207,7 @@ public class PragmaticList<T> {
         return maxResults;
     }
 
-    public PragmaticList setMaxResults(Integer maxResults) {
+    public PragmaticList<T> setMaxResults(Integer maxResults) {
         this.maxResults = maxResults;
         return this;
     }
@@ -201,7 +216,7 @@ public class PragmaticList<T> {
         return fields;
     }
 
-    public PragmaticList setFields(String[] fields) {
+    public PragmaticList<T> setFields(String[] fields) {
         this.fields = fields;
         return this;
     }
@@ -210,7 +225,7 @@ public class PragmaticList<T> {
         return sorts;
     }
 
-    public PragmaticList setSorts(String[] sorts) {
+    public PragmaticList<T> setSorts(String[] sorts) {
         this.sorts = sorts;
         return this;
     }
@@ -219,8 +234,85 @@ public class PragmaticList<T> {
         return query;
     }
 
-    public PragmaticList setQuery(String query) {
+    public PragmaticList<T> setQuery(String query) {
         this.query = query;
         return this;
+    }
+
+    public Long getTotalCount() {
+        if (totalCount == null) {
+            CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
+            if (jpaClass == null) {
+                try {
+                    jpaClass = (Class<T>) Class.forName(jpaName);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+            countQuery.select(criteriaBuilder.count(countQuery.from(jpaClass)));
+            totalCount = entityManager.createQuery(countQuery).getSingleResult();
+        }
+        return totalCount;
+    }
+
+    public static class Difference {
+
+        public static <T> Set<T> getDifferenceSet(List<T> initList1, List<T> initList2) {
+            Set<T> symmetricDiff = new HashSet<T>(initList1);
+            symmetricDiff.addAll(initList2);
+            Set<T> tmp = new HashSet<T>(initList1);
+            tmp.retainAll(initList2);
+            symmetricDiff.removeAll(tmp);
+            return symmetricDiff;
+        }
+
+        public static <T> Set<T> getDifferenceSet(Set<T> initList1, Set<T> initList2) {
+            Set<T> symmetricDiff = new HashSet<T>(initList1);
+            symmetricDiff.addAll(initList2);
+            Set<T> tmp = new HashSet<T>(initList1);
+            tmp.retainAll(initList2);
+            symmetricDiff.removeAll(tmp);
+            return symmetricDiff;
+        }
+
+        public static <T> List<T> getDifferenceList(List<T> initList1, List<T> initList2) {
+            Set<T> symmetricDiff = new HashSet<T>(initList1);
+            symmetricDiff.addAll(initList2);
+            Set<T> tmp = new HashSet<T>(initList1);
+            tmp.retainAll(initList2);
+            symmetricDiff.removeAll(tmp);
+
+            List<T> tempList = new ArrayList<T>(symmetricDiff);
+            return tempList;
+        }
+
+        public static <T> Set<T> getContainingSet(Set<T> initList1, Set<T> initList2) {
+            Set<T> tmp = new HashSet<T>(initList2);
+            tmp.retainAll(initList1);
+            return tmp;
+        }
+    }
+
+    public PragmaticList<T> setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
+        return this;
+    }
+
+    private List<String> getKeys() {
+        List<String> keys = new ArrayList<String>();
+        for (String field : fields) {
+            keys.add(getField(field));
+        }
+        return keys;
+    }
+
+    protected PragmaticList<T> setJpaClass(Class<T> jpaClass) {
+        this.jpaClass = jpaClass;
+        return this;
+    }
+
+    public Class<T> getJpaClass() {
+        return jpaClass;
     }
 }
