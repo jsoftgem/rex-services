@@ -1,5 +1,6 @@
-package com.jsofttechnologies.util;
+package dk.topdanmark.tr.common;
 
+import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.Column;
 import javax.persistence.EntityManager;
@@ -7,12 +8,11 @@ import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
-public class PragmaticList<T> {
+public class TRRestList<T> {
 
     private String unitName;
     private String jpaName;
@@ -26,17 +26,17 @@ public class PragmaticList<T> {
     protected Class<T> jpaClass;
     protected EntityManager entityManager;
 
-    public PragmaticList() {
+    public TRRestList() {
         this.firstResult = Integer.valueOf(0);
     }
 
-    public PragmaticList(String unitName, String jpaName) {
+    public TRRestList(String unitName, String jpaName) {
         this();
         this.unitName = unitName;
         this.jpaName = jpaName;
     }
 
-    public PragmaticList(String unitName, String jpaName, Integer firstResult, Integer maxResults, String[] fields, String[] sorts, String query) {
+    public TRRestList(String unitName, String jpaName, Integer firstResult, Integer maxResults, String[] fields, String[] sorts, String query) {
         this(unitName, jpaName);
         this.firstResult = firstResult;
         this.maxResults = maxResults;
@@ -58,7 +58,6 @@ public class PragmaticList<T> {
         }
 
         if (jpaClass != null) {
-            Integer firstResult = (this.firstResult += maxResults) - 1;
             CriteriaQuery criteriaQuery = criteriaBuilder.createQuery(jpaClass);
             Root<T> from = criteriaQuery.from(jpaClass);
             CriteriaQuery select = criteriaQuery.select(from);
@@ -66,10 +65,10 @@ public class PragmaticList<T> {
             setCriteriaQuery(criteriaBuilder, select, from);
             setCriteriaSorts(criteriaBuilder, select, from);
             TypedQuery<T> typedQuery = entityManager.createQuery(select);
-            typedQuery.setFirstResult(firstResult);
             if (maxResults != null) {
                 typedQuery.setMaxResults(maxResults);
             }
+            resultList = typedQuery.getResultList();
         }
         return resultList;
     }
@@ -97,49 +96,151 @@ public class PragmaticList<T> {
     }
 
     protected void setCriteriaQuery(CriteriaBuilder criteriaBuilder, CriteriaQuery select, Root from) {
-        Field[] classFields = jpaClass.getDeclaredFields();
-        List<String> queryFields = new ArrayList<String>();
-        List<String> difference = new ArrayList<String>();
-        List<Predicate> predicates = new ArrayList<Predicate>();
+        if (query != null) {
+            Field[] classFields = jpaClass.getDeclaredFields();
+            List<String> queryFields = new ArrayList<String>();
+            List<String> difference = new ArrayList<String>();
+            List<Predicate> predicates = new ArrayList<Predicate>();
+            for (Field field : classFields) {
+                if (field.isAnnotationPresent(Column.class) && field.getType().equals(String.class)) {
+                    queryFields.add(field.getName());
+                }
+            }
 
-        for (Field field : classFields) {
-            if (field.isAnnotationPresent(Column.class) && field.getType().equals(String.class)) {
-                queryFields.add(field.getName());
+            if (this.fields != null) {
+                difference = Difference.getDifferenceList(queryFields, getKeys());
+            }
+
+            for (String queryField : queryFields) {
+                if (difference != null && !difference.isEmpty() && difference.contains(queryField)) {
+                    predicates.add(criteriaBuilder.like(criteriaBuilder.lower(from.get(queryField)), query));
+                } else {
+                    predicates.add(criteriaBuilder.like(criteriaBuilder.lower(from.get(queryField)), query));
+                }
+            }
+            if (!predicates.isEmpty()) {
+                select.where(criteriaBuilder.or(predicates.toArray(new Predicate[predicates.size()])));
             }
         }
-
-        if (this.fields != null) {
-            difference = Difference.getDifferenceList(queryFields, getKeys());
-        }
-
-        for (String queryField : queryFields) {
-            if (difference.contains(queryField)) {
-                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(from.get(queryField)), "%" + query + "%"));
-            }
-        }
-
-        select.where(criteriaBuilder.or(predicates.toArray(new Predicate[predicates.size()])));
     }
 
     protected void setCriteriaFields(CriteriaBuilder criteriaBuilder, CriteriaQuery select, Root from) {
         if (fields != null) {
-            List<Predicate> predicates = new ArrayList<Predicate>();
+
             for (String query : fields) {
                 String value = getValue(query);
                 String field = getField(query);
-                if (value.charAt(0) == '%') {
-                    predicates.add(criteriaBuilder.like(criteriaBuilder.lower(from.get(field)), value));
-                } else if (value.charAt(0) == '^') {
-                    predicates.add(criteriaBuilder.notLike(criteriaBuilder.lower(from.get(field)), value));
-                } else if (value.charAt(0) == '!') {
-                    predicates.add(criteriaBuilder.notEqual(from.get(field), value));
+                Class type = getFieldType(field);
+                Predicate predicate = null;
+                boolean isAnd = false;
+
+                if (value.charAt(value.length() - 1) == '*') {
+                    value = value.substring(0, value.length() - 2);
+                    isAnd = true;
+                }
+                if (type.equals(String.class)) {
+                    if (value.charAt(0) == '%') {
+                        predicate = criteriaBuilder.like(criteriaBuilder.lower(from.get(field)), value);
+                    } else if (value.charAt(0) == '^') {
+                        predicate = criteriaBuilder.notLike(criteriaBuilder.lower(from.get(field)), value);
+                    } else if (value.charAt(0) == '!') {
+                        predicate = criteriaBuilder.notEqual(from.get(field), value);
+                    } else {
+                        predicate = criteriaBuilder.equal(from.get(field), value);
+                    }
+                } else if (type.equals(Boolean.class)) {
+                    predicate = criteriaBuilder.equal(from.get(field), Boolean.valueOf(value));
+                } else if (type.equals(Integer.class)) {
+                    predicate = criteriaBuilder.equal(from.get(field), Integer.valueOf(value));
+                } else if (type.equals(Long.class)) {
+                    predicate = criteriaBuilder.equal(from.get(field), Long.valueOf(value));
+                } else if (type.equals(Short.class)) {
+                    predicate = criteriaBuilder.equal(from.get(field), Short.valueOf(value));
+                } else if (type.equals(Float.class)) {
+                    predicate = criteriaBuilder.equal(from.get(field), Float.valueOf(value));
+                } else if (type.equals(Double.class)) {
+                    predicate = criteriaBuilder.equal(from.get(field), Double.valueOf(value));
+                } else if (type.equals(Date.class)) {
+                    DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy", Locale.ENGLISH);
+                    predicate = criteriaBuilder.equal(from.get(field), dateFormat.format(value));
+                }
+
+                if (isAnd) {
+                    select.where(criteriaBuilder.and(predicate));
                 } else {
-                    predicates.add(criteriaBuilder.equal(from.get(field), value));
+                    select.where(criteriaBuilder.or(predicate));
                 }
             }
-
-            select.where(criteriaBuilder.or(predicates.toArray(new Predicate[predicates.size()])));
         }
+    }
+
+    private Predicate getFieldCriteria(CriteriaBuilder criteriaBuilder, Path path, String value, Class type) {
+        Predicate predicate = null;
+
+        if (value.contains("<")) {
+            int nextChar = value.indexOf("<") + 1;
+            if (nextChar < value.length() && value.charAt(nextChar) == '^') {
+                value = value.replaceAll("<^", "");
+                criteriaBuilder.lessThanOrEqualTo(path, value);
+            } else {
+                value = value.replaceAll("<", "");
+                criteriaBuilder.lessThan(path, value);
+            }
+
+        } else if (value.contains(">")) {
+            int nextChar = value.indexOf(">") + 1;
+            if (nextChar < value.length() && value.charAt(nextChar) == '^') {
+                value = value.replaceAll(">^", "");
+                criteriaBuilder.greaterThanOrEqualTo(path, value);
+            } else {
+                value = value.replaceAll(">", "");
+                criteriaBuilder.greaterThan(path, value);
+            }
+        } else {
+            criteriaBuilder.equal(path, getValue(value, type));
+        }
+
+        return predicate;
+    }
+
+    private Object getValue(String value, Class type) {
+        Object oValue = null;
+        if (type.equals(Integer.class)) {
+            oValue = Integer.valueOf(value);
+        } else if (type.equals(Long.class)) {
+            oValue = Integer.valueOf(value);
+        } else if (type.equals(Short.class)) {
+            oValue = Integer.valueOf(value);
+        } else if (type.equals(Float.class)) {
+            oValue = Integer.valueOf(value);
+        } else if (type.equals(Double.class)) {
+            oValue = Integer.valueOf(value);
+        } else if (type.equals(Date.class)) {
+            DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy", Locale.ENGLISH);
+            oValue = dateFormat.format(value);
+        }
+        return oValue;
+    }
+
+    private void setAllFields(List<Field> fields, Class<?> type) {
+        fields.addAll(Arrays.asList(type.getDeclaredFields()));
+
+        if (type.getSuperclass() != null) {
+            setAllFields(fields, type.getSuperclass());
+        }
+
+    }
+
+    private Class getFieldType(String field) {
+        List<Field> fields = new ArrayList<Field>();
+        setAllFields(fields, jpaClass);
+        Class type = null;
+        for (Field fd : fields) {
+            if (fd.getName().equals(field)) {
+                type = fd.getType();
+            }
+        }
+        return type;
     }
 
     protected void setCriteriaSorts(CriteriaBuilder criteriaBuilder, CriteriaQuery select, Root from) {
@@ -147,6 +248,7 @@ public class PragmaticList<T> {
             List<Order> orderList = new ArrayList<Order>();
             for (String sort : sorts) {
                 if (sort.charAt(0) == '-') {
+                    sort = sort.substring(1);
                     orderList.add(criteriaBuilder.desc(from.get(sort)));
                 } else {
                     orderList.add(criteriaBuilder.asc(from.get(sort)));
@@ -156,14 +258,13 @@ public class PragmaticList<T> {
         }
     }
 
-
     public static class MalformedFieldMappingException extends Exception {
         public MalformedFieldMappingException(String where) {
             super(where + " must have field=value format.");
         }
     }
 
-    public PragmaticList<T> open() {
+    public TRRestList<T> open() {
         entityManager = Persistence.createEntityManagerFactory(unitName).createEntityManager();
         return this;
     }
@@ -180,7 +281,7 @@ public class PragmaticList<T> {
         return unitName;
     }
 
-    public PragmaticList<T> setUnitName(String unitName) {
+    public TRRestList<T> setUnitName(String unitName) {
         this.unitName = unitName;
         return this;
     }
@@ -189,7 +290,7 @@ public class PragmaticList<T> {
         return jpaName;
     }
 
-    public PragmaticList<T> setJpaName(String jpaName) {
+    public TRRestList<T> setJpaName(String jpaName) {
         this.jpaName = jpaName;
         return this;
     }
@@ -198,7 +299,7 @@ public class PragmaticList<T> {
         return firstResult;
     }
 
-    public PragmaticList<T> setFirstResult(Integer firstResult) {
+    public TRRestList<T> setFirstResult(Integer firstResult) {
         this.firstResult = firstResult;
         return this;
     }
@@ -207,7 +308,7 @@ public class PragmaticList<T> {
         return maxResults;
     }
 
-    public PragmaticList<T> setMaxResults(Integer maxResults) {
+    public TRRestList<T> setMaxResults(Integer maxResults) {
         this.maxResults = maxResults;
         return this;
     }
@@ -216,7 +317,7 @@ public class PragmaticList<T> {
         return fields;
     }
 
-    public PragmaticList<T> setFields(String[] fields) {
+    public TRRestList<T> setFields(String[] fields) {
         this.fields = fields;
         return this;
     }
@@ -225,7 +326,7 @@ public class PragmaticList<T> {
         return sorts;
     }
 
-    public PragmaticList<T> setSorts(String[] sorts) {
+    public TRRestList<T> setSorts(String[] sorts) {
         this.sorts = sorts;
         return this;
     }
@@ -234,7 +335,7 @@ public class PragmaticList<T> {
         return query;
     }
 
-    public PragmaticList<T> setQuery(String query) {
+    public TRRestList<T> setQuery(String query) {
         this.query = query;
         return this;
     }
@@ -292,9 +393,10 @@ public class PragmaticList<T> {
             tmp.retainAll(initList1);
             return tmp;
         }
+
     }
 
-    public PragmaticList<T> setEntityManager(EntityManager entityManager) {
+    public TRRestList<T> setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
         return this;
     }
@@ -307,7 +409,7 @@ public class PragmaticList<T> {
         return keys;
     }
 
-    protected PragmaticList<T> setJpaClass(Class<T> jpaClass) {
+    protected TRRestList<T> setJpaClass(Class<T> jpaClass) {
         this.jpaClass = jpaClass;
         return this;
     }
