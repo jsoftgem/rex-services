@@ -84,7 +84,7 @@ public class WarReportWeeklyService extends FlowService {
 
         List<WarReportWeeklyAgentView> warReportWeeklyAgentViewList = new ArrayList<>();
 
-        boolean complete = isYear && isMonth && isAgent && isRegion;
+        boolean complete = isYear && isMonth && isAgent && isRegion && isWorkedWith;
 
         String query = "select * from " + WarConstants.VIEW_WAR_REPORT_WEEKLY_AGENT + " w";
 
@@ -155,8 +155,6 @@ public class WarReportWeeklyService extends FlowService {
             }
 
             warReportWeeklyAgentViewList = entityManager.createNativeQuery(query, WarReportWeeklyAgentView.class)
-                    /*.setFirstResult(start)
-                    .setMaxResults(size)*/
                     .getResultList();
 
 
