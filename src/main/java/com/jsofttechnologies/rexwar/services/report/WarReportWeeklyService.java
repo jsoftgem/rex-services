@@ -69,7 +69,6 @@ public class WarReportWeeklyService extends FlowService {
             isAgent = Boolean.TRUE;
             isRegion = Boolean.TRUE;
             FlowSessionHelper.Promise session = getUserSession();
-
             WarAgent agent = warAgentQueryService.findAgentByUsername(session.getFlowUser().getUsername());
             warAgent = warAgentLightQueryService.getById(agent.getId());
             agentId = warAgent.getId();
@@ -137,7 +136,8 @@ public class WarReportWeeklyService extends FlowService {
                 }
 
             } else {
-                query += " where w.report_year =" + year + " and w.report_month = '" + month.toString() + "' and w.report_agent_id = " + agentId + " and lower(w.report_region) ='" + region.toLowerCase() + "'" + "and w.report_manager = " + managerId;;
+                query += " where w.report_year =" + year + " and w.report_month = '" + month.toString() + "' and w.report_agent_id = " + agentId + " and lower(w.report_region) ='" + region.toLowerCase() + "'" + "and w.report_manager = " + managerId;
+                ;
             }
 
 
@@ -230,7 +230,7 @@ public class WarReportWeeklyService extends FlowService {
 
         List<WarReportWeeklyAgentView> warReportWeeklyAgentViewList = new ArrayList<>();
 
-        boolean complete = isYear && isMonth && isAgent && isRegion;
+        boolean complete = isYear && isMonth && isAgent && isRegion && isWorkedWith;
 
         String query = "select * from " + WarConstants.VIEW_WAR_REPORT_WEEKLY_AGENT + " w";
 
@@ -347,7 +347,7 @@ public class WarReportWeeklyService extends FlowService {
 
         List<WarReportWeeklyAgentView> warReportWeeklyAgentViewList = new ArrayList<>();
 
-        boolean complete = isYear && isMonth && isAgent && isRegion;
+        boolean complete = isYear && isMonth && isAgent && isRegion && isWorkedWith;
 
         String query = "select * from " + WarConstants.VIEW_WAR_REPORT_WEEKLY_AGENT + " w";
 
@@ -466,7 +466,7 @@ public class WarReportWeeklyService extends FlowService {
 
         List<WarReportWeeklyAgentView> warReportWeeklyAgentViewList = new ArrayList<>();
 
-        boolean complete = isYear && isMonth && isAgent && isRegion;
+        boolean complete = isYear && isMonth && isAgent && isRegion && isWorkedWith;
 
         String query = "select * from " + WarConstants.VIEW_WAR_REPORT_WEEKLY_AGENT + " w";
 

@@ -2,6 +2,7 @@ package com.jsofttechnologies.report.generator;
 
 import com.jsofttechnologies.report.utlil.ReportColumn;
 
+import javax.ws.rs.core.MultivaluedMap;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
@@ -17,6 +18,17 @@ public class HtmlReportGenerator extends ReportGenerator {
     private HtmlReportGenerator() {
 
     }
+
+    @Override
+    public String getDefaultName() {
+        return new Date() + ".html";
+    }
+
+    @Override
+    public String getMediaType() {
+        return "text/html";
+    }
+
 
     @Override
     public String getContentType() {
@@ -91,5 +103,8 @@ public class HtmlReportGenerator extends ReportGenerator {
         return htmlReportGenerator;
     }
 
+    @Override
+    public void setHeaders(MultivaluedMap<String, Object> headers) {
 
+    }
 }

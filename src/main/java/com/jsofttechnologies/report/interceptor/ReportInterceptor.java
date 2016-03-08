@@ -37,17 +37,12 @@ public class ReportInterceptor implements WriterInterceptor, ReaderInterceptor {
         try {
 
             ReportGenerator reportGenerator = (ReportGenerator) report.generator().getDeclaredMethod("getInstance", null).invoke(null, null);
-
             Object filteredEntity = reportGenerator.generate(entity);
-
             context.setEntity(filteredEntity);
-
             String[] mediaType = reportGenerator.getContentType().split("/");
-
             context.setMediaType(new MediaType(mediaType[0], mediaType[1]));
-
             context.setType(reportGenerator.getType());
-
+            reportGenerator.setHeaders(context.getHeaders());
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (NoSuchMethodException e) {

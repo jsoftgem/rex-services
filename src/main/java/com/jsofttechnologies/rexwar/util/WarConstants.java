@@ -13,6 +13,7 @@ public class WarConstants {
     public static final String AGENT_REGIONAL_MANAGER_GROUP = "agent_regional_manager";
     public static final String AGENT_REGIONAL_MANAGER = "agent_regional_manager";
     public static final String AGENT_GENERAL_MANAGER_GROUP = "agent_general_manager";
+    public static final String AGENT_GENERAL_MANAGER_PROFILE = "agent_general_manager";
     public static final String WAR_ADMIN_GROUP = "warAdmin";
     public static final String MSG_AGENT_CREATED = "WAR_AGENT_CREATED";
     public static final String MSG_AGENT_UPDATED = "WAR_AGENT_UPDATED";

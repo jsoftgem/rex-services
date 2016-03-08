@@ -86,7 +86,9 @@ public class WarActivityCrudService extends CrudService<WarActivity, Long> {
     private void setWorkWith(WarActivity warActivity) {
 
         FlowSessionHelper.Promise authorized = getUserSession();
-        if (authorized.isGroup(WarConstants.AGENT_REGIONAL_MANAGER_GROUP)) {
+        if (authorized.isGroup(WarConstants.AGENT_GENERAL_MANAGER_GROUP)) {
+            warActivity.setManagerId(authorized.getFlowUser().getId());
+        } else if (authorized.isGroup(WarConstants.AGENT_REGIONAL_MANAGER_GROUP)) {
             warActivity.setWorkedWith(Boolean.TRUE);
             WarAgent warAgent = warAgentQueryService.findAgentByUsername(authorized.getFlowUser().getUsername());
             warActivity.setManagerId(warAgent.getId());

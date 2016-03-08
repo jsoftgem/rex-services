@@ -6,8 +6,10 @@ import com.jsofttechnologies.report.utlil.ReportColumn;
 import com.jsofttechnologies.report.utlil.ReportConverter;
 import com.jsofttechnologies.report.utlil.ReportHeader;
 import com.jsofttechnologies.rexwar.model.management.WarAgent;
+import org.apache.commons.collections.map.MultiValueMap;
 import org.apache.commons.lang.StringUtils;
 
+import javax.ws.rs.core.MultivaluedMap;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -21,6 +23,12 @@ import java.util.logging.Logger;
 public abstract class ReportGenerator {
 
     public abstract String getContentType();
+
+    public abstract String getDefaultName();
+
+    public abstract String getMediaType();
+
+    public abstract void setHeaders(MultivaluedMap<String, Object> headers);
 
     public abstract Class getType();
 

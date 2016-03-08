@@ -44,6 +44,14 @@
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="web" url="file://$PROJECT_DIR$" />
   </component>
+  <component name="JsfProjectComponent">
+    <option name="viewSettings">
+      <JsfViewSettings>
+        <option name="managed_beans" value="false" />
+        <option name="component" value="false" />
+      </JsfViewSettings>
+    </option>
+  </component>
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>

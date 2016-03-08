@@ -5,6 +5,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.*;
@@ -15,6 +16,16 @@ import java.util.*;
 public class CSVReportGenerator extends ReportGenerator {
     private static int fileCounter = 0;
     private static CSVReportGenerator csvReportGenerator;
+
+    @Override
+    public String getDefaultName() {
+        return new Date() + ".csv";
+    }
+
+    @Override
+    public String getMediaType() {
+        return "text/csv";
+    }
 
     @Override
     public String getContentType() {
@@ -109,7 +120,7 @@ public class CSVReportGenerator extends ReportGenerator {
         return null;
     }
 
-    public static final CSVReportGenerator getInstance() {
+    public static CSVReportGenerator getInstance() {
         if (csvReportGenerator != null) {
             synchronized (csvReportGenerator) {
                 return csvReportGenerator;
@@ -120,4 +131,9 @@ public class CSVReportGenerator extends ReportGenerator {
         return csvReportGenerator;
     }
 
+    @Override
+    public void setHeaders(MultivaluedMap<String, Object> headers) {
+    /*    headers.putSingle("Content-Disposition", "attachment; filename=\"" + getDefaultName() + "\"");
+        headers.putSingle("Content-Type", getMediaType());*/
+    }
 }
