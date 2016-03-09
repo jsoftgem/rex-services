@@ -42,7 +42,7 @@ public class WarAgentQueryService extends QueryService<WarAgent> {
                     case WarConstants.AGENT_GROUP:
                        break;
                     case WarConstants.AGENT_GENERAL_MANAGER_GROUP:
-                        setNamedQuery(WarAgent.FIND_ALL_NO_MANAGER);
+                        setNamedQuery(WarAgent.FIND_ALL);
                         response = Response.ok(doGetResultList(), MediaType.APPLICATION_JSON_TYPE).build();
                         break;
                     case WarConstants.AGENT_REGIONAL_MANAGER_GROUP:

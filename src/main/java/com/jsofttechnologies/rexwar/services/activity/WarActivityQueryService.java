@@ -50,7 +50,12 @@ public class WarActivityQueryService extends QueryService<WarActivity> {
         if (schoolYear != null) {
             setNamedQuery(WarActivity.FIND_BY_EVENT_SCHOOL_YEAR_DATE);
             if (agent != null) {
-                setNamedQuery(WarActivity.FIND_BY_EVENT_SCHOOL_YEAR_AGENT_DATE);
+                WarAgent warAgent = warAgentQueryService.getById(agent);
+                if (warAgent.getIsManager()) {
+                    setNamedQuery(WarActivity.FIND_BY_EVENT_SCHOOL_YEAR_AGENT_DATE_MANAGER);
+                } else {
+                    setNamedQuery(WarActivity.FIND_BY_EVENT_SCHOOL_YEAR_AGENT_DATE);
+                }
                 putParam("agent", agent);
             }
             putParam("schoolYear", schoolYear);
@@ -73,7 +78,12 @@ public class WarActivityQueryService extends QueryService<WarActivity> {
         if (schoolYear != null) {
             setNamedQuery(WarActivity.FIND_BY_EVENT_SCHOOL_YEAR);
             if (agent != null) {
-                setNamedQuery(WarActivity.FIND_BY_EVENT_SCHOOL_YEAR_AGENT);
+                WarAgent warAgent = warAgentQueryService.getById(agent);
+                if (warAgent.getIsManager()) {
+                    setNamedQuery(WarActivity.FIND_BY_EVENT_SCHOOL_YEAR_AGENT_MANAGER);
+                } else {
+                    setNamedQuery(WarActivity.FIND_BY_EVENT_SCHOOL_YEAR_AGENT);
+                }
                 putParam("agent", agent);
             }
 
@@ -118,7 +128,12 @@ public class WarActivityQueryService extends QueryService<WarActivity> {
         if (schoolYear != null) {
             query += " where a.schoolYear=" + schoolYear;
             if (agent != null) {
-                query += "and a.agentId=" + agent;
+                WarAgent warAgent = warAgentQueryService.getById(agent);
+                if (warAgent.getIsManager()) {
+                    query += "and a.managerId=" + agent;
+                } else {
+                    query += "and a.agentId=" + agent;
+                }
             }
 
             if (customerId != null) {

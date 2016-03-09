@@ -62,7 +62,9 @@ public class WarReportWeeklyService extends FlowService {
             @QueryParam("year") Integer year, @QueryParam("month") Month month, @QueryParam("agentId") Long agentId,
             @QueryParam("region") String region, @QueryParam("size") @DefaultValue("25") Integer size,
             @QueryParam("start") @DefaultValue("0") Integer start, @QueryParam("tag") @DefaultValue("20") String tag,
-            @QueryParam("workedWith") @DefaultValue("false") Boolean isWorkedWith, @QueryParam("managerId") Integer managerId
+            @QueryParam("workedWith") @DefaultValue("false") Boolean isWorkedWith,
+            @QueryParam("myWorkPlan") @DefaultValue("false") Boolean myWorkPlan,
+            @QueryParam("managerId") Integer managerId
     ) {
         WarAgentLight warAgent = null;
         if (flowPermissionService.hasProfileEJB(WarConstants.AGENT_PROFILE)) {
@@ -83,7 +85,7 @@ public class WarReportWeeklyService extends FlowService {
 
         List<WarReportWeeklyAgentView> warReportWeeklyAgentViewList = new ArrayList<>();
 
-        boolean complete = isYear && isMonth && isAgent && isRegion && isWorkedWith;
+        boolean complete = isYear && isMonth && isAgent && isRegion && (isWorkedWith || myWorkPlan);
 
         String query = "select * from " + WarConstants.VIEW_WAR_REPORT_WEEKLY_AGENT + " w";
 
@@ -126,7 +128,7 @@ public class WarReportWeeklyService extends FlowService {
                     query += "lower(w.report_region) like '" + region.toLowerCase() + "'";
                 }
 
-                if (isWorkedWith) {
+                if (isWorkedWith || myWorkPlan) {
                     if (count > 0) {
                         query += " and ";
                     } else {
@@ -210,7 +212,9 @@ public class WarReportWeeklyService extends FlowService {
             @QueryParam("year") Integer year, @QueryParam("month") Month month, @QueryParam("agentId") Long agentId,
             @QueryParam("region") String region, @QueryParam("size") @DefaultValue("25") Integer size,
             @QueryParam("start") @DefaultValue("0") Integer start, @QueryParam("tag") @DefaultValue("20") String tag,
-            @QueryParam("workedWith") @DefaultValue("false") Boolean isWorkedWith, @QueryParam("managerId") Integer managerId
+            @QueryParam("workedWith") @DefaultValue("false") Boolean isWorkedWith,
+            @QueryParam("myWorkPlan") @DefaultValue("false") Boolean myWorkPlan,
+            @QueryParam("managerId") Integer managerId
     ) {
         WarAgentLight warAgent = null;
         if (flowPermissionService.hasProfileEJB(WarConstants.AGENT_PROFILE)) {
@@ -230,7 +234,7 @@ public class WarReportWeeklyService extends FlowService {
 
         List<WarReportWeeklyAgentView> warReportWeeklyAgentViewList = new ArrayList<>();
 
-        boolean complete = isYear && isMonth && isAgent && isRegion && isWorkedWith;
+        boolean complete = isYear && isMonth && isAgent && isRegion && (isWorkedWith || myWorkPlan);
 
         String query = "select * from " + WarConstants.VIEW_WAR_REPORT_WEEKLY_AGENT + " w";
 
@@ -273,7 +277,7 @@ public class WarReportWeeklyService extends FlowService {
                     query += "lower(w.report_region) like '" + region.toLowerCase() + "'";
                 }
 
-                if (isWorkedWith) {
+                if (isWorkedWith || myWorkPlan) {
                     if (count > 0) {
                         query += " and ";
                     } else {
@@ -327,7 +331,9 @@ public class WarReportWeeklyService extends FlowService {
             @QueryParam("year") Integer year, @QueryParam("month") Month month, @QueryParam("agentId") Long agentId,
             @QueryParam("region") String region, @QueryParam("size") @DefaultValue("25") Integer size,
             @QueryParam("start") @DefaultValue("0") Integer start, @QueryParam("tag") @DefaultValue("20") String tag,
-            @QueryParam("workedWith") @DefaultValue("false") Boolean isWorkedWith, @QueryParam("managerId") Integer managerId
+            @QueryParam("workedWith") @DefaultValue("false") Boolean isWorkedWith,
+            @QueryParam("myWorkPlan") @DefaultValue("false") Boolean myWorkPlan,
+            @QueryParam("managerId") Integer managerId
     ) {
         WarAgentLight warAgent = null;
         if (flowPermissionService.hasProfileEJB(WarConstants.AGENT_PROFILE)) {
@@ -347,7 +353,7 @@ public class WarReportWeeklyService extends FlowService {
 
         List<WarReportWeeklyAgentView> warReportWeeklyAgentViewList = new ArrayList<>();
 
-        boolean complete = isYear && isMonth && isAgent && isRegion && isWorkedWith;
+        boolean complete = isYear && isMonth && isAgent && isRegion && (isWorkedWith || myWorkPlan);
 
         String query = "select * from " + WarConstants.VIEW_WAR_REPORT_WEEKLY_AGENT + " w";
 
@@ -390,7 +396,7 @@ public class WarReportWeeklyService extends FlowService {
                     query += "lower(w.report_region) like '" + region.toLowerCase() + "'";
                 }
 
-                if (isWorkedWith) {
+                if (isWorkedWith || myWorkPlan) {
                     if (count > 0) {
                         query += " and ";
                     } else {
@@ -444,7 +450,9 @@ public class WarReportWeeklyService extends FlowService {
             @QueryParam("year") Integer year, @QueryParam("month") Month month, @QueryParam("agentId") Long agentId,
             @QueryParam("region") String region, @QueryParam("size") @DefaultValue("25") Integer size,
             @QueryParam("start") @DefaultValue("0") Integer start, @QueryParam("tag") @DefaultValue("20") String tag,
-            @QueryParam("workedWith") @DefaultValue("false") Boolean isWorkedWith, @QueryParam("managerId") Integer managerId
+            @QueryParam("workedWith") @DefaultValue("false") Boolean isWorkedWith,
+            @QueryParam("myWorkPlan") @DefaultValue("false") Boolean myWorkPlan,
+            @QueryParam("managerId") Integer managerId
     ) {
         WarAgentLight warAgent = null;
         if (flowPermissionService.hasProfileEJB(WarConstants.AGENT_PROFILE)) {
@@ -466,7 +474,7 @@ public class WarReportWeeklyService extends FlowService {
 
         List<WarReportWeeklyAgentView> warReportWeeklyAgentViewList = new ArrayList<>();
 
-        boolean complete = isYear && isMonth && isAgent && isRegion && isWorkedWith;
+        boolean complete = isYear && isMonth && isAgent && isRegion && (isWorkedWith || myWorkPlan);
 
         String query = "select * from " + WarConstants.VIEW_WAR_REPORT_WEEKLY_AGENT + " w";
 
@@ -509,7 +517,7 @@ public class WarReportWeeklyService extends FlowService {
                     query += "lower(w.report_region) like '" + region.toLowerCase() + "'";
                 }
 
-                if (isWorkedWith) {
+                if (isWorkedWith || myWorkPlan) {
                     if (count > 0) {
                         query += " and ";
                     } else {

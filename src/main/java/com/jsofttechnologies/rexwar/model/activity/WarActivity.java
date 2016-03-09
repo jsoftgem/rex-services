@@ -20,8 +20,11 @@ import java.util.Date;
         @NamedQuery(name = WarActivity.FIND_BY_EVENT_SCHOOL_YEAR, query = "select a from WarActivity a where a.schoolYear =:schoolYear and a.deleted = false and a.startDt between :start and :end"),
         @NamedQuery(name = WarActivity.FIND_BY_EVENT_SCHOOL_YEAR_DATE, query = "select a from WarActivity a where a.schoolYear =:schoolYear and a.deleted = false and a.startDt =:date"),
         @NamedQuery(name = WarActivity.FIND_BY_EVENT_SCHOOL_YEAR_AGENT, query = "select a from WarActivity a where a.agentId = :agent and a.schoolYear =:schoolYear and a.deleted = false and a.startDt between :start and :end"),
-        @NamedQuery(name = WarActivity.FIND_BY_EVENT_SCHOOL_YEAR_AGENT_DATE, query = "select a from WarActivity a where a.agentId = :agent and a.schoolYear =:schoolYear and a.deleted = false and a.startDt =:date")
+        @NamedQuery(name = WarActivity.FIND_BY_EVENT_SCHOOL_YEAR_AGENT_MANAGER, query = "select a from WarActivity a where a.managerId = :agent and a.schoolYear =:schoolYear and a.deleted = false and a.startDt between :start and :end"),
+        @NamedQuery(name = WarActivity.FIND_BY_EVENT_SCHOOL_YEAR_AGENT_DATE, query = "select a from WarActivity a where a.agentId = :agent and a.schoolYear =:schoolYear and a.deleted = false and a.startDt =:date"),
+        @NamedQuery(name = WarActivity.FIND_BY_EVENT_SCHOOL_YEAR_AGENT_DATE_MANAGER, query = "select a from WarActivity a where a.managerId = :agent and a.schoolYear =:schoolYear and a.deleted = false and a.startDt =:date")
 })
+
 public class WarActivity implements FlowJpe {
 
     public static final String FIND_ALL = "WarActivity.FIND_ALL";
@@ -29,6 +32,8 @@ public class WarActivity implements FlowJpe {
     public static final String FIND_BY_EVENT_SCHOOL_YEAR = "WarActivity.FIND_BY_EVENT_SCHOOL_YEAR";
     public static final String FIND_BY_EVENT_SCHOOL_YEAR_DATE = "WarActivity.FIND_BY_EVENT_SCHOOL_YEAR_DATE";
     public static final String FIND_BY_EVENT_SCHOOL_YEAR_AGENT = "WarActivity.FIND_BY_EVENT_SCHOOL_YEAR_AGENT";
+    public static final String FIND_BY_EVENT_SCHOOL_YEAR_AGENT_MANAGER  = "WarActivity.FIND_BY_EVENT_SCHOOL_YEAR_AGENT_MANAGER";
+    public static final String FIND_BY_EVENT_SCHOOL_YEAR_AGENT_DATE_MANAGER = "WarActivity.FIND_BY_EVENT_SCHOOL_YEAR_AGENT_DATE_MANAGER";
     public static final String FIND_BY_EVENT_SCHOOL_YEAR_AGENT_DATE = "WarActivity.FIND_BY_EVENT_SCHOOL_YEAR_AGENT_DATE";
     @Id
     @Column(name = "war_activity_id", nullable = false)
