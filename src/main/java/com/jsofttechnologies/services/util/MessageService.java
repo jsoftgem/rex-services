@@ -67,7 +67,7 @@ public class MessageService extends FlowService {
             String property = properties.getProperty(key);
 
 
-            if (param != null) {
+            if (param != null && property != null) {
                 return MessageFormat.format(property, param);
             }
 
